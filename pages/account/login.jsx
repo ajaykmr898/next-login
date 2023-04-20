@@ -63,18 +63,20 @@ function Login() {
               />
               <div className="invalid-feedback">{errors.password?.message}</div>
             </div>
-            <button
-              disabled={formState.isSubmitting}
-              className="btn btn-primary"
-            >
-              {formState.isSubmitting && (
-                <span className="spinner-border spinner-border-sm me-1"></span>
-              )}
-              Login
-            </button>
-            <Link href="/account/register" className="btn btn-link">
+            <div className="text-center">
+              <button
+                disabled={formState.isSubmitting}
+                className="btn btn-primary text-center"
+              >
+                {formState.isSubmitting && (
+                  <span className="spinner-border spinner-border-sm me-1"></span>
+                )}
+                Login
+              </button>
+            </div>
+            {/*<Link href="/account/register" className="btn btn-link">
               Register
-            </Link>
+            </Link>*/}
           </form>
         </div>
       </div>
