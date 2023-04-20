@@ -7,6 +7,7 @@ import { FilterMatchMode } from "primereact/api";
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Router from "next/router";
+import { InputNumber } from "primereact/inputnumber";
 
 export default Index;
 
@@ -103,6 +104,47 @@ function Index() {
     dt.current.exportCSV({ selectionOnly });
   };
 
+  const isPositiveInteger = (val) => {
+    let str = String(val);
+
+    str = str.trim();
+
+    if (!str) {
+      return false;
+    }
+
+    str = str.replace(/^0+/, "") || "0";
+    let n = Math.floor(Number(str));
+
+    return n !== Infinity && String(n) === str && n >= 0;
+  };
+
+  const onCellEditComplete = (e) => {
+    let { rowData, newValue, field, originalEvent: event } = e;
+
+    switch (field) {
+      case "balance":
+        if (isPositiveInteger(newValue)) rowData[field] = newValue;
+        else event.preventDefault();
+        break;
+
+      default:
+        if (newValue.trim().length > 0) rowData[field] = newValue;
+        else event.preventDefault();
+        break;
+    }
+  };
+
+  const cellEditor = (options) => {
+    return (
+      <InputText
+        type="text"
+        value={options.value}
+        onChange={(e) => options.editorCallback(e.target.value)}
+      />
+    );
+  };
+
   return (
     <Layout>
       <div className="card">
@@ -118,10 +160,34 @@ function Index() {
           header={header}
           emptyMessage="No customers found."
         >
-          <Column field="name" sortable header="Name" />
-          <Column field="company" sortable header="Company" />
-          <Column field="balance" sortable header="Balance" />
-          <Column field="date" sortable header="Date" />
+          <Column
+            editor={(options) => cellEditor(options)}
+            onCellEditComplete={onCellEditComplete}
+            field="name"
+            sortable
+            header="Name"
+          />
+          <Column
+            editor={(options) => cellEditor(options)}
+            onCellEditComplete={onCellEditComplete}
+            field="company"
+            sortable
+            header="Company"
+          />
+          <Column
+            editor={(options) => cellEditor(options)}
+            onCellEditComplete={onCellEditComplete}
+            field="balance"
+            sortable
+            header="Balance"
+          />
+          <Column
+            editor={(options) => cellEditor(options)}
+            onCellEditComplete={onCellEditComplete}
+            field="date"
+            sortable
+            header="Date"
+          />
         </DataTable>
       </div>
     </Layout>

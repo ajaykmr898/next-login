@@ -1,17 +1,13 @@
-import { useRouter } from "next/router";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 
-import { userService, alertService } from "services";
+import { ticketsService, alertService } from "services";
 
 export { AddEdit };
 
 function AddEdit(props) {
-  const user = props?.user;
-  const router = useRouter();
-
   // form validation rules
   const validationSchema = Yup.object().shape({
     name: Yup.string().required("Name is required"),
@@ -21,11 +17,6 @@ function AddEdit(props) {
   });
   const formOptions = { resolver: yupResolver(validationSchema) };
 
-  // set default form values if in edit mode
-  if (user) {
-    formOptions.defaultValues = props.user;
-  }
-
   // get functions to build form with useForm() hook
   const { register, handleSubmit, reset, formState } = useForm(formOptions);
   const { errors } = formState;
@@ -34,18 +25,8 @@ function AddEdit(props) {
     alertService.clear();
     try {
       // create or update user based on user prop
-      let message;
-      if (user) {
-        await userService.update(user.id, data);
-        message = "User updated";
-      } else {
-        await userService.register(data);
-        message = "User added";
-      }
-
-      // redirect to user list with success message
-      router.push("/users");
-      alertService.success(message, true);
+      ticketsService.create();
+      alertService.success("Record Added", true);
     } catch (error) {
       alertService.error(error);
       console.error(error);
