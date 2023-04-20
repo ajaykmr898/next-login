@@ -5,12 +5,15 @@ import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { FilterMatchMode } from "primereact/api";
 import React, { useState, useEffect, useRef } from "react";
+import Link from "next/link";
+import Router from "next/router";
 
 export default Index;
 
 function Index() {
   const [customers, setCustomers] = useState(null);
   const dt = useRef(null);
+
   useEffect(() => {
     let tempCustomers = [
       {
@@ -37,6 +40,7 @@ function Index() {
     ];
     setCustomers(tempCustomers);
   }, []);
+
   const [filters, setFilters] = useState({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
     name: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -56,6 +60,10 @@ function Index() {
     setGlobalFilterValue(value);
   };
 
+  const addNew = () => {
+    Router.push("/tickets/add");
+  };
+
   const renderHeader = () => {
     return (
       <div className="flex justify-content-end">
@@ -68,13 +76,22 @@ function Index() {
           />
         </span>
         <Button
-          className="file-excel"
+          className="tb-btns"
           type="button"
           icon="fa fa-file-excel"
           rounded
           onClick={() => exportCSV(false)}
           data-pr-tooltip="CSV"
           severity="success"
+        />
+        <Button
+          className="tb-btns"
+          type="button"
+          icon="fa fa-plus"
+          rounded
+          onClick={() => addNew()}
+          data-pr-tooltip="CSV"
+          severity="primary"
         />
       </div>
     );

@@ -57,13 +57,9 @@ function App({ Component, pageProps }) {
       <div className={`app-container ${user ? "bg-light" : ""}`}>
         <div id="wrapper">
           <Nav />
-          <section id="content-wrapper">
-            <div className="row">
-              <div className="col-lg-12">
-                <Alert />
-                {authorized && <Component {...pageProps} />}
-              </div>
-            </div>
+          <section id="content">
+            <Alert />
+            {authorized && <Component {...pageProps} />}
           </section>
         </div>
       </div>
