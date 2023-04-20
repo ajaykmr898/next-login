@@ -1,64 +1,55 @@
-import Link from "next/link";
 import { Layout } from "components/users";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
-import { useEffect, useRef, useState } from "react";
-import { FilterMatchMode, FilterOperator } from "primereact/api";
+import { FilterMatchMode } from "primereact/api";
+import React, { useState, useEffect } from "react";
 
 export default Index;
 
-const xlsx = require("xlsx");
-const fsaver = require("file-saver");
-
 function Index() {
-  const [products, setProducts] = useState([]);
-  const dt = useRef(null);
-  const [globalFilterValue, setGlobalFilterValue] = useState("");
-  const [filters, setFilters] = useState({
-    name: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
-  });
-
-  const cols = [
-    { field: "code", header: "Code" },
-    { field: "name", header: "Name" },
-    { field: "category", header: "Category" },
-    { field: "quantity", header: "Quantity" },
-  ];
-
+  const [customers, setCustomers] = useState(null);
   useEffect(() => {
-    setProducts([
+    setCustomers([
       {
-        id: "1000",
-        code: "f230fh0g3",
-        name: "Bamboo Watch",
-        description: "Product Description",
-        image: "bamboo-watch.jpg",
-        price: 65,
-        category: "Accessories",
-        quantity: 24,
-        inventoryStatus: "INSTOCK",
-        rating: 5,
+        id: 1000,
+        name: "James Butt",
+        company: "John",
+        date: "2015-09-13",
+        status: "ccc",
+        verified: true,
+        activity: 17,
+        balance: 70663,
       },
       {
-        id: "1001",
-        code: "f230fh0g3",
-        name: "ssd Watch",
-        description: "Product Description",
-        image: "bamboo-watch.jpg",
-        price: 65,
-        category: "Accessories",
-        quantity: 24,
-        inventoryStatus: "INSTOCK",
-        rating: 5,
+        id: 10300,
+        name: "fgd",
+        company: "Benton, John B Jr",
+        date: "2015-09-13",
+        status: "aaa",
+        verified: true,
+        activity: 17,
+        balance: 70663,
+      },
+      {
+        id: 10010,
+        name: "James Butt",
+        company: "Benton, John B Jr",
+        date: "2015-09-13",
+        status: "unqualified",
+        verified: true,
+        activity: 17,
+        balance: 4534,
       },
     ]);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const exportCSV = (selectionOnly) => {
-    dt.current.exportCSV({ selectionOnly });
-  };
+  }, []);
+  const [filters, setFilters] = useState({
+    global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    name: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    balance: { value: null, matchMode: FilterMatchMode.CONTAINS },
+  });
+  const [loading, setLoading] = useState(true);
+  const [globalFilterValue, setGlobalFilterValue] = useState("");
 
   const onGlobalFilterChange = (e) => {
     const value = e.target.value;
@@ -70,18 +61,8 @@ function Index() {
     setGlobalFilterValue(value);
   };
 
-  const header = (
-    <div>
-      <div className="flex align-items-center justify-content-end gap-2">
-        <Button
-          type="button"
-          icon="fa fa-file-excel"
-          severity="success"
-          rounded
-          onClick={() => exportCSV(false)}
-          data-pr-tooltip="XLS"
-        />
-      </div>
+  const renderHeader = () => {
+    return (
       <div className="flex justify-content-end">
         <span className="p-input-icon-left">
           <i className="pi pi-search" />
@@ -92,21 +73,48 @@ function Index() {
           />
         </span>
       </div>
-    </div>
-  );
+    );
+  };
+
+  const header = renderHeader();
 
   return (
     <Layout>
       <div className="card">
         <DataTable
-          ref={dt}
-          value={products}
+          value={customers}
+          paginator
+          rows={10}
+          dataKey="id"
+          filters={filters}
+          filterDisplay="row"
+          globalFilterFields={["name"]}
           header={header}
-          tableStyle={{ minWidth: "50rem" }}
+          emptyMessage="No customers found."
         >
-          {cols.map((col, index) => (
-            <Column key={index} field={col.field} header={col.header} />
-          ))}
+          <Column
+            field="name"
+            header="Name"
+            filter
+            style={{ minWidth: "12rem" }}
+            showFilterMenu={false}
+          />
+          <Column
+            field="company"
+            header="Company"
+            showFilterMenu={false}
+            filterMenuStyle={{ width: "14rem" }}
+            style={{ minWidth: "12rem" }}
+            filter
+          />
+          <Column
+            field="balance"
+            header="Balance"
+            showFilterMenu={false}
+            filterMenuStyle={{ width: "14rem" }}
+            style={{ minWidth: "12rem" }}
+            filter
+          />
         </DataTable>
       </div>
     </Layout>
