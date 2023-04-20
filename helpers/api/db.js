@@ -71,5 +71,5 @@ function ticketsModel() {
     },
   });
 
-  return mongoose.models.User || mongoose.model("Tickets", schema);
+  return mongoose.models.Tickets || mongoose.model("Tickets", schema);
 }

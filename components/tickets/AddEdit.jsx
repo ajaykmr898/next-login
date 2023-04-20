@@ -25,7 +25,24 @@ function AddEdit(props) {
     alertService.clear();
     try {
       // create or update user based on user prop
-      ticketsService.create();
+      let ticket = {
+        fileName: "a",
+        name: "a",
+        bookingCode: "a",
+        ticketNumber: "a",
+        paidAmount: "a",
+        receivingAmount1: "a",
+        receivingAmount2: "a",
+        receivingAmount3: "a",
+        cardNumber: "a",
+        bookedOn: "a",
+        travel1: "a",
+        travel2: "a",
+        dates: "a",
+        phone: "a",
+        flight: "a",
+      };
+      await ticketsService.create(ticket);
       alertService.success("Record Added", true);
     } catch (error) {
       alertService.error(error);

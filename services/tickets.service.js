@@ -15,8 +15,8 @@ export const ticketsService = {
 
 async function getAll() {}
 
-function create() {
-  console.log("qui");
+async function create(ticket) {
+  await fetchWrapper.post(`${baseUrl}/create`, ticket);
 }
 
 async function update() {}

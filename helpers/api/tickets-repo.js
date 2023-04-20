@@ -1,5 +1,3 @@
-import jwt from "jsonwebtoken";
-import bcrypt from "bcryptjs";
 import { db } from "helpers/api";
 
 const Tickets = db.Tickets;
@@ -15,7 +13,10 @@ async function getAll() {
   return await Tickets.find();
 }
 
-async function create(params) {}
+async function create(params) {
+  const ticket = new Tickets(params);
+  await ticket.save();
+}
 
 async function update(id, params) {}
 
