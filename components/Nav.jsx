@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 
 import { NavLink } from ".";
 import { userService } from "services";
+import Link from "next/link";
 
 export { Nav };
 
@@ -33,25 +34,25 @@ function Nav() {
 
         <ul className="sidebar-nav">
           <li className="nav-item">
-            <a href="/">
+            <Link href="/">
               <i className="fa-fw fas fa-home nav-icon"></i>&nbsp; Home
-            </a>
+            </Link>
           </li>
           <li className="nav-item">
-            <a href="/users">
+            <Link href="/users">
               <i className="fa-fw fas fa-list nav-icon"></i>&nbsp; Tickets List
-            </a>
+            </Link>
           </li>
           <li className="nav-item">
-            <a href="/upload">
+            <Link href="/upload">
               <i className="fa-fw fas fa-upload nav-icon"></i>&nbsp; Upload
-            </a>
+            </Link>
           </li>
           <li className="nav-item">
-            <a onClick={userService.logout} href="#">
+            <Link onClick={userService.logout} href="#">
               <i className="nav-icon fas fa-fw fa-sign-out-alt"></i>&nbsp;
               Logout
-            </a>
+            </Link>
           </li>
         </ul>
       </aside>
