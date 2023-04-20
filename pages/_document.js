@@ -11,6 +11,10 @@ function Document() {
           rel="stylesheet"
         />
         <link
+          href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css"
+          rel="stylesheet"
+        />
+        <link
           href="https://use.fontawesome.com/releases/v5.2.0/css/all.css"
           rel="stylesheet"
         />

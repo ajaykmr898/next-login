@@ -35,11 +35,17 @@ function Nav() {
         <ul className="sidebar-nav">
           <li className="nav-item">
             <Link href="/">
-              <i className="fa-fw fas fa-home nav-icon"></i>&nbsp; Home
+              <i className="fa-fw fas fa-home nav-icon"></i>&nbsp;&nbsp; Home
             </Link>
           </li>
           <li className="nav-item">
             <Link href="/users">
+              <i className="fa-fw fas fa-users nav-icon"></i>&nbsp;&nbsp; Agents
+              List
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link href="/tickets">
               <i className="fa-fw fas fa-list nav-icon"></i>&nbsp; Tickets List
             </Link>
           </li>

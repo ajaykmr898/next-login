@@ -30,9 +30,9 @@ function Index() {
 
   return (
     <Layout>
-      <h1>Users</h1>
+      <h1>Agents</h1>
       <Link href="/users/add" className="btn btn-sm btn-success mb-2">
-        Add User
+        Add Agent
       </Link>
       <table className="table table-striped">
         <thead>
@@ -55,7 +55,7 @@ function Index() {
                     href={`/users/edit/${user.id}`}
                     className="btn btn-sm btn-primary me-1"
                   >
-                    Edit
+                    <i className="fa fa-pencil"></i>Edit
                   </Link>
                   <button
                     onClick={() => deleteUser(user.id)}
@@ -66,7 +66,7 @@ function Index() {
                     {user.isDeleting ? (
                       <span className="spinner-border spinner-border-sm"></span>
                     ) : (
-                      <span>Delete</span>
+                      <i className="fa fa-times"></i>
                     )}
                   </button>
                 </td>

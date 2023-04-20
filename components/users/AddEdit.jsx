@@ -16,7 +16,12 @@ function AddEdit(props) {
   const validationSchema = Yup.object().shape({
     firstName: Yup.string().required("First Name is required"),
     lastName: Yup.string().required("Last Name is required"),
-    email: Yup.string().required("Email is required"),
+    email: Yup.string()
+      .required("Email is required")
+      .email("Email must be a valid email")
+      .matches({
+        regex: /^[A-Za-z0-9_!#$%&'*+\/=?`{|}~^.-]+@[A-Za-z0-9.-]+$/gm,
+      }),
     password: Yup.string()
       .transform((x) => (x === "" ? undefined : x))
       // password optional in edit mode
@@ -39,6 +44,7 @@ function AddEdit(props) {
     try {
       // create or update user based on user prop
       let message;
+      data = { ...data, username_1: data.email };
       if (user) {
         await userService.update(user.id, data);
         message = "User updated";
