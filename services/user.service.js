@@ -3,10 +3,8 @@ import Router from "next/router";
 
 import { fetchWrapper } from "helpers";
 import { alertService } from "./alert.service";
-import getConfig from "next/config";
 
-const { publicRuntimeConfig } = getConfig();
-const baseUrl = `${publicRuntimeConfig.apiUrl}/users`;
+const baseUrl = `/api/users`;
 const userSubject = new BehaviorSubject(
   typeof window !== "undefined" && JSON.parse(localStorage.getItem("user"))
 );
