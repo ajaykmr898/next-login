@@ -23,9 +23,9 @@ export const userService = {
   delete: _delete,
 };
 
-async function login(username, password) {
+async function login(email, password) {
   const user = await fetchWrapper.post(`${baseUrl}/authenticate`, {
-    username,
+    email,
     password,
   });
 
