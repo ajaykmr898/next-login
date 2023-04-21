@@ -1,6 +1,8 @@
 @import "primereact/resources/themes/saga-blue/theme.css";
 @import "primereact/resources/primereact.min.css";
-
+.p-datatable.p-datatable-sm .p-datatable-tbody > tr > td {
+  min-width: 250px !important;
+}
 .tb-btns {
   float: right;
   margin-right: 10px;

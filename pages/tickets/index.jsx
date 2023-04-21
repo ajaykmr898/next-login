@@ -20,7 +20,19 @@ function Index() {
   const [ticket, setTicket] = useState(null);
 
   useEffect(() => {
-    ticketsService.getAll().then((x) => setTickets(x));
+    ticketsService.getAll().then((x) => {
+      const tickets = x.map((t) => {
+        let tk2 = t.paidAmount.trim() ? parseFloat(t.paidAmount) : 0;
+        let tra = t.receivingAmount1.trim()
+          ? parseFloat(t.receivingAmount1) +
+            parseFloat(t.receivingAmount2) +
+            parseFloat(t.receivingAmount3)
+          : 0;
+        let profit = parseFloat((tra - tk2).toFixed(2));
+        return { ...t, profit };
+      });
+      setTickets(tickets);
+    });
   }, []);
 
   const [filters, setFilters] = useState({
@@ -174,6 +186,8 @@ function Index() {
     <Layout>
       <div className="card">
         <DataTable
+          size="small"
+          tableStyle={{ minWidth: "100rem" }}
           ref={dt}
           value={tickets}
           paginator
@@ -181,21 +195,38 @@ function Index() {
           dataKey="id"
           filters={filters}
           filterDisplay="row"
-          globalFilterFields={["name", "company", "balance", "date"]}
+          globalFilterFields={[
+            "name",
+            "agent",
+            "bookingCode",
+            "ticketNumber",
+            "paidAmount",
+            "agent",
+            "receivingAmount1",
+            "receivingAmount2",
+            "receivingAmount3",
+            "profit",
+            "cardNumber",
+            "bookedOn",
+            "travel1",
+            "travel2",
+            "dates",
+            "phone",
+          ]}
           header={header}
           emptyMessage="No tickets found."
         >
           <Column
             field="name"
             sortable
-            header="Name"
+            header="Customer"
             editor={(options) => cellEditor(options)}
             onCellEditComplete={onCellEditComplete}
           />
           <Column
             field="agent"
             sortable
-            header="Booking Code"
+            header="Agent"
             editor={(options) => cellEditor(options)}
             onCellEditComplete={onCellEditComplete}
           />
@@ -210,6 +241,13 @@ function Index() {
             field="ticketNumber"
             sortable
             header="Ticket Number"
+            editor={(options) => cellEditor(options)}
+            onCellEditComplete={onCellEditComplete}
+          />
+          <Column
+            field="profit"
+            sortable
+            header="Profit"
             editor={(options) => cellEditor(options)}
             onCellEditComplete={onCellEditComplete}
           />
@@ -238,13 +276,6 @@ function Index() {
             field="receivingAmount3"
             sortable
             header="Receiving Amount 3"
-            editor={(options) => cellEditor(options)}
-            onCellEditComplete={onCellEditComplete}
-          />
-          <Column
-            field="profit"
-            sortable
-            header="Profit"
             editor={(options) => cellEditor(options)}
             onCellEditComplete={onCellEditComplete}
           />
@@ -297,7 +328,11 @@ function Index() {
             editor={(options) => cellEditor(options)}
             onCellEditComplete={onCellEditComplete}
           />
-          <Column body={actionBodyTemplate} exportable={false}></Column>
+          <Column
+            header="Actions"
+            body={actionBodyTemplate}
+            exportable={false}
+          ></Column>
         </DataTable>
       </div>
       <Dialog

@@ -11,6 +11,7 @@ export const ticketsService = {
   create,
   update,
   delete: _delete,
+  upload,
 };
 
 async function getAll() {
@@ -25,4 +26,143 @@ async function update() {}
 
 async function _delete(id) {
   await fetchWrapper.delete(`${baseUrl}/${id}`);
+}
+
+async function upload(files) {
+  let fc = [];
+  files.map((ct) => {
+    let final = [];
+    const dr = ct.split("\n").map(function (ln) {
+      return ln.split(";");
+    });
+
+    dr.map((dC) => {
+      let manipulated = [];
+      dC.map((cl) => {
+        cl = cl.trim();
+        if (cl) {
+          manipulated.push(cl);
+        }
+      });
+      final.push(manipulated);
+    });
+
+    // console.log(final, final.length);
+
+    let ard = [];
+    let n = "-";
+    let c1 =
+      final.hasOwnProperty(3) && final[3].hasOwnProperty(6) ? final[3][6] : "-";
+    let c2 = "-";
+    let d = "-";
+    let dor = "-";
+    let tk = "";
+    let tk2 = "";
+    let tra = "";
+    let pr = 0;
+    let tn = "";
+    let tc = "-";
+    let cn = "-";
+    let t = "-";
+    let p = "-";
+    let f =
+      final.hasOwnProperty(4) && final[4].hasOwnProperty(0) ? final[4][0] : "-";
+
+    for (let r = 0; r < final.length; r++) {
+      for (let c = 0; c < final[r].length; c++) {
+        if (final[r][c].includes("I-001")) {
+          n = final[r][c + 1].replace(/[^a-zA-Z ]/g, " ").trim();
+        }
+        if (final[r][c].includes("MUC1A")) {
+          c2 = final[r][c].replace("MUC1A ", "").trim();
+          c2 = c2.slice(0, -3);
+        }
+        if (final[r][c].includes("D-")) {
+          d = final[r][c].replace("D-", "").trim();
+          dor = d;
+          if (d.length === 6) {
+            let y = "20" + d[0] + d[1];
+            let m = d[2] + d[3];
+            let g = d[4] + d[5];
+            d = `${g}/${m}/${y}`;
+          }
+        }
+        if (final[r][c].includes("K-F")) {
+          tk = final[r][c].replace("K-FEUR", "").trim();
+          tk2 = final[r][c + 1].replace("EUR", "").trim();
+          tra = "0";
+        }
+        if (final[r][c].includes("N-")) {
+          if (final[r][c].includes("EUR")) {
+            tn = final[r][c].replace("N-EUR", "").trim();
+          }
+          if (final[r][c].includes("NUC")) {
+            tn = final[r][c].replace("N-NUC", "").trim();
+          }
+        }
+        if (final[r][c].includes("T-L")) {
+          tc = final[r][c].replace("T-L", "").trim();
+        }
+        if (final[r][c].includes("FPD")) {
+          cn = final[r][c].replace("MFPDCCA", "").trim();
+          cn = cn.split("/")[0];
+        }
+        if (final[r][c].includes("CTCM")) {
+          p = final[r][c].replace("SSR CTCM SM  HK1/", "").trim();
+        }
+        if (final[r][c].includes("T-K")) {
+          t = final[r][c].replace("T-K", "").trim();
+          //ticket = final[r][c];
+        }
+        if (final[r][c].includes("H-")) {
+          ard.push(final[r]);
+        }
+      }
+    }
+
+    let dstr = "";
+    let t1s = "";
+    let t2s = "";
+    for (let i = 0; i < ard.length; i++) {
+      let dd = ard[i][5];
+      let dd2 = dd.split(" ");
+      let d2l = dd2.length;
+      dstr += dd2[d2l - 1] + " - ";
+      t1s += ard[i][2] + " - ";
+      t2s += ard[i][4] + " - ";
+    }
+
+    dstr = dstr.replace(/-\s*$/, "").trim();
+    t1s = t1s.replace(/-\s*$/, "").trim();
+    t2s = t2s.replace(/-\s*$/, "").trim();
+    tk = tk.trim() ? parseFloat(tk) : 0;
+    tk2 = tk2.trim() ? parseFloat(tk2) : 0;
+    tra = tra.trim() ? parseFloat(tra) : 0;
+    tn = tn.trim() ? parseFloat(tn) : 0;
+    pr = parseFloat((tra - tk2).toFixed(2));
+
+    let tkt = {
+      name: n,
+      bookingCode: c2,
+      agent: "",
+      ticketNumber: t,
+      paidAmount: tk2,
+      receivingAmount1: tra,
+      receivingAmount2: 0,
+      receivingAmount3: 0,
+      cardNumber: cn,
+      bookedOn: d,
+      travel1: t1s,
+      travel2: t2s,
+      dates: dstr,
+      phone: p,
+      flight: f,
+    };
+    fc.push(tkt);
+  });
+
+  fc.map((f) => {
+    console.log(f);
+    create(f);
+  });
 }

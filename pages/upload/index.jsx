@@ -3,14 +3,16 @@ import { useState, useEffect } from "react";
 
 import { Spinner } from "components";
 import { Layout } from "components/users";
-import { userService } from "services";
+import { alertService, ticketsService, userService } from "services";
 
 export default Index;
 
 function Index() {
   const [files, setFiles] = useState(null);
+  const [content, setContent] = useState([]);
 
-  function readInput(input) {
+  function readInput(e) {
+    let input = e.target;
     const dt = new DataTransfer();
     if (input.files && input.files[0]) {
       for (let i = 0; i < input.files.length; i++) {
@@ -26,6 +28,17 @@ function Index() {
       input.files = dt.files;
       setFiles(input.files);
     }
+
+    const data = [...content];
+    Object.keys(input.files).map((f, i) => {
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        const text = e.target.result;
+        data.push(text);
+        setContent(data);
+      };
+      reader.readAsText(e.target.files[i]);
+    });
   }
 
   function deleteItem(index) {
@@ -55,6 +68,17 @@ function Index() {
     return nameS + nameF;
   }
 
+  function onSubmit() {
+    const input = document.getElementById("filesInput");
+    const files = input.files;
+    return ticketsService
+      .upload(content)
+      .then(() => {
+        alertService.success("Upload successful", true);
+      })
+      .catch(alertService.error);
+  }
+
   return (
     <Layout>
       <form id="uploadFile" method="POST" encType="multipart/form-data">
@@ -69,7 +93,7 @@ function Index() {
                 accept=".M*"
                 multiple
                 onChange={(event) => {
-                  readInput(event.target);
+                  readInput(event);
                 }}
               />
               <div className="drag-text">
@@ -96,7 +120,11 @@ function Index() {
         </div>
       </form>
       <div id="filenames"></div>
-      <button type="button" className="w-100 btn btn-lg btn-warning">
+      <button
+        type="button"
+        onClick={onSubmit}
+        className="w-100 btn btn-lg btn-warning"
+      >
         Upload
       </button>
     </Layout>
