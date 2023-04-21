@@ -14,10 +14,11 @@ import { ticketsService, userService } from "../../services";
 export default Index;
 
 function Index() {
-  const [tickets, setTickets] = useState(null);
+  const [tickets, setTickets] = useState([]);
   const dt = useRef(null);
   const [deleteTicketDialog, setDeleteTicketDialog] = useState(false);
   const [ticket, setTicket] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     ticketsService.getAll().then((x) => {
@@ -32,6 +33,7 @@ function Index() {
         return { ...t, profit };
       });
       setTickets(tickets);
+      setLoading(false);
     });
   }, []);
 
@@ -41,7 +43,6 @@ function Index() {
     balance: { value: null, matchMode: FilterMatchMode.CONTAINS },
     date: { value: null, matchMode: FilterMatchMode.CONTAINS },
   });
-  const [loading, setLoading] = useState(true);
   const [globalFilterValue, setGlobalFilterValue] = useState("");
 
   const onGlobalFilterChange = (e) => {
@@ -186,6 +187,7 @@ function Index() {
     <Layout>
       <div className="card">
         <DataTable
+          loading={loading}
           size="small"
           tableStyle={{ minWidth: "100rem" }}
           ref={dt}

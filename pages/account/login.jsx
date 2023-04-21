@@ -78,11 +78,11 @@ function Login() {
                   </div>
 
                   <div className="col-lg-12 loginbttm">
-                    <div className="col-lg-6 login-btm login-text"></div>
-                    <div className="col-lg-6 login-btm login-button">
+                    <div className="col-lg-12 login-btm login-text"></div>
+                    <div className="col-lg-12 login-btm login-button">
                       <button
                         disabled={formState.isSubmitting}
-                        className="btn btn-primary text-center"
+                        className="btn btn-warning text-center"
                       >
                         {formState.isSubmitting && (
                           <span className="spinner-border spinner-border-sm me-1"></span>

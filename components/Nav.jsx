@@ -49,29 +49,32 @@ function Nav() {
         <ul className="sidebar-nav">
           <li className={getActiveMenu(["users", "tickets", "upload"])}>
             <Link href="/">
-              <i className="fa-fw fas fa-home nav-icon"></i>&nbsp;&nbsp; Home
+              <i className="fa-fw fas fa-home nav-icon"></i>
+              &nbsp;&nbsp;&nbsp;&nbsp; Home
             </Link>
           </li>
           <li className={getActiveMenu(["users"])}>
             <Link href="/users">
-              <i className="fa-fw fas fa-users nav-icon"></i>&nbsp;&nbsp; Agents
-              List
+              <i className="fa-fw fas fa-users nav-icon"></i>
+              &nbsp;&nbsp;&nbsp;&nbsp; Agents List
             </Link>
           </li>
           <li className={getActiveMenu(["tickets"])}>
             <Link href="/tickets">
-              <i className="fa-fw fas fa-list nav-icon"></i>&nbsp; Tickets List
+              <i className="fa-fw fas fa-list nav-icon"></i>
+              &nbsp;&nbsp;&nbsp;&nbsp; Tickets List
             </Link>
           </li>
           <li className={getActiveMenu(["upload"])}>
             <Link href="/upload">
-              <i className="fa-fw fas fa-upload nav-icon"></i>&nbsp; Upload
+              <i className="fa-fw fas fa-upload nav-icon"></i>
+              &nbsp;&nbsp;&nbsp;&nbsp; Upload
             </Link>
           </li>
           <li className="nav-item">
             <Link onClick={userService.logout} href="#">
-              <i className="nav-icon fas fa-fw fa-sign-out-alt"></i>&nbsp;
-              Logout
+              <i className="nav-icon fas fa-fw fa-sign-out-alt"></i>
+              &nbsp;&nbsp;&nbsp;&nbsp; Logout
             </Link>
           </li>
         </ul>

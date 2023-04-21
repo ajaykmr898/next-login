@@ -185,7 +185,7 @@ a:focus {
   }
 
   #sidebar-wrapper {
-    width: 60px;
+    width: 53px;
   }
 
   #wrapper.toggled #navbar-wrapper {
@@ -611,10 +611,6 @@ label {
 .btn-outline-primary:hover {
   background-color: #f8be12;
   right: 0px;
-}
-
-.login-btm {
-  float: left;
 }
 
 .login-button {
