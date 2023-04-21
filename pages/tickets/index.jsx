@@ -5,11 +5,9 @@ import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { FilterMatchMode } from "primereact/api";
 import React, { useState, useEffect, useRef } from "react";
-import Link from "next/link";
 import Router from "next/router";
-import { InputNumber } from "primereact/inputnumber";
 import { Dialog } from "primereact/dialog";
-import { ticketsService, userService } from "../../services";
+import { formatDate, ticketsService } from "../../services";
 
 export default Index;
 
@@ -23,6 +21,7 @@ function Index() {
   useEffect(() => {
     ticketsService.getAll().then((x) => {
       const tickets = x.map((t) => {
+        let bkd = formatDate(t.bookedOn, "IT");
         let tk2 = t.paidAmount.trim() ? parseFloat(t.paidAmount) : 0;
         let tra = t.receivingAmount1.trim()
           ? parseFloat(t.receivingAmount1) +
@@ -30,7 +29,7 @@ function Index() {
             parseFloat(t.receivingAmount3)
           : 0;
         let profit = parseFloat((tra - tk2).toFixed(2));
-        return { ...t, profit };
+        return { ...t, profit, bookedOn: bkd };
       });
       setTickets(tickets);
       setLoading(false);

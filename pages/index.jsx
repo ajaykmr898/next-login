@@ -35,7 +35,7 @@ function Home() {
           datasets: [
             {
               data: Object.values(data),
-              label: "Profit",
+              label: "Profit (Last 12 months)",
               borderColor: "rgb(75, 192, 192)",
               fill: true,
             },

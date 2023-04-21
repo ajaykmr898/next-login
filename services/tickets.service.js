@@ -45,7 +45,7 @@ async function _delete(id) {
 }
 
 async function getProfit() {
-  const result = await fetchWrapper.get(baseUrl);
+  const result = await fetchWrapper.get(baseUrl + "/profit");
   let ticketsP = {};
   result.map((ticket) => {
     let date = new Date(ticket.bookedOn);
@@ -124,7 +124,7 @@ async function upload(files) {
             let y = "20" + d[0] + d[1];
             let m = d[2] + d[3];
             let g = d[4] + d[5];
-            d = `${g}/${m}/${y}`;
+            d = `${y}-${m}-${g}`;
           }
         }
         if (final[r][c].includes("K-F")) {
