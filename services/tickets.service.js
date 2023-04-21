@@ -12,6 +12,7 @@ export const ticketsService = {
   update,
   delete: _delete,
   upload,
+  getProfit,
 };
 
 async function getAll() {
@@ -26,6 +27,29 @@ async function update() {}
 
 async function _delete(id) {
   await fetchWrapper.delete(`${baseUrl}/${id}`);
+}
+
+async function getProfit() {
+  const result = await fetchWrapper.get(baseUrl);
+  let ticketsP = {};
+  result.map((ticket) => {
+    let date = new Date(ticket.bookedOn);
+    let key = date.getFullYear() + "-" + date.getMonth() + 1;
+    if (ticketsP[key] !== undefined) {
+      ticketsP[key] +=
+        ticket.receivingAmount1 +
+        ticket.receivingAmount2 +
+        ticket.receivingAmount3;
+    } else {
+      ticketsP[key] =
+        ticket.receivingAmount1 +
+        ticket.receivingAmount2 +
+        ticket.receivingAmount3;
+    }
+    ticketsP[key] = ticketsP[key] - ticket.paidAmount;
+  });
+
+  return ticketsP;
 }
 
 async function upload(files) {

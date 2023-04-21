@@ -9,6 +9,8 @@
         "lint": "next lint"
     },
     "dependencies": {
+        "chart.js": "^4.0.0",
+        "react-chartjs-2": "^5.0.0",
         "@hookform/resolvers": "^3.0.0",
         "bcryptjs": "^2.4.3",
         "express-jwt": "^8.4.1",
