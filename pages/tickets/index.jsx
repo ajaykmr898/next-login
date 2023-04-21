@@ -9,6 +9,7 @@ import Link from "next/link";
 import Router from "next/router";
 import { InputNumber } from "primereact/inputnumber";
 import { Dialog } from "primereact/dialog";
+import { ticketsService, userService } from "../../services";
 
 export default Index;
 
@@ -19,30 +20,7 @@ function Index() {
   const [ticket, setTicket] = useState(null);
 
   useEffect(() => {
-    let tempTickets = [
-      {
-        id: 1000,
-        name: "James Butt",
-        company: "John",
-        date: "2015-09-13",
-        balance: 70663,
-      },
-      {
-        id: 10300,
-        name: "fgd",
-        company: "Benton, John B Jr",
-        date: "2015-09-10",
-        balance: 70663,
-      },
-      {
-        id: 10010,
-        name: "James Butt",
-        company: "Benton, John B Jr",
-        date: "2015-09-12",
-        balance: 4534,
-      },
-    ];
-    setTickets(tempTickets);
+    ticketsService.getAll().then((x) => setTickets(x));
   }, []);
 
   const [filters, setFilters] = useState({
@@ -169,7 +147,10 @@ function Index() {
 
   const deleteTicket = () => {
     console.log("delete", ticket);
-    hideDeleteTicketDialog();
+    ticketsService.delete(ticket.id).then(() => {
+      setTickets((tickets) => tickets.filter((x) => x.id !== ticket.id));
+      hideDeleteTicketDialog();
+    });
   };
 
   const deleteTicketDialogFooter = (
@@ -212,23 +193,107 @@ function Index() {
             onCellEditComplete={onCellEditComplete}
           />
           <Column
-            field="company"
+            field="agent"
             sortable
-            header="Company"
+            header="Booking Code"
             editor={(options) => cellEditor(options)}
             onCellEditComplete={onCellEditComplete}
           />
           <Column
-            field="balance"
+            field="bookingCode"
             sortable
-            header="Balance"
+            header="Booking Code"
             editor={(options) => cellEditor(options)}
             onCellEditComplete={onCellEditComplete}
           />
           <Column
-            field="date"
+            field="ticketNumber"
             sortable
-            header="Date"
+            header="Ticket Number"
+            editor={(options) => cellEditor(options)}
+            onCellEditComplete={onCellEditComplete}
+          />
+          <Column
+            field="paidAmount"
+            sortable
+            header="Paid Amount"
+            editor={(options) => cellEditor(options)}
+            onCellEditComplete={onCellEditComplete}
+          />
+          <Column
+            field="receivingAmount1"
+            sortable
+            header="Receiving Amount 1"
+            editor={(options) => cellEditor(options)}
+            onCellEditComplete={onCellEditComplete}
+          />
+          <Column
+            field="receivingAmount2"
+            sortable
+            header="Receiving Amount 2"
+            editor={(options) => cellEditor(options)}
+            onCellEditComplete={onCellEditComplete}
+          />
+          <Column
+            field="receivingAmount3"
+            sortable
+            header="Receiving Amount 3"
+            editor={(options) => cellEditor(options)}
+            onCellEditComplete={onCellEditComplete}
+          />
+          <Column
+            field="profit"
+            sortable
+            header="Profit"
+            editor={(options) => cellEditor(options)}
+            onCellEditComplete={onCellEditComplete}
+          />
+          <Column
+            field="cardNumber"
+            sortable
+            header="Card Number"
+            editor={(options) => cellEditor(options)}
+            onCellEditComplete={onCellEditComplete}
+          />
+          <Column
+            field="bookedOn"
+            sortable
+            header="Booked On"
+            editor={(options) => cellEditor(options)}
+            onCellEditComplete={onCellEditComplete}
+          />
+          <Column
+            field="travel1"
+            sortable
+            header="Travel 1"
+            editor={(options) => cellEditor(options)}
+            onCellEditComplete={onCellEditComplete}
+          />
+          <Column
+            field="travel2"
+            sortable
+            header="Travel 2"
+            editor={(options) => cellEditor(options)}
+            onCellEditComplete={onCellEditComplete}
+          />
+          <Column
+            field="dates"
+            sortable
+            header="Dates"
+            editor={(options) => cellEditor(options)}
+            onCellEditComplete={onCellEditComplete}
+          />
+          <Column
+            field="phone"
+            sortable
+            header="Phone"
+            editor={(options) => cellEditor(options)}
+            onCellEditComplete={onCellEditComplete}
+          />
+          <Column
+            field="flight"
+            sortable
+            header="Flight"
             editor={(options) => cellEditor(options)}
             onCellEditComplete={onCellEditComplete}
           />

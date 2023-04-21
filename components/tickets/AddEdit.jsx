@@ -10,10 +10,11 @@ export { AddEdit };
 function AddEdit(props) {
   // form validation rules
   const validationSchema = Yup.object().shape({
-    name: Yup.string().required("Name is required"),
+    name: Yup.string().required("Customer is required"),
     paid: Yup.string().required("Paid Amount is required"),
     receiving: Yup.string().required("Receiving Amount is required"),
     agent: Yup.string().required("Agent is required"),
+    bookcode: Yup.string().notRequired(),
     ticket: Yup.string().notRequired(),
     booked: Yup.string().notRequired(),
     card: Yup.string().notRequired(),
@@ -37,6 +38,7 @@ function AddEdit(props) {
         fileName: data.name,
         name: data.name,
         agent: data.agent,
+        bookingCode: data.bookcode || "",
         bookedOn: data.booked || "",
         ticketNumber: data.ticket || "",
         paidAmount: data.paid,
@@ -73,6 +75,20 @@ function AddEdit(props) {
           />
           <div className="invalid-feedback">{errors.name?.message}</div>
         </div>
+      </div>
+      <div className="row">
+        <div className="mb-3 col">
+          <label className="form-label">
+            Agent <span className="text-danger">*</span>
+          </label>
+          <input
+            name="agent"
+            type="text"
+            {...register("agent")}
+            className={`form-control ${errors.agent ? "is-invalid" : ""}`}
+          />
+          <div className="invalid-feedback">{errors.agent?.message}</div>
+        </div>
         <div className="mb-3 col">
           <label className="form-label">
             Paid Amount <span className="text-danger">*</span>
@@ -101,16 +117,14 @@ function AddEdit(props) {
           <div className="invalid-feedback">{errors.receiving?.message}</div>
         </div>
         <div className="mb-3 col">
-          <label className="form-label">
-            Agent <span className="text-danger">*</span>
-          </label>
+          <label className="form-label">Booking Code</label>
           <input
-            name="agent"
+            name="bookcode"
             type="text"
-            {...register("agent")}
-            className={`form-control ${errors.agent ? "is-invalid" : ""}`}
+            {...register("bookcode")}
+            className={`form-control ${errors.bookcode ? "is-invalid" : ""}`}
           />
-          <div className="invalid-feedback">{errors.agent?.message}</div>
+          <div className="invalid-feedback">{errors.bookcode?.message}</div>
         </div>
       </div>
 

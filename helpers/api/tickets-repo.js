@@ -20,4 +20,6 @@ async function create(params) {
 
 async function update(id, params) {}
 
-async function _delete(id) {}
+async function _delete(id) {
+  await Tickets.findByIdAndRemove(id);
+}

@@ -1,10 +1,10 @@
-import { apiHandler, usersRepo } from 'helpers/api';
+import { apiHandler, ticketsRepo } from "helpers/api";
 
 export default apiHandler({
-    get: getAll
+  get: getAll,
 });
 
 async function getAll(req, res) {
-    const users = await usersRepo.getAll();
-    return res.status(200).json(users);
+  const tickets = await ticketsRepo.getAll();
+  return res.status(200).json(tickets);
 }
