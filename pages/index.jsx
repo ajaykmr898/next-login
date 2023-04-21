@@ -27,22 +27,25 @@ export default Home;
 function Home() {
   const [data, setData] = useState({});
 
+  const lineChart =
+    Object.keys(data).length > 0 ? (
+      <Line
+        data={{
+          labels: Object.keys(data),
+          datasets: [
+            {
+              data: Object.values(data),
+              label: "Profit",
+              borderColor: "rgb(75, 192, 192)",
+              fill: true,
+            },
+          ],
+        }}
+      />
+    ) : null;
+
   useEffect(() => {
-    ticketsService.getProfit().then((tickets) => {
-      const res = {
-        labels: Object.keys(tickets),
-        datasets: [
-          {
-            label: "Profit",
-            data: Object.values(tickets),
-            borderColor: "rgb(75, 192, 192)",
-            backgroundColor: "rgb(75, 192, 192)",
-          },
-        ],
-      };
-      console.log(res);
-      setData(res);
-    });
+    const tickets = ticketsService.getProfit().then((x) => setData(x));
   }, []);
 
   return (
@@ -50,7 +53,7 @@ function Home() {
       <div className="container">
         <h1>Hi {userService.userValue?.firstName}!</h1>
         <p>Welcome on ticket manager</p>
-        {<Line data={data} />}
+        <div>{lineChart}</div>
       </div>
     </div>
   );
