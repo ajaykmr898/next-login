@@ -80,10 +80,10 @@ function Index() {
           {files &&
             files.length > 0 &&
             Object.keys(files).map((f, i) => (
-              <div key={i} className="uploaded uploaded--one">
-                <i className="far fa-file-text"></i>
+              <div key={i} className="uploaded">
                 <div className="file">
                   <div className="file__name">
+                    <i className="fa fa-file delete"></i>
                     <p>{getFileName(files[i])}</p>
                     <i
                       className="fas fa-times delete"

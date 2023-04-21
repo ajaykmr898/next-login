@@ -492,7 +492,6 @@ body {
   margin: 10px;
   background-color: #e6f5e9;
   border-radius: 10px;
-  display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
@@ -500,13 +499,13 @@ body {
 .file {
   display: flex;
   flex-direction: column;
+  padding: 10px;
 }
 .file__name {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: baseline;
-  width: 300px;
   line-height: 0;
   color: #0c3214;
   font-size: 18px;
