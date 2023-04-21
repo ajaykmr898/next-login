@@ -30,5 +30,7 @@ async function getProfit(id, params) {
   start.setFullYear(start.getFullYear() - 1);
   start = formatDate(start);
   let end = formatDate(new Date());
-  return await Tickets.find({ bookedOn: { $gte: start, $lt: end } });
+  return await Tickets.find({ bookedOn: { $gte: start, $lt: end } }).sort({
+    bookedOn: 1,
+  });
 }

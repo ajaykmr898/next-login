@@ -3,6 +3,7 @@ import Router from "next/router";
 
 import { fetchWrapper } from "helpers";
 import { alertService } from "./alert.service";
+import { formatDate } from "./index";
 
 const baseUrl = `/api/tickets`;
 
@@ -50,21 +51,21 @@ async function getProfit() {
   result.map((ticket) => {
     let date = new Date(ticket.bookedOn);
     let key = months[date.getMonth()] + " " + date.getFullYear();
-    console.log(key);
     if (ticketsP[key] !== undefined) {
       ticketsP[key] +=
-        ticket.receivingAmount1 +
-        ticket.receivingAmount2 +
-        ticket.receivingAmount3;
+        parseFloat(ticket.receivingAmount1) +
+        parseFloat(ticket.receivingAmount2) +
+        parseFloat(ticket.receivingAmount3);
     } else {
       ticketsP[key] =
-        ticket.receivingAmount1 +
-        ticket.receivingAmount2 +
-        ticket.receivingAmount3;
+        parseFloat(ticket.receivingAmount1) +
+        parseFloat(ticket.receivingAmount2) +
+        parseFloat(ticket.receivingAmount3);
     }
-    ticketsP[key] = ticketsP[key] - ticket.paidAmount;
+    ticketsP[key] = parseFloat(ticketsP[key]) - parseFloat(ticket.paidAmount);
+    console.log(key, ticketsP[key], ticket.paidAmount);
   });
-
+  console.log(ticketsP);
   return ticketsP;
 }
 
@@ -125,6 +126,8 @@ async function upload(files) {
             let m = d[2] + d[3];
             let g = d[4] + d[5];
             d = `${y}-${m}-${g}`;
+          } else {
+            d = formatDate(new Date());
           }
         }
         if (final[r][c].includes("K-F")) {

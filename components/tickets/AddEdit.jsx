@@ -11,12 +11,12 @@ function AddEdit(props) {
   // form validation rules
   const validationSchema = Yup.object().shape({
     name: Yup.string().required("Customer is required"),
-    paid: Yup.string().required("Paid Amount is required"),
-    receiving: Yup.string().required("Receiving Amount is required"),
+    paid: Yup.number().required("Paid Amount is required"),
+    receiving: Yup.number().required("Receiving Amount is required"),
     agent: Yup.string().required("Agent is required"),
+    booked: Yup.date().required("Booked On is required"),
     bookcode: Yup.string().notRequired(),
     ticket: Yup.string().notRequired(),
-    booked: Yup.string().notRequired(),
     card: Yup.string().notRequired(),
     travel1: Yup.string().notRequired(),
     travel2: Yup.string().notRequired(),
@@ -39,7 +39,7 @@ function AddEdit(props) {
         name: data.name,
         agent: data.agent,
         bookingCode: data.bookcode || "",
-        bookedOn: data.booked || "",
+        bookedOn: data.booked,
         ticketNumber: data.ticket || "",
         paidAmount: data.paid,
         receivingAmount1: data.receiving,
@@ -114,7 +114,8 @@ function AddEdit(props) {
           </label>
           <input
             name="paid"
-            type="text"
+            type="number"
+            step="0.01"
             {...register("paid")}
             className={`form-control ${errors.paid ? "is-invalid" : ""}`}
           />
@@ -129,21 +130,24 @@ function AddEdit(props) {
           </label>
           <input
             name="receiving"
-            type="text"
+            type="number"
+            step="0.01"
             {...register("receiving")}
             className={`form-control ${errors.receiving ? "is-invalid" : ""}`}
           />
           <div className="invalid-feedback">{errors.receiving?.message}</div>
         </div>
         <div className="mb-3 col">
-          <label className="form-label">Booking Code</label>
+          <label className="form-label">
+            Booked on <span className="text-danger">*</span>
+          </label>
           <input
-            name="bookcode"
-            type="text"
-            {...register("bookcode")}
-            className={`form-control ${errors.bookcode ? "is-invalid" : ""}`}
+            name="booked"
+            type="date"
+            {...register("booked")}
+            className={`form-control ${errors.booked ? "is-invalid" : ""}`}
           />
-          <div className="invalid-feedback">{errors.bookcode?.message}</div>
+          <div className="invalid-feedback">{errors.booked?.message}</div>
         </div>
       </div>
 
@@ -159,14 +163,14 @@ function AddEdit(props) {
           <div className="invalid-feedback">{errors.ticket?.message}</div>
         </div>
         <div className="mb-3 col">
-          <label className="form-label">Booked on</label>
+          <label className="form-label">Booking Code</label>
           <input
-            name="booked"
+            name="bookcode"
             type="text"
-            {...register("booked")}
-            className={`form-control ${errors.booked ? "is-invalid" : ""}`}
+            {...register("bookcode")}
+            className={`form-control ${errors.bookcode ? "is-invalid" : ""}`}
           />
-          <div className="invalid-feedback">{errors.booked?.message}</div>
+          <div className="invalid-feedback">{errors.bookcode?.message}</div>
         </div>
       </div>
 
@@ -250,7 +254,7 @@ function AddEdit(props) {
           )}
           Save
         </button>
-        <Link href="/users" className="btn btn-link">
+        <Link href="/tickets" className="btn btn-link">
           Cancel
         </Link>
       </div>
