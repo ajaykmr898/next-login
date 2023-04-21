@@ -8,15 +8,18 @@ import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Router from "next/router";
 import { InputNumber } from "primereact/inputnumber";
+import { Dialog } from "primereact/dialog";
 
 export default Index;
 
 function Index() {
-  const [customers, setCustomers] = useState(null);
+  const [tickets, setTickets] = useState(null);
   const dt = useRef(null);
+  const [deleteTicketDialog, setDeleteTicketDialog] = useState(false);
+  const [ticket, setTicket] = useState(null);
 
   useEffect(() => {
-    let tempCustomers = [
+    let tempTickets = [
       {
         id: 1000,
         name: "James Butt",
@@ -39,7 +42,7 @@ function Index() {
         balance: 4534,
       },
     ];
-    setCustomers(tempCustomers);
+    setTickets(tempTickets);
   }, []);
 
   const [filters, setFilters] = useState({
@@ -145,12 +148,54 @@ function Index() {
     );
   };
 
+  const actionBodyTemplate = (rowData) => {
+    return (
+      <div>
+        <Button
+          icon="fa fa-times"
+          className="p-button-rounded p-button-warning"
+          onClick={() => confirmDeleteTicket(rowData)}
+        />
+      </div>
+    );
+  };
+
+  const confirmDeleteTicket = (product) => {
+    setTicket(product);
+    setDeleteTicketDialog(true);
+  };
+
+  const hideDeleteTicketDialog = () => {
+    setDeleteTicketDialog(false);
+  };
+
+  const deleteProduct = () => {
+    console.log("delete");
+  };
+
+  const deleteTicketDialogFooter = (
+    <React.Fragment>
+      <Button
+        label="No"
+        icon="fa fa-times"
+        className="p-button-text"
+        onClick={hideDeleteTicketDialog}
+      />
+      <Button
+        label="Yes"
+        icon="fa fa-check"
+        className="p-button-text"
+        onClick={deleteProduct}
+      />
+    </React.Fragment>
+  );
+
   return (
     <Layout>
       <div className="card">
         <DataTable
           ref={dt}
-          value={customers}
+          value={tickets}
           paginator
           rows={10}
           dataKey="id"
@@ -158,38 +203,55 @@ function Index() {
           filterDisplay="row"
           globalFilterFields={["name", "company", "balance", "date"]}
           header={header}
-          emptyMessage="No customers found."
+          emptyMessage="No tickets found."
         >
           <Column
-            editor={(options) => cellEditor(options)}
-            onCellEditComplete={onCellEditComplete}
             field="name"
             sortable
             header="Name"
-          />
-          <Column
             editor={(options) => cellEditor(options)}
             onCellEditComplete={onCellEditComplete}
+          />
+          <Column
             field="company"
             sortable
             header="Company"
-          />
-          <Column
             editor={(options) => cellEditor(options)}
             onCellEditComplete={onCellEditComplete}
+          />
+          <Column
             field="balance"
             sortable
             header="Balance"
-          />
-          <Column
             editor={(options) => cellEditor(options)}
             onCellEditComplete={onCellEditComplete}
+          />
+          <Column
             field="date"
             sortable
             header="Date"
+            editor={(options) => cellEditor(options)}
+            onCellEditComplete={onCellEditComplete}
           />
+          <Column body={actionBodyTemplate} exportable={false}></Column>
         </DataTable>
       </div>
+      <Dialog
+        visible={deleteTicketDialog}
+        header="Confirm"
+        modal
+        footer={deleteTicketDialogFooter}
+        onHide={hideDeleteTicketDialog}
+      >
+        <div className="confirmation-content">
+          <i className="fa fa-triangle mr-3" />
+          {ticket && (
+            <span>
+              Are you sure you want to delete <b>{ticket.name}</b>'s ticket?
+            </span>
+          )}
+        </div>
+      </Dialog>
     </Layout>
   );
 }
