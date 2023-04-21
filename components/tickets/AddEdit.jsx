@@ -53,7 +53,26 @@ function AddEdit(props) {
         flight: data.flight || "",
       };
       await ticketsService.create(ticket);
-      alertService.success("Ticket for " + ticket.name + " Added", true);
+      document.getElementById("add-form").reset();
+      reset({
+        name: "",
+        paid: "",
+        receiving: "",
+        agent: "",
+        bookcode: "",
+        ticket: "",
+        booked: "",
+        card: "",
+        travel1: "",
+        travel2: "",
+        dates: "",
+        phone: "",
+        flight: "",
+      });
+      alertService.success(
+        "Ticket for " + ticket.name + " added successfully",
+        true
+      );
     } catch (error) {
       alertService.error(error);
       console.error(error);
@@ -61,7 +80,7 @@ function AddEdit(props) {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form id="add-form" onSubmit={handleSubmit(onSubmit)}>
       <div className="row">
         <div className="mb-3 col">
           <label className="form-label">

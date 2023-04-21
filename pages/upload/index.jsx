@@ -75,6 +75,8 @@ function Index() {
       .upload(content)
       .then(() => {
         alertService.success("Upload successful", true);
+        setFiles([]);
+        setContent([]);
       })
       .catch(alertService.error);
   }

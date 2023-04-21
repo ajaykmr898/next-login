@@ -187,13 +187,16 @@ function Index() {
     <Layout>
       <div className="card">
         <DataTable
+          paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+          rowsPerPageOptions={[50, 100, 250, 500]}
+          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
           loading={loading}
           size="small"
           tableStyle={{ minWidth: "100rem" }}
           ref={dt}
           value={tickets}
           paginator
-          rows={10}
+          rows={50}
           dataKey="id"
           filters={filters}
           filterDisplay="row"
