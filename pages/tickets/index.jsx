@@ -246,7 +246,8 @@ function Index() {
           <i className="fa fa-triangle mr-3" />
           {ticket && (
             <span>
-              Are you sure you want to delete <b>{ticket.name}</b>'s ticket?
+              Are you sure you want to delete <b>{ticket.name}</b>&apos;s
+              ticket?
             </span>
           )}
         </div>
