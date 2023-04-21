@@ -22,6 +22,20 @@ function Nav() {
   // only show nav when logged in
   if (!user) return null;
 
+  function getActiveMenu(curPage) {
+    if (curPage.length > 1) {
+      return !window?.location?.href.includes(curPage[0]) &&
+        !window.location.href.includes(curPage[1]) &&
+        !window.location.href.includes(curPage[2])
+        ? "nav-item active"
+        : "nav-item";
+    } else {
+      return window?.location?.href.includes(curPage[0])
+        ? "nav-item active"
+        : "nav-item";
+    }
+  }
+
   return (
     <div>
       <aside id="sidebar-wrapper">
@@ -33,23 +47,23 @@ function Nav() {
         </div>
 
         <ul className="sidebar-nav">
-          <li className="nav-item">
+          <li className={getActiveMenu(["users", "tickets", "upload"])}>
             <Link href="/">
               <i className="fa-fw fas fa-home nav-icon"></i>&nbsp;&nbsp; Home
             </Link>
           </li>
-          <li className="nav-item">
+          <li className={getActiveMenu(["users"])}>
             <Link href="/users">
               <i className="fa-fw fas fa-users nav-icon"></i>&nbsp;&nbsp; Agents
               List
             </Link>
           </li>
-          <li className="nav-item">
+          <li className={getActiveMenu(["tickets"])}>
             <Link href="/tickets">
               <i className="fa-fw fas fa-list nav-icon"></i>&nbsp; Tickets List
             </Link>
           </li>
-          <li className="nav-item">
+          <li className={getActiveMenu(["upload"])}>
             <Link href="/upload">
               <i className="fa-fw fas fa-upload nav-icon"></i>&nbsp; Upload
             </Link>

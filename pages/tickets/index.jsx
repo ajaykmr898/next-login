@@ -150,18 +150,16 @@ function Index() {
 
   const actionBodyTemplate = (rowData) => {
     return (
-      <div>
-        <Button
-          icon="fa fa-times"
-          className="p-button-rounded p-button-warning"
-          onClick={() => confirmDeleteTicket(rowData)}
-        />
-      </div>
+      <Button
+        icon="fa fa-times"
+        className="p-button-rounded p-button-warning"
+        onClick={() => confirmDeleteTicket(rowData)}
+      />
     );
   };
 
-  const confirmDeleteTicket = (product) => {
-    setTicket(product);
+  const confirmDeleteTicket = (ticket) => {
+    setTicket(ticket);
     setDeleteTicketDialog(true);
   };
 
@@ -169,12 +167,13 @@ function Index() {
     setDeleteTicketDialog(false);
   };
 
-  const deleteProduct = () => {
-    console.log("delete");
+  const deleteTicket = () => {
+    console.log("delete", ticket);
+    hideDeleteTicketDialog();
   };
 
   const deleteTicketDialogFooter = (
-    <React.Fragment>
+    <div>
       <Button
         label="No"
         icon="fa fa-times"
@@ -185,9 +184,9 @@ function Index() {
         label="Yes"
         icon="fa fa-check"
         className="p-button-text"
-        onClick={deleteProduct}
+        onClick={deleteTicket}
       />
-    </React.Fragment>
+    </div>
   );
 
   return (

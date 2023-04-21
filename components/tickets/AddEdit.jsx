@@ -13,6 +13,7 @@ function AddEdit(props) {
     name: Yup.string().required("Name is required"),
     paid: Yup.string().required("Paid Amount is required"),
     receiving: Yup.string().required("Receiving Amount is required"),
+    agent: Yup.string().required("Agent is required"),
     ticket: Yup.string().notRequired(),
     booked: Yup.string().notRequired(),
     card: Yup.string().notRequired(),
@@ -35,6 +36,7 @@ function AddEdit(props) {
       let ticket = {
         fileName: data.name,
         name: data.name,
+        agent: data.agent,
         bookedOn: data.booked || "",
         ticketNumber: data.ticket || "",
         paidAmount: data.paid,
@@ -99,6 +101,21 @@ function AddEdit(props) {
           <div className="invalid-feedback">{errors.receiving?.message}</div>
         </div>
         <div className="mb-3 col">
+          <label className="form-label">
+            Agent <span className="text-danger">*</span>
+          </label>
+          <input
+            name="agent"
+            type="text"
+            {...register("agent")}
+            className={`form-control ${errors.agent ? "is-invalid" : ""}`}
+          />
+          <div className="invalid-feedback">{errors.agent?.message}</div>
+        </div>
+      </div>
+
+      <div className="row">
+        <div className="mb-3 col">
           <label className="form-label">Ticket Number</label>
           <input
             name="ticket"
@@ -108,9 +125,6 @@ function AddEdit(props) {
           />
           <div className="invalid-feedback">{errors.ticket?.message}</div>
         </div>
-      </div>
-
-      <div className="row">
         <div className="mb-3 col">
           <label className="form-label">Booked on</label>
           <input
@@ -120,16 +134,6 @@ function AddEdit(props) {
             className={`form-control ${errors.booked ? "is-invalid" : ""}`}
           />
           <div className="invalid-feedback">{errors.booked?.message}</div>
-        </div>
-        <div className="mb-3 col">
-          <label className="form-label">Card Number</label>
-          <input
-            name="card"
-            type="text"
-            {...register("card")}
-            className={`form-control ${errors.card ? "is-invalid" : ""}`}
-          />
-          <div className="invalid-feedback">{errors.card?.message}</div>
         </div>
       </div>
 
@@ -180,6 +184,16 @@ function AddEdit(props) {
       </div>
 
       <div className="row">
+        <div className="mb-3 col">
+          <label className="form-label">Card Number</label>
+          <input
+            name="card"
+            type="text"
+            {...register("card")}
+            className={`form-control ${errors.card ? "is-invalid" : ""}`}
+          />
+          <div className="invalid-feedback">{errors.card?.message}</div>
+        </div>
         <div className="mb-3 col">
           <label className="form-label">Flight Number</label>
           <input

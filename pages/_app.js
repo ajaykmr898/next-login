@@ -39,10 +39,12 @@ function App({ Component, pageProps }) {
     const path = url.split("?")[0];
     if (!userService.userValue && !publicPaths.includes(path)) {
       setAuthorized(false);
-      router.push({
-        pathname: "/account/login",
-        query: { returnUrl: router.asPath },
-      });
+      router
+        .push({
+          pathname: "/account/login",
+          query: { returnUrl: router.asPath },
+        })
+        .then();
     } else {
       setAuthorized(true);
     }
