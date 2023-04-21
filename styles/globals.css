@@ -554,7 +554,7 @@ body {
   text-align: left;
 }
 
-input[type="text"] {
+.f-login {
   background-color: #1a2226;
   border: none;
   border-bottom: 2px solid #f8be12;
@@ -564,19 +564,6 @@ input[type="text"] {
   outline: 0;
   margin-bottom: 20px;
   padding-left: 0px;
-  color: #ecf0f5;
-}
-
-input[type="password"] {
-  background-color: #1a2226;
-  border: none;
-  border-bottom: 2px solid #f8be12;
-  border-top: 0px;
-  border-radius: 0px;
-  font-weight: bold;
-  outline: 0;
-  padding-left: 0px;
-  margin-bottom: 20px;
   color: #ecf0f5;
 }
 
@@ -585,7 +572,7 @@ input[type="password"] {
   outline: 0px;
 }
 
-.form-control:focus {
+.f-login:focus {
   border-color: inherit;
   -webkit-box-shadow: none;
   box-shadow: none;

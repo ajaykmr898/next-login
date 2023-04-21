@@ -54,7 +54,7 @@ function Login() {
                       name="email"
                       type="text"
                       {...register("email")}
-                      className={`form-control ${
+                      className={`form-control f-login ${
                         errors.email ? "is-invalid" : ""
                       }`}
                     />
@@ -68,7 +68,7 @@ function Login() {
                       name="password"
                       type="password"
                       {...register("password")}
-                      className={`form-control ${
+                      className={`form-control f-login ${
                         errors.password ? "is-invalid" : ""
                       }`}
                     />
