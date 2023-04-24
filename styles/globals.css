@@ -12,7 +12,7 @@
 }
 
 .p-datatable.p-datatable-sm .p-datatable-tbody > tr > td {
-  min-width: 250px !important;
+  min-width: 150px !important;
 }
 
 .tb-btns {
