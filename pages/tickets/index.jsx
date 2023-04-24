@@ -18,6 +18,7 @@ function Index() {
   const [deleteTicketDialog, setDeleteTicketDialog] = useState(false);
   const [ticket, setTicket] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [dates, setDates] = useState({ start: "", end: "" });
 
   useEffect(() => {
     getTickets();
@@ -31,9 +32,11 @@ function Index() {
     if (dates) {
       start = dates.start;
       end = dates.end;
+    } else {
+      setDates({ start, end });
     }
 
-    ticketsService.getAll().then((x) => {
+    ticketsService.getAll({ start, end }).then((x) => {
       const tickets = x.map((t) => {
         let bkd = formatDate(t.bookedOn, "IT");
         let tk2 = t.paidAmount.trim() ? parseFloat(t.paidAmount) : 0;
@@ -269,6 +272,7 @@ function Index() {
                 type="date"
                 className="form-control"
                 id="start"
+                defaultValue={dates.start}
                 placeholder="From"
               />
             </div>
@@ -280,6 +284,7 @@ function Index() {
                 type="date"
                 className="form-control"
                 id="end"
+                defaultValue={dates.end}
                 placeholder="To"
               />
             </div>

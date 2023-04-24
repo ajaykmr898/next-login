@@ -31,8 +31,8 @@ export const ticketsService = {
   getProfit,
 };
 
-async function getAll() {
-  return await fetchWrapper.get(baseUrl);
+async function getAll(dates) {
+  return await fetchWrapper.post(baseUrl, dates);
 }
 
 async function create(ticket) {

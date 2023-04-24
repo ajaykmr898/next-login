@@ -1,4 +1,4 @@
-import { db, formatDate, formatDateDB } from "helpers/api";
+import { db, formatDate } from "helpers/api";
 
 const Tickets = db.Tickets;
 
@@ -10,8 +10,10 @@ export const ticketsRepo = {
   getProfit,
 };
 
-async function getAll() {
-  return await Tickets.find();
+async function getAll(dates) {
+  return await Tickets.find({
+    bookedOn: { $gte: dates.start, $lte: dates.end },
+  }).sort({ bookedOn: 1 });
 }
 
 async function create(params) {
@@ -30,7 +32,7 @@ async function getProfit(id, params) {
   start.setFullYear(start.getFullYear() - 1);
   start = formatDate(start);
   let end = formatDate(new Date());
-  return await Tickets.find({ bookedOn: { $gte: start, $lt: end } }).sort({
+  return await Tickets.find({ bookedOn: { $gte: start, $lte: end } }).sort({
     bookedOn: 1,
   });
 }
