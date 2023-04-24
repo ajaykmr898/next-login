@@ -66,7 +66,7 @@ function Home() {
         }}
       />
     ) : (
-      <ProgressSpinner />
+      <ProgressSpinner className="center" />
     );
 
   const barChart =
@@ -101,7 +101,7 @@ function Home() {
         }}
       />
     ) : (
-      <ProgressSpinner />
+      <ProgressSpinner className="center" />
     );
 
   useEffect(() => {
