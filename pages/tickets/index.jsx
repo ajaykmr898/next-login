@@ -193,10 +193,7 @@ function Index() {
 
     doc.setFontSize(20);
     row += 10;
-    doc.text("Indus Viaggi srl", 200, row, null, null, "right");
-    doc.setFontSize(12);
-    row += 10;
-    doc.text("Ashok Kumar", 200, row, null, null, "right");
+    doc.text("Indus Viaggi", 200, row, null, null, "right");
     doc.setFontSize(10);
     row += 10;
     doc.text("Via Don Giovanni Alai, 6/A", 200, row, null, null, "right");
@@ -208,13 +205,13 @@ function Index() {
     doc.text(
       "Cell.: +39 3889220982, +39 3802126100",
       200,
-      55,
+      row,
       null,
       null,
       "right"
     );
     row += 5;
-    doc.line(10, row, 200, 60);
+    doc.line(10, row, 200, row);
     doc.setFontSize(10);
     row += 10;
     doc.text("Nome: " + ticket.name, 10, row);
@@ -357,6 +354,11 @@ function Index() {
           header={header}
           emptyMessage="No tickets found."
         >
+          <Column
+            header="Actions"
+            body={actionBodyTemplate}
+            exportable={false}
+          ></Column>
           <Column field="idP" header="Id" />
           <Column
             field="name"
@@ -470,11 +472,6 @@ function Index() {
             editor={(options) => cellEditor(options)}
             onCellEditComplete={onCellEditComplete}
           />
-          <Column
-            header="Actions"
-            body={actionBodyTemplate}
-            exportable={false}
-          ></Column>
         </DataTable>
       </div>
       <Dialog
