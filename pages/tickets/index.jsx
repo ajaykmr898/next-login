@@ -165,7 +165,7 @@ function Index() {
     console.log(ticket);
 
     var imgData = "logo.png";
-    var doc = new jsPDF("p", "pt", "a4");
+    var doc = new jsPDF();
     doc.addImage(imgData, "PNG", 15, 40, 180, 180);
     doc.save("two-by-four.pdf");
   };
