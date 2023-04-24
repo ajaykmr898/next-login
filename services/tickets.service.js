@@ -213,6 +213,6 @@ async function upload(files) {
 
   fc.map((f) => {
     console.log(f);
-    //create(f);
+    create(f);
   });
 }

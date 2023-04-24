@@ -188,19 +188,35 @@ function Index() {
 
     const imgData = "logo.png";
     const doc = new jsPDF();
-    doc.addImage(imgData, "PNG", 10, 10, 50, 50);
+    let row = 10;
+    doc.addImage(imgData, "PNG", 10, 10, 40, 40);
 
     doc.setFontSize(20);
-    doc.text("Indus Viaggi srl", 200, 25, null, null, "right");
-    doc.setFontSize(14);
-    doc.text("Ashok Kumar", 200, 35, null, null, "right");
+    row += 10;
+    doc.text("Indus Viaggi srl", 200, row, null, null, "right");
     doc.setFontSize(12);
-    doc.text("Via Don Giovanni Alai, 6/A", 200, 45, null, null, "right");
-    doc.text("42121, Reggio Emilia, IT", 200, 50, null, null, "right");
-    doc.text("0522 434627", 200, 55, null, null, "right");
-    doc.line(10, 70, 200, 70);
+    row += 10;
+    doc.text("Ashok Kumar", 200, row, null, null, "right");
     doc.setFontSize(10);
-    let row = 80;
+    row += 10;
+    doc.text("Via Don Giovanni Alai, 6/A", 200, row, null, null, "right");
+    row += 5;
+    doc.text("42121 - Reggio Emilia", 200, row, null, null, "right");
+    row += 5;
+    doc.text("Tel/fax: +39 0522434627", 200, row, null, null, "right");
+    row += 5;
+    doc.text(
+      "Cell.: +39 3889220982, +39 3802126100",
+      200,
+      55,
+      null,
+      null,
+      "right"
+    );
+    row += 5;
+    doc.line(10, row, 200, 60);
+    doc.setFontSize(10);
+    row += 10;
     doc.text("Nome: " + ticket.name, 10, row);
     row += 5;
     doc.text("Data: " + ticket.bookedOn, 10, row);
