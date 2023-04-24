@@ -63,9 +63,7 @@ async function getProfit() {
         parseFloat(ticket.receivingAmount3);
     }
     ticketsP[key] = parseFloat(ticketsP[key]) - parseFloat(ticket.paidAmount);
-    console.log(key, ticketsP[key], ticket.paidAmount);
   });
-  console.log(ticketsP);
   return ticketsP;
 }
 
