@@ -241,9 +241,11 @@ function Index() {
       row
     );
     row += 5;
-    doc.text("Volo: " + ticket.phone, 10, row);
+    doc.text("Volo: " + ticket.flight, 10, row);
     row += 5;
     doc.text("Telefono: " + ticket.phone, 10, row);
+    row += 5;
+    doc.text("Metodo di pagamento: ", 10, row);
 
     doc.save(ticket.name.replace(/\W/g, "_") + "_" + ticket.id + ".pdf");
   };
