@@ -8,6 +8,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Router from "next/router";
 import { Dialog } from "primereact/dialog";
 import { formatDate, ticketsService } from "../../services";
+import { jsPDF } from "jspdf";
 
 export default Index;
 
@@ -163,11 +164,11 @@ function Index() {
   const downloadTicket = (ticket) => {
     console.log(ticket);
 
-    /*var imgData = "logo.png";
-    var doc = new jsPDF();
+    const imgData = "logo.png";
+    const doc = new jsPDF();
     doc.text(20, 20, "CTS Aarchival");
     doc.addImage(imgData, "PNG", 15, 40, 180, 180);
-    doc.save("two-by-four.pdf");*/
+    doc.save("two-by-four.pdf");
   };
 
   const hideDeleteTicketDialog = () => {
