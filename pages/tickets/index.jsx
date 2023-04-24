@@ -20,6 +20,19 @@ function Index() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    getTickets();
+  }, []);
+
+  const getTickets = (dates = null) => {
+    let start = new Date();
+    start.setMonth(start.getMonth() - 6);
+    start = formatDate(start);
+    let end = formatDate(new Date());
+    if (dates) {
+      start = dates.start;
+      end = dates.end;
+    }
+
     ticketsService.getAll().then((x) => {
       const tickets = x.map((t) => {
         let bkd = formatDate(t.bookedOn, "IT");
@@ -35,7 +48,13 @@ function Index() {
       setTickets(tickets);
       setLoading(false);
     });
-  }, []);
+  };
+
+  const search = () => {
+    let start = document.getElementById("start").value;
+    let end = document.getElementById("end").value;
+    getTickets({ start, end });
+  };
 
   const [filters, setFilters] = useState({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -241,6 +260,44 @@ function Index() {
 
   return (
     <Layout>
+      <div className="container">
+        <div className="row">
+          <div className="col-sm-5">
+            <label htmlFor="exampleInputEmail1">From Date</label>
+            <div className="input-group">
+              <input
+                type="date"
+                className="form-control"
+                id="start"
+                placeholder="From"
+              />
+            </div>
+          </div>
+          <div className="col-sm-5">
+            <label htmlFor="exampleInputEmail1">To Date</label>
+            <div className="input-group">
+              <input
+                type="date"
+                className="form-control"
+                id="end"
+                placeholder="To"
+              />
+            </div>
+          </div>
+          <div className="col-sm-2">
+            <button
+              type="submit"
+              className="btn btn-block btn-primary width-search"
+              onClick={() => {
+                search();
+              }}
+            >
+              Search
+            </button>
+          </div>
+        </div>
+      </div>
+      <br />
       <div className="card">
         <DataTable
           paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"

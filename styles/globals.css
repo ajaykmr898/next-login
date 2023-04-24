@@ -1,8 +1,15 @@
 @import "primereact/resources/themes/saga-blue/theme.css";
 @import "primereact/resources/primereact.min.css";
+
+.width-search {
+  margin: 20px 0 0 0;
+  float: right;
+}
+
 .p-datatable.p-datatable-sm .p-datatable-tbody > tr > td {
   min-width: 250px !important;
 }
+
 .tb-btns {
   float: right;
   margin-right: 10px !important;
