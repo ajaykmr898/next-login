@@ -8,7 +8,6 @@ import React, { useState, useEffect, useRef } from "react";
 import Router from "next/router";
 import { Dialog } from "primereact/dialog";
 import { formatDate, ticketsService } from "../../services";
-import { jsPDF } from "jspdf";
 
 export default Index;
 
@@ -141,34 +140,17 @@ function Index() {
 
   const actionBodyTemplate = (rowData) => {
     return (
-      <>
-        <Button
-          icon="fa fa-file-pdf"
-          className="p-button-rounded tb-btns-1 p-button-danger"
-          onClick={() => downloadTicket(rowData)}
-        />
-        <Button
-          icon="fa fa-times"
-          className="p-button-rounded tb-btns-1 p-button-warning"
-          onClick={() => confirmDeleteTicket(rowData)}
-        />
-      </>
+      <Button
+        icon="fa fa-times"
+        className="p-button-rounded p-button-warning"
+        onClick={() => confirmDeleteTicket(rowData)}
+      />
     );
   };
 
   const confirmDeleteTicket = (ticket) => {
     setTicket(ticket);
     setDeleteTicketDialog(true);
-  };
-
-  const downloadTicket = (ticket) => {
-    console.log(ticket);
-
-    /*var imgData = "logo.png";
-    var doc = new jsPDF();
-    doc.text(20, 20, "CTS Aarchival");
-    doc.addImage(imgData, "PNG", 15, 40, 180, 180);
-    doc.save("two-by-four.pdf");*/
   };
 
   const hideDeleteTicketDialog = () => {

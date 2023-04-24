@@ -9,21 +9,19 @@
         "lint": "next lint"
     },
     "dependencies": {
+        "chart.js": "^4.0.0",
+        "react-chartjs-2": "^5.0.0",
         "@hookform/resolvers": "^3.0.0",
         "bcryptjs": "^2.4.3",
-        "chart.js": "^4.0.0",
         "express-jwt": "^8.4.1",
         "file-saver": "^2.0.5",
         "jsonwebtoken": "^9.0.0",
-        "jspdf": "^2.3.1",
         "mongodb": "^5.2.0",
         "mongoose": "^7.0.3",
         "next": "13.2.4",
-        "pdfkit": "^0.13.0",
         "primereact": "^9.3.0",
         "prop-types": "^15.8.1",
         "react": "18.2.0",
-        "react-chartjs-2": "^5.0.0",
         "react-dom": "18.2.0",
         "react-hook-form": "^7.43.9",
         "rxjs": "^7.8.0",
@@ -33,10 +31,5 @@
     "devDependencies": {
         "eslint": "8.37.0",
         "eslint-config-next": "13.2.4"
-    },
-    "browser": {
-        "fs": false,
-        "os": false,
-        "path": false
     }
 }
