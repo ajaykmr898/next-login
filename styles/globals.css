@@ -5,7 +5,11 @@
 }
 .tb-btns {
   float: right;
-  margin-right: 10px;
+  margin-right: 10px !important;
+}
+
+.tb-btns-1 {
+  margin-right: 10px !important;
 }
 
 .app-container {
