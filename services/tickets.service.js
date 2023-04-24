@@ -1,8 +1,4 @@
-import { BehaviorSubject } from "rxjs";
-import Router from "next/router";
-
 import { fetchWrapper } from "helpers";
-import { alertService } from "./alert.service";
 import { formatDate } from "./index";
 
 const baseUrl = `/api/tickets`;
@@ -48,6 +44,7 @@ async function _delete(id) {
 async function getProfit() {
   const result = await fetchWrapper.get(baseUrl + "/profit");
   let ticketsP = {};
+  let newArr = {};
   result.map((ticket) => {
     let date = new Date(ticket.bookedOn);
     let key = months[date.getMonth()] + " " + date.getFullYear();
@@ -57,14 +54,17 @@ async function getProfit() {
         parseFloat(ticket.receivingAmount2) +
         parseFloat(ticket.receivingAmount3);
     } else {
+      newArr[key] = {};
       ticketsP[key] =
         parseFloat(ticket.receivingAmount1) +
         parseFloat(ticket.receivingAmount2) +
         parseFloat(ticket.receivingAmount3);
     }
+    newArr[key]["receiving"] = parseFloat(ticketsP[key]);
     ticketsP[key] = parseFloat(ticketsP[key]) - parseFloat(ticket.paidAmount);
+    newArr[key]["paid"] = parseFloat(ticket.paidAmount);
   });
-  return ticketsP;
+  return [ticketsP, newArr];
 }
 
 async function upload(files) {
