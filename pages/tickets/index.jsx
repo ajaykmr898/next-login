@@ -37,7 +37,7 @@ function Index() {
     }
 
     ticketsService.getAll({ start, end }).then((x) => {
-      const tickets = x.map((t) => {
+      const tickets = x.map((t, i) => {
         let bkd = formatDate(t.bookedOn, "IT");
         let tk2 = t.paidAmount.trim() ? parseFloat(t.paidAmount) : 0;
         let tra = t.receivingAmount1.trim()
@@ -46,7 +46,7 @@ function Index() {
             parseFloat(t.receivingAmount3)
           : 0;
         let profit = parseFloat((tra - tk2).toFixed(2));
-        return { ...t, profit, bookedOn: bkd };
+        return { ...t, profit, bookedOn: bkd, idP: i + 1 };
       });
       setTickets(tickets);
       setLoading(false);
@@ -355,6 +355,7 @@ function Index() {
           header={header}
           emptyMessage="No tickets found."
         >
+          <Column field="idP" header="Id" />
           <Column
             field="name"
             sortable
