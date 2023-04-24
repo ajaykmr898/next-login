@@ -186,15 +186,15 @@ async function upload(files) {
     tra = tra.trim() ? parseFloat(tra) : 0;
     tn = tn.trim() ? parseFloat(tn) : 0;
     pr = parseFloat((tra - tk2).toFixed(2));
-
+    let ntl = n.length;
     n.map((ntp, i) => {
       let tkt = {
         name: ntp,
         bookingCode: c2,
         agent: "",
         ticketNumber: t[i],
-        paidAmount: tk2,
-        receivingAmount1: tra,
+        paidAmount: parseFloat(parseFloat(tk2 / ntl).toFixed(2)),
+        receivingAmount1: parseFloat(parseFloat(tra / ntl).toFixed(2)),
         receivingAmount2: 0,
         receivingAmount3: 0,
         cardNumber: cn,
