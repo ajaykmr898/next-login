@@ -13,7 +13,7 @@ export const ticketsRepo = {
 async function getAll(dates) {
   return await Tickets.find({
     bookedOn: { $gte: dates.start, $lte: dates.end },
-  }).sort({ bookedOn: 1 });
+  }).sort({ bookedOn: -1 });
 }
 
 async function create(params) {

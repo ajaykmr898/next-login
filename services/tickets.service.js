@@ -91,7 +91,8 @@ async function upload(files) {
     // console.log(final, final.length);
 
     let ard = [];
-    let n = "-";
+    let t = [];
+    let n = [];
     let c1 =
       final.hasOwnProperty(3) && final[3].hasOwnProperty(6) ? final[3][6] : "-";
     let c2 = "-";
@@ -104,15 +105,17 @@ async function upload(files) {
     let tn = "";
     let tc = "-";
     let cn = "-";
-    let t = "-";
     let p = "-";
     let f =
       final.hasOwnProperty(4) && final[4].hasOwnProperty(0) ? final[4][0] : "-";
 
     for (let r = 0; r < final.length; r++) {
       for (let c = 0; c < final[r].length; c++) {
-        if (final[r][c].includes("I-001")) {
-          n = final[r][c + 1].replace(/[^a-zA-Z ]/g, " ").trim();
+        if (final[r][c].includes("I-00")) {
+          n.push(final[r][c + 1].replace(/[^a-zA-Z ]/g, " ").trim());
+        }
+        if (final[r][c].includes("T-K")) {
+          t.push(final[r][c].replace("T-K", "").trim());
         }
         if (final[r][c].includes("MUC1A")) {
           c2 = final[r][c].replace("MUC1A ", "").trim();
@@ -135,6 +138,11 @@ async function upload(files) {
           tk2 = final[r][c + 1].replace("EUR", "").trim();
           tra = "0";
         }
+        if (final[r][c].includes("KN-I")) {
+          tk = final[r][c].replace("KN-IEUR", "").trim();
+          tk2 = final[r][c + 1].replace("EUR", "").trim();
+          tra = "0";
+        }
         if (final[r][c].includes("N-")) {
           if (final[r][c].includes("EUR")) {
             tn = final[r][c].replace("N-EUR", "").trim();
@@ -151,11 +159,8 @@ async function upload(files) {
           cn = cn.split("/")[0];
         }
         if (final[r][c].includes("CTCM")) {
-          p = final[r][c].replace("SSR CTCM SM  HK1/", "").trim();
-        }
-        if (final[r][c].includes("T-K")) {
-          t = final[r][c].replace("T-K", "").trim();
-          //ticket = final[r][c];
+          let tph = final[r][c].split("/");
+          p = tph.hasOwnProperty(1) && tph[1];
         }
         if (final[r][c].includes("H-")) {
           ard.push(final[r]);
@@ -184,28 +189,30 @@ async function upload(files) {
     tn = tn.trim() ? parseFloat(tn) : 0;
     pr = parseFloat((tra - tk2).toFixed(2));
 
-    let tkt = {
-      name: n,
-      bookingCode: c2,
-      agent: "",
-      ticketNumber: t,
-      paidAmount: tk2,
-      receivingAmount1: tra,
-      receivingAmount2: 0,
-      receivingAmount3: 0,
-      cardNumber: cn,
-      bookedOn: d,
-      travel1: t1s,
-      travel2: t2s,
-      dates: dstr,
-      phone: p,
-      flight: f,
-    };
-    fc.push(tkt);
+    n.map((ntp, i) => {
+      let tkt = {
+        name: ntp,
+        bookingCode: c2,
+        agent: "",
+        ticketNumber: t[i],
+        paidAmount: tk2,
+        receivingAmount1: tra,
+        receivingAmount2: 0,
+        receivingAmount3: 0,
+        cardNumber: cn,
+        bookedOn: d,
+        travel1: t1s,
+        travel2: t2s,
+        dates: dstr,
+        phone: p,
+        flight: f,
+      };
+      fc.push(tkt);
+    });
   });
 
   fc.map((f) => {
     console.log(f);
-    create(f);
+    //create(f);
   });
 }
