@@ -166,9 +166,48 @@ function Index() {
 
     const imgData = "logo.png";
     const doc = new jsPDF();
-    doc.text(20, 20, "CTS Aarchival");
-    doc.addImage(imgData, "PNG", 15, 40, 180, 180);
-    doc.save("two-by-four.pdf");
+    doc.addImage(imgData, "PNG", 10, 10, 50, 50);
+
+    doc.setFontSize(20);
+    doc.text("Indus Viaggi srl", 200, 25, null, null, "right");
+    doc.setFontSize(14);
+    doc.text("Ashok Kumar", 200, 35, null, null, "right");
+    doc.setFontSize(12);
+    doc.text("Via Don Giovanni Alai, 6/A", 200, 45, null, null, "right");
+    doc.text("42121, Reggio Emilia, IT", 200, 50, null, null, "right");
+    doc.text("0522 434627", 200, 55, null, null, "right");
+    doc.line(10, 70, 200, 70);
+    doc.setFontSize(10);
+    let row = 80;
+    doc.text("Nome: " + ticket.name, 10, row);
+    row += 5;
+    doc.text("Data: " + ticket.bookedOn, 10, row);
+    row += 5;
+    doc.text("Codice: " + ticket.bookingCode, 10, row);
+    row += 5;
+    doc.text("Viaggio 1: " + ticket.travel1, 10, row);
+    row += 5;
+    doc.text("Viaggio 2: " + ticket.travel2, 10, row);
+    row += 5;
+    doc.text("Biglietto: " + ticket.ticketNumber, 10, row);
+    row += 5;
+    doc.text(
+      "Pagato: " +
+        parseFloat(
+          parseFloat(ticket.receivingAmount1) +
+            parseFloat(ticket.receivingAmount2) +
+            parseFloat(ticket.receivingAmount3)
+        ).toFixed(2) +
+        " EUR",
+      10,
+      row
+    );
+    row += 5;
+    doc.text("Volo: " + ticket.phone, 10, row);
+    row += 5;
+    doc.text("Telefono: " + ticket.phone, 10, row);
+
+    doc.save(ticket.name.replace(/\W/g, "_") + "_" + ticket.id + ".pdf");
   };
 
   const hideDeleteTicketDialog = () => {
