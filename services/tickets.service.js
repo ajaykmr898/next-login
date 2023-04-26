@@ -209,7 +209,7 @@ async function upload(files) {
         bookingCode: c2,
         agent: "",
         ticketNumber: t[i],
-        paymentMethod: "XXXXX",
+        paymentMethod: "",
         paidAmount: tk2,
         receivingAmount1: tra,
         receivingAmount2: 0,
