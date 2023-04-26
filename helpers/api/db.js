@@ -46,6 +46,7 @@ function ticketsModel() {
       bookingCode: { type: String, required: false },
       agent: { type: String, required: false },
       ticketNumber: { type: String, required: false },
+      paymentMethod: { type: String, required: false },
       paidAmount: { type: String, required: false },
       receivingAmount1: { type: String, required: false },
       receivingAmount2: { type: String, required: false },
@@ -61,6 +62,7 @@ function ticketsModel() {
     {
       // add createdAt and updatedAt timestamps
       timestamps: true,
+      strict: false,
     }
   );
   schema.set("toJSON", {

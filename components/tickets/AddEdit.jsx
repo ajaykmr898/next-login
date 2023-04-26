@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 
-import { ticketsService, alertService } from "services";
+import { ticketsService, alertService, formatDate } from "services";
 
 export { AddEdit };
 
@@ -13,6 +13,7 @@ function AddEdit(props) {
     name: Yup.string().required("Customer is required"),
     paid: Yup.number().required("Paid Amount is required"),
     receiving: Yup.number().required("Receiving Amount is required"),
+    method: Yup.string().required("Payment method is required"),
     agent: Yup.string().required("Agent is required"),
     booked: Yup.date().required("Booked On is required"),
     bookcode: Yup.string().notRequired(),
@@ -38,8 +39,9 @@ function AddEdit(props) {
         fileName: data.name,
         name: data.name,
         agent: data.agent,
+        paymentMethod: data.method,
         bookingCode: data.bookcode || "",
-        bookedOn: data.booked,
+        bookedOn: formatDate(data.booked),
         ticketNumber: data.ticket || "",
         paidAmount: data.paid,
         receivingAmount1: data.receiving,
@@ -59,6 +61,7 @@ function AddEdit(props) {
         paid: "",
         receiving: "",
         agent: "",
+        method: "",
         bookcode: "",
         ticket: "",
         booked: "",
@@ -94,8 +97,6 @@ function AddEdit(props) {
           />
           <div className="invalid-feedback">{errors.name?.message}</div>
         </div>
-      </div>
-      <div className="row">
         <div className="mb-3 col">
           <label className="form-label">
             Agent <span className="text-danger">*</span>
@@ -108,9 +109,23 @@ function AddEdit(props) {
           />
           <div className="invalid-feedback">{errors.agent?.message}</div>
         </div>
+      </div>
+      <div className="row">
         <div className="mb-3 col">
           <label className="form-label">
-            Paid Amount <span className="text-danger">*</span>
+            Payment Method <span className="text-danger">*</span>
+          </label>
+          <input
+            name="method"
+            type="text"
+            {...register("method")}
+            className={`form-control ${errors.method ? "is-invalid" : ""}`}
+          />
+          <div className="invalid-feedback">{errors.agent?.message}</div>
+        </div>
+        <div className="mb-3 col">
+          <label className="form-label">
+            Agent Paid Amount <span className="text-danger">*</span>
           </label>
           <input
             name="paid"
@@ -126,7 +141,7 @@ function AddEdit(props) {
       <div className="row">
         <div className="mb-3 col">
           <label className="form-label">
-            Receiving Amount <span className="text-danger">*</span>
+            Customer Paid Amount <span className="text-danger">*</span>
           </label>
           <input
             name="receiving"

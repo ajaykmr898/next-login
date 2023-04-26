@@ -35,6 +35,7 @@ export default Home;
 function Home() {
   const [profit, setData] = useState({});
   const [amounts, setAmounts] = useState({});
+  const [method, setMethod] = useState({});
   const colors = [
     "rgba(255, 99, 132, 0.5)",
     "rgba(54, 162, 235, 0.5)",
@@ -58,7 +59,7 @@ function Home() {
           datasets: [
             {
               data: Object.values(profit),
-              label: "Profit (Last 12 months)",
+              label: "Profit",
               backgroundColor: colors.slice(),
               borderColor: colors.slice(),
             },
@@ -69,6 +70,24 @@ function Home() {
       <ProgressSpinner className="center" />
     );
 
+  const pieChart2 =
+    Object.keys(method).length > 0 ? (
+      <Doughnut
+        data={{
+          labels: Object.keys(method),
+          datasets: [
+            {
+              data: Object.values(method),
+              label: "Profit",
+              backgroundColor: colors.slice(),
+              borderColor: colors.slice(),
+            },
+          ],
+        }}
+      />
+    ) : (
+      <ProgressSpinner className="center" />
+    );
   const barChart =
     Object.keys(amounts).length > 0 ? (
       <Chart
@@ -80,7 +99,7 @@ function Home() {
               type: "bar",
               label: "Paid",
               data: Object.values(amounts).map((a) => a.paid),
-              backgroundColor: "rgba(53, 162, 235, 0.5)",
+              backgroundColor: colors[0],
             },
             {
               type: "bar",
@@ -88,7 +107,7 @@ function Home() {
               data: Object.values(amounts).map((a) => {
                 return a.receiving;
               }),
-              backgroundColor: "rgba(255, 99, 132, 0.5)",
+              backgroundColor: colors[1],
             },
             {
               type: "line",
@@ -105,8 +124,10 @@ function Home() {
 
   useEffect(() => {
     ticketsService.getProfit().then((x) => {
+      console.log(x);
       setData(x[0]);
       setAmounts(x[1]);
+      setMethod(x[2]);
     });
   }, []);
 
@@ -119,8 +140,16 @@ function Home() {
         <h3 className="drag-text">Paid vs Received Amount (12 months)</h3>
         <div>{barChart}</div>
         <br />
-        <h3 className="drag-text">Profit (12 months)</h3>
-        <div>{pieChart}</div>
+        <div className="row">
+          <div className="col-md-6">
+            <h3 className="drag-text">Profit (12 months)</h3>
+            {pieChart}
+          </div>
+          <div className="col-md-6">
+            <h3 className="drag-text">Payment Methods</h3>
+            {pieChart2}
+          </div>
+        </div>
       </div>
     </div>
   );

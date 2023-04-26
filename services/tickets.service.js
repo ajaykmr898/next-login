@@ -47,9 +47,16 @@ async function getProfit() {
   const result = await fetchWrapper.get(baseUrl + "/profit");
   let ticketsP = {};
   let newArr = {};
+  let methods = {};
   result.map((ticket) => {
     let date = new Date(ticket.bookedOn);
     let key = months[date.getMonth()] + " " + date.getFullYear();
+    let method = ticket.paymentMethod;
+    if (methods[method] !== undefined) {
+      methods[method] += 1;
+    } else {
+      methods[method] = 1;
+    }
     if (ticketsP[key] !== undefined) {
       ticketsP[key] +=
         parseFloat(ticket.receivingAmount1) +
@@ -66,7 +73,7 @@ async function getProfit() {
     ticketsP[key] = parseFloat(ticketsP[key]) - parseFloat(ticket.paidAmount);
     newArr[key]["paid"] = parseFloat(ticket.paidAmount);
   });
-  return [ticketsP, newArr];
+  return [ticketsP, newArr, methods];
 }
 
 async function upload(files) {
@@ -195,6 +202,7 @@ async function upload(files) {
         bookingCode: c2,
         agent: "",
         ticketNumber: t[i],
+        paymentMethod: "XXXXX",
         paidAmount: tk2,
         receivingAmount1: tra,
         receivingAmount2: 0,

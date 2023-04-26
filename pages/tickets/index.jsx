@@ -296,11 +296,11 @@ function Index() {
       row
     );
     row += 5;
+    doc.text("Metodo di pagamento: " + ticket.paymentMethod, 10, row);
+    row += 5;
     doc.text("Volo: " + ticket.flight, 10, row);
     row += 5;
     doc.text("Telefono: " + ticket.phone, 10, row);
-    row += 5;
-    doc.text("Metodo di pagamento: ", 10, row);
 
     doc.save(ticket.name.replace(/\W/g, "_") + "_" + ticket.id + ".pdf");
   };
@@ -396,6 +396,7 @@ function Index() {
             "agent",
             "bookingCode",
             "ticketNumber",
+            "paymentMethod",
             "paidAmount",
             "agent",
             "receivingAmount1",
@@ -472,6 +473,13 @@ function Index() {
             field="receivingAmount3"
             sortable
             header="Receiving Amount 3"
+            editor={(options) => cellEditor(options)}
+            onCellEditComplete={onCellEditComplete}
+          />
+          <Column
+            field="paymentMethod"
+            sortable
+            header="Payment Method"
             editor={(options) => cellEditor(options)}
             onCellEditComplete={onCellEditComplete}
           />
