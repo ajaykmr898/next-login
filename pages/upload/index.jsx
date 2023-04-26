@@ -69,12 +69,10 @@ function Index() {
   }
 
   function onSubmit() {
-    const input = document.getElementById("filesInput");
-    const files = input.files;
     return ticketsService
       .upload(content)
       .then(() => {
-        alertService.success("Upload successful", true);
+        alertService.success("File(s) uploaded successfully", true);
         setFiles([]);
         setContent([]);
       })
@@ -124,6 +122,7 @@ function Index() {
       <div id="filenames"></div>
       <button
         type="button"
+        disabled={!files || files.length <= 0}
         onClick={onSubmit}
         className="w-100 btn btn-lg btn-warning"
       >

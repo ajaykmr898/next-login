@@ -78,23 +78,22 @@ function Home() {
           datasets: [
             {
               type: "bar",
-              label: "Received",
-              data: Object.values(amounts).map((a) => {
-                console.log(a);
-                return a.receiving;
-              }),
-              backgroundColor: "rgba(255, 99, 132, 0.5)",
-            },
-            {
-              type: "bar",
               label: "Paid",
               data: Object.values(amounts).map((a) => a.paid),
               backgroundColor: "rgba(53, 162, 235, 0.5)",
             },
             {
+              type: "bar",
+              label: "Received",
+              data: Object.values(amounts).map((a) => {
+                return a.receiving;
+              }),
+              backgroundColor: "rgba(255, 99, 132, 0.5)",
+            },
+            {
               type: "line",
               data: Object.values(profit),
-              label: "Profit (Last 12 months)",
+              label: "Profit",
               borderColor: "rgb(75, 192, 192)",
             },
           ],
@@ -106,7 +105,6 @@ function Home() {
 
   useEffect(() => {
     ticketsService.getProfit().then((x) => {
-      //console.log(x);
       setData(x[0]);
       setAmounts(x[1]);
     });
@@ -118,10 +116,10 @@ function Home() {
         <h1>Hi {userService.userValue?.firstName}!</h1>
         <p>Welcome on ticket manager</p>
         <br />
-        <h3 className="drag-text">Paid vs Received Amount</h3>
+        <h3 className="drag-text">Paid vs Received Amount (12 months)</h3>
         <div>{barChart}</div>
         <br />
-        <h3 className="drag-text">Profit</h3>
+        <h3 className="drag-text">Profit (12 months)</h3>
         <div>{pieChart}</div>
       </div>
     </div>

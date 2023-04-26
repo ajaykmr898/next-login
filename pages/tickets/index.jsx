@@ -9,6 +9,7 @@ import Router from "next/router";
 import { Dialog } from "primereact/dialog";
 import { formatDate, ticketsService } from "../../services";
 import { jsPDF } from "jspdf";
+import moment from "moment";
 
 export default Index;
 
@@ -17,7 +18,7 @@ function Index() {
   const dt = useRef(null);
   const [deleteTicketDialog, setDeleteTicketDialog] = useState(false);
   const [ticket, setTicket] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [dates, setDates] = useState({ start: "", end: "" });
 
   useEffect(() => {
@@ -25,6 +26,7 @@ function Index() {
   }, []);
 
   const getTickets = (dates = null) => {
+    setLoading(true);
     let start = new Date();
     start.setMonth(start.getMonth() - 6);
     start = formatDate(start);
@@ -120,34 +122,90 @@ function Index() {
     dt.current.exportCSV({ selectionOnly });
   };
 
-  const isPositiveInteger = (val) => {
+  const isPositiveNumber = (val) => {
     let str = String(val);
-
     str = str.trim();
-
     if (!str) {
-      return false;
+      return [false, 0];
     }
-
     str = str.replace(/^0+/, "") || "0";
-    let n = Math.floor(Number(str));
+    let n = parseFloat(str);
+    let isOk = !isNaN(n) && /^\d*\.?\d+$/.test(n);
+    return [isOk, n];
+  };
 
-    return n !== Infinity && String(n) === str && n >= 0;
+  const validDate = (date) => {
+    let isDate = moment(date, "DD/MM/YYYY", true).isValid();
+    return isDate ? date : "";
   };
 
   const onCellEditComplete = (e) => {
+    setLoading(true);
     let { rowData, newValue, field, originalEvent: event } = e;
+    let id = rowData.id;
+    let toSend = "|";
+    let cProfit = false;
 
     switch (field) {
-      case "balance":
-        if (isPositiveInteger(newValue)) rowData[field] = newValue;
-        else event.preventDefault();
+      //case "cardNumber":
+      //case "phone":
+      case "paidAmount":
+      case "receivingAmount1":
+      case "receivingAmount2":
+      case "receivingAmount3":
+        let res1 = isPositiveNumber(newValue);
+        if (res1[0]) {
+          rowData[field] = res1[1];
+          toSend = res1[1];
+          cProfit = true;
+        } else {
+          event.preventDefault();
+        }
+        break;
+      case "bookedOn":
+        let res2 = validDate(newValue);
+        if (res2 !== "") {
+          rowData[field] = res2;
+          toSend = res2.split("/");
+          console.log(res2, toSend);
+          toSend = [toSend[2], toSend[1], toSend[0]].join("-");
+          console.log(toSend);
+        } else {
+          event.preventDefault();
+        }
         break;
 
       default:
-        if (newValue.trim().length > 0) rowData[field] = newValue;
-        else event.preventDefault();
+        if (newValue.trim().length > 0) {
+          rowData[field] = newValue;
+          toSend = newValue;
+        } else {
+          event.preventDefault();
+        }
         break;
+    }
+
+    // call to update with field, toSend, id
+    if (toSend !== "|") {
+      ticketsService
+        .update(id, { [field]: toSend })
+        .then((res) => {
+          if (cProfit) {
+            // recalculate profit
+            let paidA = parseFloat(rowData["paidAmount"]);
+            let receivedA =
+              parseFloat(rowData["receivingAmount1"]) +
+              parseFloat(rowData["receivingAmount2"]) +
+              parseFloat(rowData["receivingAmount3"]);
+            rowData["profit"] = parseFloat(receivedA - paidA).toFixed(2);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     }
   };
 
@@ -388,13 +446,7 @@ function Index() {
             editor={(options) => cellEditor(options)}
             onCellEditComplete={onCellEditComplete}
           />
-          <Column
-            field="profit"
-            sortable
-            header="Profit"
-            editor={(options) => cellEditor(options)}
-            onCellEditComplete={onCellEditComplete}
-          />
+          <Column field="profit" sortable header="Profit" />
           <Column
             field="paidAmount"
             sortable

@@ -35,7 +35,9 @@ async function create(ticket) {
   await fetchWrapper.post(`${baseUrl}/create`, ticket);
 }
 
-async function update() {}
+async function update(id, params) {
+  await fetchWrapper.put(`${baseUrl}/${id}`, params);
+}
 
 async function _delete(id) {
   await fetchWrapper.delete(`${baseUrl}/${id}`);

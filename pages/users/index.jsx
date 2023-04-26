@@ -30,7 +30,6 @@ function Index() {
 
   return (
     <Layout>
-      <h1>Agents</h1>
       <Link href="/users/add" className="btn btn-sm btn-success mb-2">
         Add Agent
       </Link>

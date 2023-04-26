@@ -21,7 +21,9 @@ async function create(params) {
   await ticket.save();
 }
 
-async function update(id, params) {}
+async function update(id, params) {
+  await Tickets.findByIdAndUpdate(id, params);
+}
 
 async function _delete(id) {
   await Tickets.findByIdAndRemove(id);
