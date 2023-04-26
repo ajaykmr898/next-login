@@ -16,6 +16,7 @@ import {
   BarController,
   ArcElement,
 } from "chart.js";
+import { formatDate } from "../services";
 
 ChartJS.register(
   LinearScale,
@@ -35,7 +36,8 @@ export default Home;
 function Home() {
   const [profit, setData] = useState({});
   const [amounts, setAmounts] = useState({});
-  const [method, setMethod] = useState({});
+  const [methods, setMethods] = useState({});
+  const [agents, setAgents] = useState({});
   const colors = [
     "rgba(255, 99, 132, 0.5)",
     "rgba(54, 162, 235, 0.5)",
@@ -52,14 +54,14 @@ function Home() {
   ];
 
   const pieChart =
-    Object.keys(profit).length > 0 ? (
+    Object.keys(agents).length > 0 ? (
       <Doughnut
         data={{
-          labels: Object.keys(profit),
+          labels: Object.keys(agents),
           datasets: [
             {
-              data: Object.values(profit),
-              label: "Profit",
+              data: Object.values(agents),
+              label: "Agents",
               backgroundColor: colors.slice(),
               borderColor: colors.slice(),
             },
@@ -71,14 +73,14 @@ function Home() {
     );
 
   const pieChart2 =
-    Object.keys(method).length > 0 ? (
+    Object.keys(methods).length > 0 ? (
       <Doughnut
         data={{
-          labels: Object.keys(method),
+          labels: Object.keys(methods),
           datasets: [
             {
-              data: Object.values(method),
-              label: "Profit",
+              data: Object.values(methods),
+              label: "Method",
               backgroundColor: colors.slice(),
               borderColor: colors.slice(),
             },
@@ -109,6 +111,20 @@ function Home() {
               }),
               backgroundColor: colors[1],
             },
+          ],
+        }}
+      />
+    ) : (
+      <ProgressSpinner className="center" />
+    );
+
+  const barChart2 =
+    Object.keys(amounts).length > 0 ? (
+      <Chart
+        type="bar"
+        data={{
+          labels: Object.keys(amounts),
+          datasets: [
             {
               type: "line",
               data: Object.values(profit),
@@ -123,11 +139,17 @@ function Home() {
     );
 
   useEffect(() => {
-    ticketsService.getProfit().then((x) => {
+    let start = new Date();
+    start.setFullYear(start.getFullYear() - 1);
+    start.setDate(1);
+    start = formatDate(start);
+    let end = formatDate(new Date());
+    ticketsService.getProfit({ start, end }).then((x) => {
       console.log(x);
       setData(x[0]);
       setAmounts(x[1]);
-      setMethod(x[2]);
+      setMethods(x[2]);
+      setAgents(x[3]);
     });
   }, []);
 
@@ -137,12 +159,20 @@ function Home() {
         <h1>Hi {userService.userValue?.firstName}!</h1>
         <p>Welcome on ticket manager</p>
         <br />
-        <h3 className="drag-text">Paid vs Received Amount (12 months)</h3>
-        <div>{barChart}</div>
+        <div className="row">
+          <div className="col-md-6">
+            <h3 className="drag-text">Paid vs Received Amount</h3>
+            {barChart}
+          </div>
+          <div className="col-md-6">
+            <h3 className="drag-text">Profit</h3>
+            {barChart2}
+          </div>
+        </div>
         <br />
         <div className="row">
           <div className="col-md-6">
-            <h3 className="drag-text">Profit (12 months)</h3>
+            <h3 className="drag-text">Agents</h3>
             {pieChart}
           </div>
           <div className="col-md-6">

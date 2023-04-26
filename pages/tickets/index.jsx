@@ -29,6 +29,7 @@ function Index() {
     setLoading(true);
     let start = new Date();
     start.setMonth(start.getMonth() - 6);
+    start.setDate(1);
     start = formatDate(start);
     let end = formatDate(new Date());
     if (dates) {
@@ -140,7 +141,6 @@ function Index() {
   };
 
   const onCellEditComplete = (e) => {
-    setLoading(true);
     let { rowData, newValue, field, originalEvent: event } = e;
     let id = rowData.id;
     let toSend = "|";
@@ -187,6 +187,7 @@ function Index() {
 
     // call to update with field, toSend, id
     if (toSend !== "|") {
+      setLoading(true);
       ticketsService
         .update(id, { [field]: toSend })
         .then((res) => {

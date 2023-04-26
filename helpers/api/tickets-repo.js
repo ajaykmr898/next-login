@@ -29,12 +29,10 @@ async function _delete(id) {
   await Tickets.findByIdAndRemove(id);
 }
 
-async function getProfit(id, params) {
-  let start = new Date();
-  start.setFullYear(start.getFullYear() - 1);
-  start = formatDate(start);
-  let end = formatDate(new Date());
-  return await Tickets.find({ bookedOn: { $gte: start, $lte: end } }).sort({
+async function getProfit(dates) {
+  return await Tickets.find({
+    bookedOn: { $gte: dates.start, $lte: dates.end },
+  }).sort({
     bookedOn: 1,
   });
 }

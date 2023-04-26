@@ -43,19 +43,26 @@ async function _delete(id) {
   await fetchWrapper.delete(`${baseUrl}/${id}`);
 }
 
-async function getProfit() {
-  const result = await fetchWrapper.get(baseUrl + "/profit");
+async function getProfit(dates) {
+  const result = await fetchWrapper.post(baseUrl + "/profit", dates);
   let ticketsP = {};
-  let newArr = {};
+  let paidR = {};
   let methods = {};
+  let agents = {};
   result.map((ticket) => {
     let date = new Date(ticket.bookedOn);
     let key = months[date.getMonth()] + " " + date.getFullYear();
-    let method = ticket.paymentMethod;
+    let method = ticket.paymentMethod.trim() || "None";
+    let agent = ticket.agent.trim() || "None";
     if (methods[method] !== undefined) {
       methods[method] += 1;
     } else {
       methods[method] = 1;
+    }
+    if (agents[agent] !== undefined) {
+      agents[agent] += 1;
+    } else {
+      agents[agent] = 1;
     }
     if (ticketsP[key] !== undefined) {
       ticketsP[key] +=
@@ -63,17 +70,17 @@ async function getProfit() {
         parseFloat(ticket.receivingAmount2) +
         parseFloat(ticket.receivingAmount3);
     } else {
-      newArr[key] = {};
+      paidR[key] = {};
       ticketsP[key] =
         parseFloat(ticket.receivingAmount1) +
         parseFloat(ticket.receivingAmount2) +
         parseFloat(ticket.receivingAmount3);
     }
-    newArr[key]["receiving"] = parseFloat(ticketsP[key]);
+    paidR[key]["receiving"] = parseFloat(ticketsP[key]);
     ticketsP[key] = parseFloat(ticketsP[key]) - parseFloat(ticket.paidAmount);
-    newArr[key]["paid"] = parseFloat(ticket.paidAmount);
+    paidR[key]["paid"] = parseFloat(ticket.paidAmount);
   });
-  return [ticketsP, newArr, methods];
+  return [ticketsP, paidR, methods, agents];
 }
 
 async function upload(files) {
