@@ -6,6 +6,10 @@
   width: 100%;
 }
 
+.center-text {
+  text-align: center;
+}
+
 .width-search {
   margin: 20px 0 0 0;
   float: right;

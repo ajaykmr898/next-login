@@ -31,7 +31,7 @@ function Nav() {
   function getPage() {
     let page = window?.location?.pathname;
     page = page.replace("/", "");
-    return titles[page] || "";
+    return titles[page] || "Dashboard - " + userService.userValue?.firstName;
   }
 
   function getActiveMenu(curPage = null) {

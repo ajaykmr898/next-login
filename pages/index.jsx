@@ -34,10 +34,11 @@ ChartJS.register(
 export default Home;
 
 function Home() {
-  const [profit, setData] = useState({});
+  const [profit, setProfit] = useState({});
   const [amounts, setAmounts] = useState({});
   const [methods, setMethods] = useState({});
   const [agents, setAgents] = useState({});
+  const [dates, setDates] = useState({});
   const colors = [
     "rgba(255, 99, 132, 0.5)",
     "rgba(54, 162, 235, 0.5)",
@@ -100,15 +101,13 @@ function Home() {
             {
               type: "bar",
               label: "Paid",
-              data: Object.values(amounts).map((a) => a.paid),
+              data: Object.values(amounts).map((a) => a.totalReceivingAmount),
               backgroundColor: colors[0],
             },
             {
               type: "bar",
               label: "Received",
-              data: Object.values(amounts).map((a) => {
-                return a.receiving;
-              }),
+              data: Object.values(amounts).map((a) => a.paidAmount),
               backgroundColor: colors[1],
             },
           ],
@@ -127,7 +126,7 @@ function Home() {
           datasets: [
             {
               type: "line",
-              data: Object.values(profit),
+              data: Object.values(profit).map((a) => a.profit),
               label: "Profit",
               borderColor: "rgb(75, 192, 192)",
             },
@@ -144,20 +143,25 @@ function Home() {
     start.setDate(1);
     start = formatDate(start);
     let end = formatDate(new Date());
+    setDates({ start, end });
     ticketsService.getProfit({ start, end }).then((x) => {
       console.log(x);
-      setData(x[0]);
-      setAmounts(x[1]);
-      setMethods(x[2]);
-      setAgents(x[3]);
+      setProfit(x.ticketsP);
+      setAmounts(x.ticketsP);
+      setMethods(x.methods);
+      setAgents(x.agents);
     });
   }, []);
 
   return (
     <div className="p-4">
       <div className="container">
-        <h1>Hi {userService.userValue?.firstName}!</h1>
-        <p>Welcome on ticket manager</p>
+        <div className="center center-text">
+          From&nbsp;{formatDate(dates.start, "IT")}
+          &nbsp;To&nbsp;{formatDate(dates.end, "IT")}
+        </div>
+        <br />
+        <br />
         <br />
         <div className="row">
           <div className="col-md-6">

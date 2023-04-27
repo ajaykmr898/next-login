@@ -64,23 +64,24 @@ async function getProfit(dates) {
     } else {
       agents[agent] = 1;
     }
+
+    let totalReceivingAmount =
+      parseFloat(ticket.receivingAmount1) +
+      parseFloat(ticket.receivingAmount2) +
+      parseFloat(ticket.receivingAmount3);
+
+    let paidAmount = parseFloat(ticket.paidAmount);
+    let profit = totalReceivingAmount - paidAmount;
+
     if (ticketsP[key] !== undefined) {
-      ticketsP[key] +=
-        parseFloat(ticket.receivingAmount1) +
-        parseFloat(ticket.receivingAmount2) +
-        parseFloat(ticket.receivingAmount3);
+      ticketsP[key].totalReceivingAmount += totalReceivingAmount;
+      ticketsP[key].paidAmount += paidAmount;
+      ticketsP[key].profit += profit;
     } else {
-      paidR[key] = {};
-      ticketsP[key] =
-        parseFloat(ticket.receivingAmount1) +
-        parseFloat(ticket.receivingAmount2) +
-        parseFloat(ticket.receivingAmount3);
+      ticketsP[key] = { totalReceivingAmount, paidAmount, profit };
     }
-    paidR[key]["receiving"] = parseFloat(ticketsP[key]);
-    ticketsP[key] = parseFloat(ticketsP[key]) - parseFloat(ticket.paidAmount);
-    paidR[key]["paid"] = parseFloat(ticket.paidAmount);
   });
-  return [ticketsP, paidR, methods, agents];
+  return { ticketsP, methods, agents };
 }
 
 async function upload(files) {
@@ -110,11 +111,16 @@ async function upload(files) {
     let c1 =
       final.hasOwnProperty(3) && final[3].hasOwnProperty(6) ? final[3][6] : "-";
     let c2 = "-";
+    let ag = "";
+    let mt = "";
     let d = "-";
     let dor = "-";
     let tk = "";
     let tk2 = "";
     let tra = "";
+    let tra1D = "";
+    let tra2D = "";
+    let tra3D = "";
     let pr = 0;
     let tn = "";
     let tc = "-";
@@ -135,6 +141,12 @@ async function upload(files) {
           c2 = final[r][c].replace("MUC1A ", "").trim();
           c2 = c2.slice(0, -3);
         }
+        if (final[r][c].includes("RM*A*")) {
+          ag = final[r][c].replace("RM*A*", "");
+        }
+        if (final[r][c].includes("RM*P*")) {
+          mt = final[r][c].replace("RM*P*", "");
+        }
         if (final[r][c].includes("D-")) {
           d = final[r][c].replace("D-", "").trim();
           dor = d;
@@ -150,12 +162,14 @@ async function upload(files) {
         if (final[r][c].includes("K-F")) {
           tk = final[r][c].replace("K-FEUR", "").trim();
           tk2 = final[r][c + 1].replace("EUR", "").trim();
-          tra = "0";
+        }
+        if (final[r][c].includes("RM*R*")) {
+          tra = final[r][c].replace("RM*R*", "");
+          tra1D = d;
         }
         if (final[r][c].includes("KN-I")) {
           tk = final[r][c].replace("KN-IEUR", "").trim();
           tk2 = final[r][c + 1].replace("EUR", "").trim();
-          tra = "0";
         }
         if (final[r][c].includes("N-")) {
           if (final[r][c].includes("EUR")) {
@@ -207,11 +221,14 @@ async function upload(files) {
       let tkt = {
         name: ntp,
         bookingCode: c2,
-        agent: "",
+        agent: ag,
         ticketNumber: t[i],
-        paymentMethod: "",
+        paymentMethod: mt,
         paidAmount: tk2,
         receivingAmount1: tra,
+        receivingAmount1Date: tra1D,
+        receivingAmount2Date: tra2D,
+        receivingAmount3Date: tra3D,
         receivingAmount2: 0,
         receivingAmount3: 0,
         cardNumber: cn,
