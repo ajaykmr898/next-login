@@ -100,13 +100,13 @@ function Home() {
           datasets: [
             {
               type: "bar",
-              label: "Paid",
+              label: "Received",
               data: Object.values(amounts).map((a) => a.totalReceivingAmount),
               backgroundColor: colors[0],
             },
             {
               type: "bar",
-              label: "Received",
+              label: "Paid",
               data: Object.values(amounts).map((a) => a.paidAmount),
               backgroundColor: colors[1],
             },
