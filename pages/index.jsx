@@ -1,5 +1,5 @@
 import { ticketsService, userService } from "services";
-import { Doughnut, Chart } from "react-chartjs-2";
+import { Doughnut, Chart, Pie } from "react-chartjs-2";
 import { useEffect, useState } from "react";
 import { ProgressSpinner } from "primereact/progressspinner";
 import React from "react";
@@ -76,7 +76,7 @@ function Home() {
 
   const pieChart2 =
     Object.keys(methods).length > 0 ? (
-      <Doughnut
+      <Pie
         data={{
           labels: Object.keys(methods),
           datasets: [
