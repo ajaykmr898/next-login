@@ -139,7 +139,7 @@ function Home() {
 
   useEffect(() => {
     let start = new Date();
-    start.setFullYear(start.getFullYear() - 1);
+    start.setMonth(start.getMonth() - 6);
     start.setDate(1);
     start = formatDate(start);
     let end = formatDate(new Date());

@@ -421,6 +421,7 @@ function Index() {
           ></Column>
           <Column field="idP" header="Id" />
           <Column
+            style={{ minWidth: "15rem" }}
             field="name"
             sortable
             header="Customer"
@@ -428,6 +429,7 @@ function Index() {
             onCellEditComplete={onCellEditComplete}
           />
           <Column
+            style={{ minWidth: "8rem" }}
             field="agent"
             sortable
             header="Agent"
@@ -499,6 +501,7 @@ function Index() {
             onCellEditComplete={onCellEditComplete}
           />
           <Column
+            style={{ minWidth: "20rem" }}
             field="travel1"
             sortable
             header="Travel 1"
@@ -506,6 +509,7 @@ function Index() {
             onCellEditComplete={onCellEditComplete}
           />
           <Column
+            style={{ minWidth: "15rem" }}
             field="travel2"
             sortable
             header="Travel 2"
@@ -513,6 +517,7 @@ function Index() {
             onCellEditComplete={onCellEditComplete}
           />
           <Column
+            style={{ minWidth: "15rem" }}
             field="dates"
             sortable
             header="Dates"
