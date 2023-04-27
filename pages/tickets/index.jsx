@@ -42,6 +42,15 @@ function Index() {
     ticketsService.getAll({ start, end }).then((x) => {
       const tickets = x.map((t, i) => {
         let bkd = formatDate(t.bookedOn, "IT");
+        let ra1d = t.receivingAmount1Date
+          ? formatDate(t.receivingAmount1Date, "IT")
+          : "";
+        let ra2d = t.receivingAmount2Date
+          ? formatDate(t.receivingAmount2Date, "IT")
+          : "";
+        let ra3d = t.receivingAmount3Date
+          ? formatDate(t.receivingAmount3Date, "IT")
+          : "";
         let tk2 = t.paidAmount.trim() ? parseFloat(t.paidAmount) : 0;
         let tra = t.receivingAmount1.trim()
           ? parseFloat(t.receivingAmount1) +
@@ -49,7 +58,15 @@ function Index() {
             parseFloat(t.receivingAmount3)
           : 0;
         let profit = parseFloat((tra - tk2).toFixed(2));
-        return { ...t, profit, bookedOn: bkd, idP: i + 1 };
+        return {
+          ...t,
+          profit,
+          bookedOn: bkd,
+          receivingAmount1Date: ra1d,
+          receivingAmount2Date: ra2d,
+          receivingAmount3Date: ra3d,
+          idP: i + 1,
+        };
       });
       setTickets(tickets);
       setLoading(false);
@@ -163,6 +180,9 @@ function Index() {
         }
         break;
       case "bookedOn":
+      case "receivingAmount1Date":
+      case "receivingAmount2Date":
+      case "receivingAmount3Date":
         let res2 = validDate(newValue);
         if (res2 !== "") {
           rowData[field] = res2;
@@ -466,6 +486,13 @@ function Index() {
             onCellEditComplete={onCellEditComplete}
           />
           <Column
+            field="receivingAmount1Date"
+            sortable
+            header="Receiving Amount 1 Date"
+            editor={(options) => cellEditor(options)}
+            onCellEditComplete={onCellEditComplete}
+          />
+          <Column
             field="receivingAmount2"
             sortable
             header="Receiving Amount 2"
@@ -473,9 +500,23 @@ function Index() {
             onCellEditComplete={onCellEditComplete}
           />
           <Column
+            field="receivingAmount2Date"
+            sortable
+            header="Receiving Amount 2 Date"
+            editor={(options) => cellEditor(options)}
+            onCellEditComplete={onCellEditComplete}
+          />
+          <Column
             field="receivingAmount3"
             sortable
             header="Receiving Amount 3"
+            editor={(options) => cellEditor(options)}
+            onCellEditComplete={onCellEditComplete}
+          />
+          <Column
+            field="receivingAmount3Date"
+            sortable
+            header="Receiving Amount 3 Date"
             editor={(options) => cellEditor(options)}
             onCellEditComplete={onCellEditComplete}
           />
