@@ -46,9 +46,9 @@ async function _delete(id) {
 async function getProfit(dates) {
   const result = await fetchWrapper.post(baseUrl + "/profit", dates);
   let ticketsP = {};
-  let paidR = {};
   let methods = {};
   let agents = {};
+  let methodsP = {};
   result.map((ticket) => {
     let date = new Date(ticket.bookedOn);
     let key = months[date.getMonth()] + " " + date.getFullYear();
@@ -80,8 +80,14 @@ async function getProfit(dates) {
     } else {
       ticketsP[key] = { totalReceivingAmount, paidAmount, profit };
     }
+
+    if (methodsP[method] !== undefined) {
+      methodsP[method] += profit;
+    } else {
+      methodsP[method] = profit;
+    }
   });
-  return { ticketsP, methods, agents };
+  return { ticketsP, methods, methodsP, agents };
 }
 
 async function upload(files) {

@@ -37,6 +37,7 @@ function Home() {
   const [profit, setProfit] = useState({});
   const [amounts, setAmounts] = useState({});
   const [methods, setMethods] = useState({});
+  const [methodsP, setMethodsP] = useState({});
   const [agents, setAgents] = useState({});
   const [dates, setDates] = useState({});
   const colors = [
@@ -91,6 +92,26 @@ function Home() {
     ) : (
       <ProgressSpinner className="center" />
     );
+
+  const pieChart3 =
+    Object.keys(methodsP).length > 0 ? (
+      <Doughnut
+        data={{
+          labels: Object.keys(methodsP),
+          datasets: [
+            {
+              data: Object.values(methodsP),
+              label: "Profit",
+              backgroundColor: colors.slice(),
+              borderColor: colors.slice(),
+            },
+          ],
+        }}
+      />
+    ) : (
+      <ProgressSpinner className="center" />
+    );
+
   const barChart =
     Object.keys(amounts).length > 0 ? (
       <Chart
@@ -149,6 +170,7 @@ function Home() {
       setProfit(x.ticketsP);
       setAmounts(x.ticketsP);
       setMethods(x.methods);
+      setMethodsP(x.methodsP);
       setAgents(x.agents);
     });
   }, []);
@@ -165,23 +187,27 @@ function Home() {
         <br />
         <div className="row">
           <div className="col-md-6">
-            <h3 className="drag-text">Paid vs Received Amount</h3>
+            <h4 className="drag-text">Paid vs Received Amount</h4>
             {barChart}
           </div>
           <div className="col-md-6">
-            <h3 className="drag-text">Profit</h3>
+            <h4 className="drag-text">Profit</h4>
             {barChart2}
           </div>
         </div>
         <br />
         <div className="row">
-          <div className="col-md-6">
-            <h3 className="drag-text">Agents</h3>
+          <div className="col-md-4">
+            <h4 className="drag-text">Agents</h4>
             {pieChart}
           </div>
-          <div className="col-md-6">
-            <h3 className="drag-text">Payment Methods</h3>
+          <div className="col-md-4">
+            <h4 className="drag-text">Payment Methods</h4>
             {pieChart2}
+          </div>
+          <div className="col-md-4">
+            <h4 className="drag-text">Profit by P. Methods</h4>
+            {pieChart3}
           </div>
         </div>
       </div>
