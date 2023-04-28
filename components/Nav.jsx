@@ -16,6 +16,8 @@ function Nav() {
   };
 
   useEffect(() => {
+    const env = process.env.MONGODB_URI;
+    console.log(process);
     const subscription = userService.user.subscribe((x) => setUser(x));
     return () => subscription.unsubscribe();
   }, []);
