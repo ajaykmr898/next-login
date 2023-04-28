@@ -207,32 +207,32 @@ function Home() {
         <br />
         <br />
         <div className="row">
-          <div className="col-sm-6">
+          <div className="col-md-6">
             <h4 className="drag-text">Paid vs Received Amount</h4>
             {barChart}
           </div>
-          <div className="col-sm-6">
+          <div className="col-md-6">
             <h4 className="drag-text">Profit</h4>
             {barChart2}
           </div>
         </div>
         <div className="row">
-          <div className="col-sm-6">
+          <div className="col-6 col-xs-12 col-xl-3">
             <br />
             <h4 className="drag-text">Agents</h4>
             {pieChart}
           </div>
-          <div className="col-sm-6">
+          <div className="col-6 col-xs-12 col-xl-3">
             <br />
             <h4 className="drag-text">Payment Methods</h4>
             {pieChart2}
           </div>
-          <div className="col-sm-6">
+          <div className="col-6 col-xs-12 col-xl-3">
             <br />
             <h4 className="drag-text">Profit by Agents</h4>
             {pieChart1}
           </div>
-          <div className="col-sm-6">
+          <div className="col-6 col-xs-12 col-xl-3">
             <br />
             <h4 className="drag-text">Profit by Methods</h4>
             {pieChart3}
