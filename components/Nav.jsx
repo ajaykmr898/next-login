@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
-
-import { NavLink } from ".";
+import getConfig from "next/config";
 import { userService } from "services";
 import Link from "next/link";
 
@@ -14,10 +13,14 @@ function Nav() {
     tickets: "Tickets List",
     upload: "Upload Files",
   };
+  const config = getConfig();
+  let icon = "fa fa-plane";
+  console.log(config);
+  if (config?.publicRuntimeConfig?.isLocal) {
+    icon = "fa fa-plane green";
+  }
 
   useEffect(() => {
-    const env = process.env.MONGODB_URI;
-    console.log(process);
     const subscription = userService.user.subscribe((x) => setUser(x));
     return () => subscription.unsubscribe();
   }, []);
@@ -52,7 +55,7 @@ function Nav() {
       <aside id="sidebar-wrapper">
         <div className="sidebar-brand">
           <h2>
-            <i className="fa fa-plane"></i>
+            <i className={icon}></i>
             Ticket Manager
           </h2>
         </div>

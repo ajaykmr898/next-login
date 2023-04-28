@@ -6,6 +6,10 @@
   width: 100%;
 }
 
+.green {
+  color: green;
+}
+
 .center-text {
   text-align: center;
 }
