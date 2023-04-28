@@ -39,6 +39,7 @@ function Home() {
   const [methods, setMethods] = useState({});
   const [methodsP, setMethodsP] = useState({});
   const [agents, setAgents] = useState({});
+  const [agentsP, setAgentsP] = useState({});
   const [dates, setDates] = useState({});
   const colors = [
     "rgba(255, 99, 132, 0.5)",
@@ -57,13 +58,32 @@ function Home() {
 
   const pieChart =
     Object.keys(agents).length > 0 ? (
-      <Doughnut
+      <Pie
         data={{
           labels: Object.keys(agents),
           datasets: [
             {
               data: Object.values(agents),
               label: "Agents",
+              backgroundColor: colors.slice(),
+              borderColor: colors.slice(),
+            },
+          ],
+        }}
+      />
+    ) : (
+      <ProgressSpinner className="center" />
+    );
+
+  const pieChart1 =
+    Object.keys(agentsP).length > 0 ? (
+      <Doughnut
+        data={{
+          labels: Object.keys(agentsP),
+          datasets: [
+            {
+              data: Object.values(agentsP),
+              label: "Profit",
               backgroundColor: colors.slice(),
               borderColor: colors.slice(),
             },
@@ -172,6 +192,7 @@ function Home() {
       setMethods(x.methods);
       setMethodsP(x.methodsP);
       setAgents(x.agents);
+      setAgentsP(x.agentsP);
     });
   }, []);
 
@@ -186,27 +207,34 @@ function Home() {
         <br />
         <br />
         <div className="row">
-          <div className="col-md-6">
+          <div className="col-sm-6">
             <h4 className="drag-text">Paid vs Received Amount</h4>
             {barChart}
           </div>
-          <div className="col-md-6">
+          <div className="col-sm-6">
             <h4 className="drag-text">Profit</h4>
             {barChart2}
           </div>
         </div>
-        <br />
         <div className="row">
-          <div className="col-md-4">
+          <div className="col-sm-6">
+            <br />
             <h4 className="drag-text">Agents</h4>
             {pieChart}
           </div>
-          <div className="col-md-4">
+          <div className="col-sm-6">
+            <br />
             <h4 className="drag-text">Payment Methods</h4>
             {pieChart2}
           </div>
-          <div className="col-md-4">
-            <h4 className="drag-text">Profit by P. Methods</h4>
+          <div className="col-sm-6">
+            <br />
+            <h4 className="drag-text">Profit by Agents</h4>
+            {pieChart1}
+          </div>
+          <div className="col-sm-6">
+            <br />
+            <h4 className="drag-text">Profit by Methods</h4>
             {pieChart3}
           </div>
         </div>

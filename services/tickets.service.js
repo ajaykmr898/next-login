@@ -48,6 +48,7 @@ async function getProfit(dates) {
   let ticketsP = {};
   let methods = {};
   let agents = {};
+  let agentsP = {};
   let methodsP = {};
   result.map((ticket) => {
     let date = new Date(ticket.bookedOn);
@@ -86,8 +87,14 @@ async function getProfit(dates) {
     } else {
       methodsP[method] = profit;
     }
+
+    if (agentsP[agent] !== undefined) {
+      agentsP[agent] += profit;
+    } else {
+      agentsP[agent] = profit;
+    }
   });
-  return { ticketsP, methods, methodsP, agents };
+  return { ticketsP, methods, methodsP, agents, agentsP };
 }
 
 async function upload(files) {
