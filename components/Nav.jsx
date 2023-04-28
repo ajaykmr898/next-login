@@ -15,7 +15,6 @@ function Nav() {
   };
   const config = getConfig();
   let icon = "fa fa-plane";
-  console.log(config);
   if (config?.publicRuntimeConfig?.isLocal) {
     icon = "fa fa-plane green";
   }

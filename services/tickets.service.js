@@ -53,8 +53,8 @@ async function getProfit(dates) {
   result.map((ticket) => {
     let date = new Date(ticket.bookedOn);
     let key = months[date.getMonth()] + " " + date.getFullYear();
-    let method = ticket.paymentMethod.trim() || "None";
-    let agent = ticket.agent.trim() || "None";
+    let method = ticket.paymentMethod.trim().toUpperCase() || "None";
+    let agent = ticket.agent.trim().toUpperCase() || "None";
     if (methods[method] !== undefined) {
       methods[method] += 1;
     } else {
