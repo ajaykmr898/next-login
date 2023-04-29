@@ -196,12 +196,12 @@ function Index() {
         break;
 
       default:
-        if (newValue.trim().length > 0) {
-          rowData[field] = newValue;
-          toSend = newValue;
-        } else {
+        //if (newValue.trim().length > 0) {
+        rowData[field] = newValue;
+        toSend = newValue;
+        /*} else {
           event.preventDefault();
-        }
+        }*/
         break;
     }
 
