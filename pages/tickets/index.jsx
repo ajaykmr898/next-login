@@ -413,23 +413,21 @@ function Index() {
           filters={filters}
           filterDisplay="row"
           globalFilterFields={[
-            "name",
-            "agent",
-            "bookingCode",
-            "ticketNumber",
-            "paymentMethod",
-            "paidAmount",
-            "agent",
-            "receivingAmount1",
+            "name", //-
+            "agent", //-
+            "bookingCode", //-
+            "ticketNumber", //-
+            "paymentMethod", //-
+            "paidAmount", //-
+            "receivingAmount1", //-
             "receivingAmount2",
             "receivingAmount3",
-            "profit",
-            "cardNumber",
-            "bookedOn",
+            "profit", //-
+            "bookedOn", //-
             "travel1",
             "travel2",
             "dates",
-            "phone",
+            "phone", //-
           ]}
           header={header}
           emptyMessage="No tickets found."
@@ -444,22 +442,14 @@ function Index() {
             style={{ minWidth: "15rem" }}
             field="name"
             sortable
-            header="Customer"
-            editor={(options) => cellEditor(options)}
-            onCellEditComplete={onCellEditComplete}
-          />
-          <Column
-            style={{ minWidth: "8rem" }}
-            field="agent"
-            sortable
-            header="Agent"
+            header="Passenger Name"
             editor={(options) => cellEditor(options)}
             onCellEditComplete={onCellEditComplete}
           />
           <Column
             field="bookingCode"
             sortable
-            header="Booking Code"
+            header="PNR"
             editor={(options) => cellEditor(options)}
             onCellEditComplete={onCellEditComplete}
           />
@@ -474,7 +464,7 @@ function Index() {
           <Column
             field="paidAmount"
             sortable
-            header="Paid Amount"
+            header="Cost"
             editor={(options) => cellEditor(options)}
             onCellEditComplete={onCellEditComplete}
           />
@@ -528,16 +518,17 @@ function Index() {
             onCellEditComplete={onCellEditComplete}
           />
           <Column
-            field="cardNumber"
+            field="bookedOn"
             sortable
-            header="Card Number"
+            header="Issue Date"
             editor={(options) => cellEditor(options)}
             onCellEditComplete={onCellEditComplete}
           />
           <Column
-            field="bookedOn"
+            style={{ minWidth: "8rem" }}
+            field="agent"
             sortable
-            header="Booked On"
+            header="Agent"
             editor={(options) => cellEditor(options)}
             onCellEditComplete={onCellEditComplete}
           />
@@ -545,7 +536,7 @@ function Index() {
             style={{ minWidth: "20rem" }}
             field="travel1"
             sortable
-            header="Travel 1"
+            header="Port of Departure"
             editor={(options) => cellEditor(options)}
             onCellEditComplete={onCellEditComplete}
           />
@@ -553,7 +544,7 @@ function Index() {
             style={{ minWidth: "15rem" }}
             field="travel2"
             sortable
-            header="Travel 2"
+            header="Port of Arrival"
             editor={(options) => cellEditor(options)}
             onCellEditComplete={onCellEditComplete}
           />
@@ -561,7 +552,7 @@ function Index() {
             style={{ minWidth: "15rem" }}
             field="dates"
             sortable
-            header="Dates"
+            header="Travel Dates"
             editor={(options) => cellEditor(options)}
             onCellEditComplete={onCellEditComplete}
           />
