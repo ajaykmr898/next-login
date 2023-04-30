@@ -16,6 +16,7 @@ export default Index;
 function Index() {
   const [tickets, setTickets] = useState([]);
   const dt = useRef(null);
+  const [ticketDialog, setTicketDialog] = useState(false);
   const [deleteTicketDialog, setDeleteTicketDialog] = useState(false);
   const [ticket, setTicket] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -66,6 +67,7 @@ function Index() {
           receivingAmount2Date: ra2d,
           receivingAmount3Date: ra3d,
           idP: i + 1,
+          receivingAmountT: tra,
         };
       });
       setTickets(tickets);
@@ -81,9 +83,6 @@ function Index() {
 
   const [filters, setFilters] = useState({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    name: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    balance: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    date: { value: null, matchMode: FilterMatchMode.CONTAINS },
   });
   const [globalFilterValue, setGlobalFilterValue] = useState("");
 
@@ -230,19 +229,28 @@ function Index() {
     }
   };
 
-  const cellEditor = (options) => {
-    return (
-      <InputText
-        type="text"
-        value={options.value}
-        onChange={(e) => options.editorCallback(e.target.value)}
-      />
-    );
+  const infoTicket = (ticket) => {
+    setTicket(ticket);
+    setTicketDialog(true);
+  };
+
+  const editTicket = (ticket) => {
+    console.log(ticket);
   };
 
   const actionBodyTemplate = (rowData) => {
     return (
       <>
+        <Button
+          icon="fa fa-info"
+          className="p-button-rounded tb-btns-1 p-button-primary"
+          onClick={() => infoTicket(rowData)}
+        />
+        <Button
+          icon="fa fa-pen"
+          className="p-button-rounded tb-btns-1 p-button-warning"
+          onClick={() => editTicket(rowData)}
+        />
         <Button
           icon="fa fa-file-pdf"
           className="p-button-rounded tb-btns-1 p-button-danger"
@@ -250,7 +258,7 @@ function Index() {
         />
         <Button
           icon="fa fa-times"
-          className="p-button-rounded tb-btns-1 p-button-warning"
+          className="p-button-rounded tb-btns-1 p-button-secondary"
           onClick={() => confirmDeleteTicket(rowData)}
         />
       </>
@@ -360,7 +368,7 @@ function Index() {
       <div className="container">
         <div className="row">
           <div className="col-sm-5">
-            <label htmlFor="exampleInputEmail1">From Date</label>
+            <label htmlFor="start">From Date:</label>
             <div className="input-group">
               <input
                 type="date"
@@ -372,7 +380,7 @@ function Index() {
             </div>
           </div>
           <div className="col-sm-5">
-            <label htmlFor="exampleInputEmail1">To Date</label>
+            <label htmlFor="end">To Date:</label>
             <div className="input-group">
               <input
                 type="date"
@@ -400,7 +408,7 @@ function Index() {
       <div className="card">
         <DataTable
           paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-          rowsPerPageOptions={[50, 100, 250, 500]}
+          rowsPerPageOptions={[25, 50, 100, 250, 500]}
           currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
           loading={loading}
           size="small"
@@ -408,168 +416,46 @@ function Index() {
           ref={dt}
           value={tickets}
           paginator
-          rows={50}
+          rows={25}
           dataKey="id"
           filters={filters}
-          filterDisplay="row"
           globalFilterFields={[
-            "name", //-
-            "agent", //-
-            "bookingCode", //-
-            "ticketNumber", //-
-            "paymentMethod", //-
-            "paidAmount", //-
-            "receivingAmount1", //-
-            "receivingAmount2",
-            "receivingAmount3",
-            "profit", //-
-            "bookedOn", //-
-            "travel1",
-            "travel2",
-            "dates",
-            "phone", //-
+            "name",
+            "agent",
+            "bookingCode",
+            "ticketNumber",
+            "paymentMethod",
+            "paidAmount",
+            "receivingAmountT",
+            "profit",
+            "bookedOn",
+            "phone",
           ]}
           header={header}
           emptyMessage="No tickets found."
         >
           <Column
+            style={{ maxWidth: "6rem" }}
             header="Actions"
             body={actionBodyTemplate}
             exportable={false}
           ></Column>
           <Column field="idP" header="Id" />
           <Column
-            style={{ minWidth: "15rem" }}
+            style={{ maxWidth: "8rem" }}
             field="name"
             sortable
             header="Passenger Name"
-            editor={(options) => cellEditor(options)}
-            onCellEditComplete={onCellEditComplete}
           />
-          <Column
-            field="bookingCode"
-            sortable
-            header="PNR"
-            editor={(options) => cellEditor(options)}
-            onCellEditComplete={onCellEditComplete}
-          />
-          <Column
-            field="ticketNumber"
-            sortable
-            header="Ticket Number"
-            editor={(options) => cellEditor(options)}
-            onCellEditComplete={onCellEditComplete}
-          />
+          <Column field="bookingCode" sortable header="PNR" />
+          <Column field="ticketNumber" sortable header="Ticket Number" />
           <Column field="profit" sortable header="Profit" />
-          <Column
-            field="paidAmount"
-            sortable
-            header="Cost"
-            editor={(options) => cellEditor(options)}
-            onCellEditComplete={onCellEditComplete}
-          />
-          <Column
-            field="receivingAmount1"
-            sortable
-            header="Receiving Amount 1"
-            editor={(options) => cellEditor(options)}
-            onCellEditComplete={onCellEditComplete}
-          />
-          <Column
-            field="receivingAmount1Date"
-            sortable
-            header="Receiving Amount 1 Date"
-            editor={(options) => cellEditor(options)}
-            onCellEditComplete={onCellEditComplete}
-          />
-          <Column
-            field="receivingAmount2"
-            sortable
-            header="Receiving Amount 2"
-            editor={(options) => cellEditor(options)}
-            onCellEditComplete={onCellEditComplete}
-          />
-          <Column
-            field="receivingAmount2Date"
-            sortable
-            header="Receiving Amount 2 Date"
-            editor={(options) => cellEditor(options)}
-            onCellEditComplete={onCellEditComplete}
-          />
-          <Column
-            field="receivingAmount3"
-            sortable
-            header="Receiving Amount 3"
-            editor={(options) => cellEditor(options)}
-            onCellEditComplete={onCellEditComplete}
-          />
-          <Column
-            field="receivingAmount3Date"
-            sortable
-            header="Receiving Amount 3 Date"
-            editor={(options) => cellEditor(options)}
-            onCellEditComplete={onCellEditComplete}
-          />
-          <Column
-            field="paymentMethod"
-            sortable
-            header="Payment Method"
-            editor={(options) => cellEditor(options)}
-            onCellEditComplete={onCellEditComplete}
-          />
-          <Column
-            field="bookedOn"
-            sortable
-            header="Issue Date"
-            editor={(options) => cellEditor(options)}
-            onCellEditComplete={onCellEditComplete}
-          />
-          <Column
-            style={{ minWidth: "8rem" }}
-            field="agent"
-            sortable
-            header="Agent"
-            editor={(options) => cellEditor(options)}
-            onCellEditComplete={onCellEditComplete}
-          />
-          <Column
-            style={{ minWidth: "20rem" }}
-            field="travel1"
-            sortable
-            header="Port of Departure"
-            editor={(options) => cellEditor(options)}
-            onCellEditComplete={onCellEditComplete}
-          />
-          <Column
-            style={{ minWidth: "15rem" }}
-            field="travel2"
-            sortable
-            header="Port of Arrival"
-            editor={(options) => cellEditor(options)}
-            onCellEditComplete={onCellEditComplete}
-          />
-          <Column
-            style={{ minWidth: "15rem" }}
-            field="dates"
-            sortable
-            header="Travel Dates"
-            editor={(options) => cellEditor(options)}
-            onCellEditComplete={onCellEditComplete}
-          />
-          <Column
-            field="phone"
-            sortable
-            header="Phone"
-            editor={(options) => cellEditor(options)}
-            onCellEditComplete={onCellEditComplete}
-          />
-          <Column
-            field="flight"
-            sortable
-            header="Flight"
-            editor={(options) => cellEditor(options)}
-            onCellEditComplete={onCellEditComplete}
-          />
+          <Column field="paidAmount" sortable header="Cost" />
+          <Column field="receivingAmountT" sortable header="Total Received" />
+          <Column field="paymentMethod" sortable header="Pay. Method" />
+          <Column field="bookedOn" sortable header="Issue Date" />
+          <Column field="agent" sortable header="Agent" />
+          <Column field="phone" sortable header="Phone" />
         </DataTable>
       </div>
       <Dialog
@@ -588,6 +474,93 @@ function Index() {
             </span>
           )}
         </div>
+      </Dialog>
+      <Dialog
+        visible={ticketDialog}
+        style={{ width: "60%" }}
+        header="Details"
+        modal
+        className="p-fluid"
+        onHide={() => setTicketDialog(false)}
+      >
+        {ticket && (
+          <table className="table">
+            <tbody>
+              <tr>
+                <td scope="col">Passenger:</td>
+                <td scope="col">{ticket.name}</td>
+              </tr>
+              <tr>
+                <td scope="col">Agent:</td>
+                <td scope="col">{ticket.agent}</td>
+              </tr>
+              <tr>
+                <td scope="col">PNR:</td>
+                <td scope="col">{ticket.bookingCode}</td>
+              </tr>
+              <tr>
+                <td scope="col">Ticket:</td>
+                <td scope="col">{ticket.ticketNumber}</td>
+              </tr>
+              <tr>
+                <td scope="col">Payment Method:</td>
+                <td scope="col">{ticket.paymentMethod}</td>
+              </tr>
+              <tr>
+                <td scope="col">Cost:</td>
+                <td scope="col">{ticket.paidAmount}</td>
+              </tr>
+              <tr>
+                <td scope="col">Receiving Amount/Date 1</td>
+                <td scope="col">
+                  {ticket.receivingAmount1}
+                  {ticket.receivingAmount1Date &&
+                    " - " + ticket.receivingAmount1Date}
+                </td>
+              </tr>
+              <tr>
+                <td scope="col">Receiving Amount/Date 2</td>
+                <td scope="col">
+                  {ticket.receivingAmount2}
+                  {ticket.receivingAmount2Date &&
+                    " - " + ticket.receivingAmount2Date}
+                </td>
+              </tr>
+              <tr>
+                <td scope="col">Receiving Amount/Date 3</td>
+                <td scope="col">
+                  {ticket.receivingAmount3}
+                  {ticket.receivingAmount3Date &&
+                    " - " + ticket.receivingAmount3Date}
+                </td>
+              </tr>
+              <tr>
+                <td scope="col">Profit:</td>
+                <td scope="col">{ticket.profit}</td>
+              </tr>
+              <tr>
+                <td scope="col">Issue Date:</td>
+                <td scope="col">{ticket.bookedOn}</td>
+              </tr>
+              <tr>
+                <td scope="col">Travel1:</td>
+                <td scope="col">{ticket.travel1}</td>
+              </tr>
+              <tr>
+                <td scope="col">Travel2:</td>
+                <td scope="col">{ticket.travel2}</td>
+              </tr>
+              <tr>
+                <td scope="col">Dates:</td>
+                <td scope="col">{ticket.dates}</td>
+              </tr>
+              <tr>
+                <td scope="col">Phone:</td>
+                <td scope="col">{ticket.phone}</td>
+              </tr>
+            </tbody>
+          </table>
+        )}
       </Dialog>
     </Layout>
   );
