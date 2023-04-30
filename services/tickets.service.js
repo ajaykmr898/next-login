@@ -24,6 +24,7 @@ export const ticketsService = {
   update,
   delete: _delete,
   upload,
+  getById,
   getProfit,
 };
 
@@ -41,6 +42,10 @@ async function update(id, params) {
 
 async function _delete(id) {
   await fetchWrapper.delete(`${baseUrl}/${id}`);
+}
+
+async function getById(id) {
+  return await fetchWrapper.get(`${baseUrl}/${id}`);
 }
 
 async function getProfit(dates) {

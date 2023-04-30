@@ -8,9 +8,10 @@ import { ticketsService, alertService, formatDate } from "services";
 export { AddEdit };
 
 function AddEdit(props) {
+  const ticket = props?.ticket;
   // form validation rules
   const validationSchema = Yup.object().shape({
-    name: Yup.string().required("Customer is required"),
+    name: Yup.string().required("Customer is required").cast("aaa"),
     paid: Yup.number().required("Paid Amount is required"),
     receiving: Yup.number().required("Receiving Amount is required"),
     method: Yup.string().required("Payment method is required"),
@@ -26,6 +27,9 @@ function AddEdit(props) {
     flight: Yup.string().notRequired(),
   });
   const formOptions = { resolver: yupResolver(validationSchema) };
+  if (props?.ticket) {
+    formOptions.name = "aa";
+  }
 
   // get functions to build form with useForm() hook
   const { register, handleSubmit, reset, formState } = useForm(formOptions);
@@ -91,6 +95,7 @@ function AddEdit(props) {
           </label>
           <input
             name="name"
+            value={ticket?.name}
             type="text"
             {...register("name")}
             className={`form-control ${errors.name ? "is-invalid" : ""}`}
@@ -103,6 +108,7 @@ function AddEdit(props) {
           </label>
           <input
             name="agent"
+            value={ticket?.agent}
             type="text"
             {...register("agent")}
             className={`form-control ${errors.agent ? "is-invalid" : ""}`}
@@ -117,6 +123,7 @@ function AddEdit(props) {
           </label>
           <input
             name="method"
+            value={ticket?.paymentMethod}
             type="text"
             {...register("method")}
             className={`form-control ${errors.method ? "is-invalid" : ""}`}
@@ -129,6 +136,7 @@ function AddEdit(props) {
           </label>
           <input
             name="paid"
+            value={ticket?.paidAmount}
             type="number"
             step="0.01"
             {...register("paid")}
@@ -145,6 +153,7 @@ function AddEdit(props) {
           </label>
           <input
             name="receiving"
+            value={ticket?.receivingAmount1}
             type="number"
             step="0.01"
             {...register("receiving")}
@@ -158,6 +167,7 @@ function AddEdit(props) {
           </label>
           <input
             name="booked"
+            value={ticket?.bookedOn}
             type="date"
             {...register("booked")}
             className={`form-control ${errors.booked ? "is-invalid" : ""}`}
@@ -171,6 +181,7 @@ function AddEdit(props) {
           <label className="form-label">Ticket Number</label>
           <input
             name="ticket"
+            value={ticket?.ticketNumber}
             type="text"
             {...register("ticket")}
             className={`form-control ${errors.ticket ? "is-invalid" : ""}`}
@@ -181,6 +192,7 @@ function AddEdit(props) {
           <label className="form-label">Booking Code</label>
           <input
             name="bookcode"
+            value={ticket?.bookingCode}
             type="text"
             {...register("bookcode")}
             className={`form-control ${errors.bookcode ? "is-invalid" : ""}`}
@@ -194,6 +206,7 @@ function AddEdit(props) {
           <label className="form-label">travel 1</label>
           <input
             name="travel1"
+            value={ticket?.travel1}
             type="text"
             {...register("travel1")}
             className={`form-control ${errors.travel1 ? "is-invalid" : ""}`}
@@ -204,6 +217,7 @@ function AddEdit(props) {
           <label className="form-label">travel 2</label>
           <input
             name="travel2"
+            value={ticket?.travel2}
             type="text"
             {...register("travel2")}
             className={`form-control ${errors.travel2 ? "is-invalid" : ""}`}
@@ -217,6 +231,7 @@ function AddEdit(props) {
           <label className="form-label">Dates</label>
           <input
             name="dates"
+            value={ticket?.dates}
             type="text"
             {...register("dates")}
             className={`form-control ${errors.dates ? "is-invalid" : ""}`}
@@ -227,6 +242,7 @@ function AddEdit(props) {
           <label className="form-label">Phone</label>
           <input
             name="phone"
+            value={ticket?.phone}
             type="text"
             {...register("phone")}
             className={`form-control ${errors.phone ? "is-invalid" : ""}`}
@@ -240,6 +256,7 @@ function AddEdit(props) {
           <label className="form-label">Card Number</label>
           <input
             name="card"
+            value={ticket?.cardNumber}
             type="text"
             {...register("card")}
             className={`form-control ${errors.card ? "is-invalid" : ""}`}
@@ -250,6 +267,7 @@ function AddEdit(props) {
           <label className="form-label">Flight Number</label>
           <input
             name="flight"
+            value={ticket?.flight}
             type="text"
             {...register("flight")}
             className={`form-control ${errors.flight ? "is-invalid" : ""}`}

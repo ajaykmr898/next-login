@@ -3,13 +3,13 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
+import { Dropdown } from "primereact/dropdown";
 import { FilterMatchMode } from "primereact/api";
 import React, { useState, useEffect, useRef } from "react";
 import Router from "next/router";
 import { Dialog } from "primereact/dialog";
 import { formatDate, ticketsService } from "../../services";
 import { jsPDF } from "jspdf";
-import moment from "moment";
 
 export default Index;
 
@@ -139,127 +139,48 @@ function Index() {
     dt.current.exportCSV({ selectionOnly });
   };
 
-  const isPositiveNumber = (val) => {
-    let str = String(val);
-    str = str.trim();
-    if (!str) {
-      return [false, 0];
-    }
-    str = str.replace(/^0+/, "") || "0";
-    let n = parseFloat(str);
-    let isOk = !isNaN(n) && /^\d*\.?\d+$/.test(n);
-    return [isOk, n];
-  };
-
-  const validDate = (date) => {
-    let isDate = moment(date, "DD/MM/YYYY", true).isValid();
-    return isDate ? date : "";
-  };
-
-  const onCellEditComplete = (e) => {
-    let { rowData, newValue, field, originalEvent: event } = e;
-    let id = rowData.id;
-    let toSend = "|";
-    let cProfit = false;
-
-    switch (field) {
-      //case "cardNumber":
-      //case "phone":
-      case "paidAmount":
-      case "receivingAmount1":
-      case "receivingAmount2":
-      case "receivingAmount3":
-        let res1 = isPositiveNumber(newValue);
-        if (res1[0]) {
-          rowData[field] = res1[1];
-          toSend = res1[1];
-          cProfit = true;
-        } else {
-          event.preventDefault();
-        }
-        break;
-      case "bookedOn":
-      case "receivingAmount1Date":
-      case "receivingAmount2Date":
-      case "receivingAmount3Date":
-        let res2 = validDate(newValue);
-        if (res2 !== "") {
-          rowData[field] = res2;
-          toSend = res2.split("/");
-          console.log(res2, toSend);
-          toSend = [toSend[2], toSend[1], toSend[0]].join("-");
-          console.log(toSend);
-        } else {
-          event.preventDefault();
-        }
-        break;
-
-      default:
-        //if (newValue.trim().length > 0) {
-        rowData[field] = newValue;
-        toSend = newValue;
-        /*} else {
-          event.preventDefault();
-        }*/
-        break;
-    }
-
-    // call to update with field, toSend, id
-    if (toSend !== "|") {
-      setLoading(true);
-      ticketsService
-        .update(id, { [field]: toSend })
-        .then((res) => {
-          if (cProfit) {
-            // recalculate profit
-            let paidA = parseFloat(rowData["paidAmount"]);
-            let receivedA =
-              parseFloat(rowData["receivingAmount1"]) +
-              parseFloat(rowData["receivingAmount2"]) +
-              parseFloat(rowData["receivingAmount3"]);
-            rowData["profit"] = parseFloat(receivedA - paidA).toFixed(2);
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    }
-  };
-
   const infoTicket = (ticket) => {
     setTicket(ticket);
     setTicketDialog(true);
   };
 
   const editTicket = (ticket) => {
-    console.log(ticket);
+    Router.push("/tickets/edit/" + ticket.id);
+  };
+
+  const actions = (e, ticket) => {
+    switch (parseInt(e?.value?.code)) {
+      case 1:
+        infoTicket(ticket);
+        break;
+      case 2:
+        downloadTicket(ticket);
+        break;
+      case 3:
+        editTicket(ticket);
+        break;
+      case 4:
+        confirmDeleteTicket(ticket);
+        break;
+      default:
+        infoTicket(ticket);
+        break;
+    }
   };
 
   const actionBodyTemplate = (rowData) => {
     return (
       <>
-        <Button
-          icon="fa fa-info"
-          className="p-button-rounded tb-btns-1 p-button-primary"
-          onClick={() => infoTicket(rowData)}
-        />
-        <Button
-          icon="fa fa-pen"
-          className="p-button-rounded tb-btns-1 p-button-warning"
-          onClick={() => editTicket(rowData)}
-        />
-        <Button
-          icon="fa fa-file-pdf"
-          className="p-button-rounded tb-btns-1 p-button-danger"
-          onClick={() => downloadTicket(rowData)}
-        />
-        <Button
-          icon="fa fa-times"
-          className="p-button-rounded tb-btns-1 p-button-secondary"
-          onClick={() => confirmDeleteTicket(rowData)}
+        <Dropdown
+          onChange={(e) => actions(e, rowData)}
+          options={[
+            { name: "Info", code: "1" },
+            { name: "PDF", code: "2" },
+            { name: "Edit", code: "3" },
+            { name: "Delete", code: "4" },
+          ]}
+          optionLabel="name"
+          placeholder="Actions"
         />
       </>
     );
@@ -271,8 +192,6 @@ function Index() {
   };
 
   const downloadTicket = (ticket) => {
-    console.log(ticket);
-
     const imgData = "logo.png";
     const doc = new jsPDF();
     let row = 10;

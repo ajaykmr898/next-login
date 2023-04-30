@@ -5,6 +5,7 @@ const Tickets = db.Tickets;
 export const ticketsRepo = {
   getAll,
   create,
+  getById,
   update,
   delete: _delete,
   getProfit,
@@ -14,6 +15,10 @@ async function getAll(dates) {
   return await Tickets.find({
     bookedOn: { $gte: dates.start, $lte: dates.end },
   }).sort({ bookedOn: -1 });
+}
+
+async function getById(id) {
+  return await Tickets.findById(id);
 }
 
 async function create(params) {
