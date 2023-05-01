@@ -25,7 +25,7 @@ function AddEdit(props) {
     dates: Yup.string().notRequired(),
     phone: Yup.string().notRequired(),
     flight: Yup.string().notRequired(),
-    receivingAmount1Date: Yup.string().notRequired(),
+    receivingAmount1Date: Yup.string().required("Receiving Date is required"),
     receivingAmount2: Yup.string().notRequired(),
     receivingAmount2Date: Yup.string().notRequired(),
     receivingAmount3: Yup.string().notRequired(),
@@ -109,7 +109,7 @@ function AddEdit(props) {
       <div className="row">
         <div className="mb-3 col">
           <label className="form-label">
-            Customer Name <span className="text-danger">*</span>
+            Passenger <span className="text-danger">*</span>
           </label>
           <input
             name="name"
@@ -135,7 +135,7 @@ function AddEdit(props) {
         </div>
       </div>
       <div className="row">
-        <div className="mb-3 col">
+        <div className="mb-3 col-md-4 col-sm-6">
           <label className="form-label">
             Payment Method <span className="text-danger">*</span>
           </label>
@@ -148,9 +148,9 @@ function AddEdit(props) {
           />
           <div className="invalid-feedback">{errors.agent?.message}</div>
         </div>
-        <div className="mb-3 col">
+        <div className="mb-3 col-md-4 col-sm-6">
           <label className="form-label">
-            Agent Paid Amount <span className="text-danger">*</span>
+            Cost <span className="text-danger">*</span>
           </label>
           <input
             name="paid"
@@ -162,12 +162,25 @@ function AddEdit(props) {
           />
           <div className="invalid-feedback">{errors.paid?.message}</div>
         </div>
+        <div className="mb-3 col-md-4 col-sm-12">
+          <label className="form-label">
+            Issue date <span className="text-danger">*</span>
+          </label>
+          <input
+            name="booked"
+            defaultValue={ticket?.bookedOn}
+            type="date"
+            {...register("booked")}
+            className={`form-control ${errors.booked ? "is-invalid" : ""}`}
+          />
+          <div className="invalid-feedback">{errors.booked?.message}</div>
+        </div>
       </div>
 
       <div className="row">
         <div className="mb-3 col">
           <label className="form-label">
-            Customer Paid Amount <span className="text-danger">*</span>
+            Receiving Amount 1 <span className="text-danger">*</span>
           </label>
           <input
             name="receiving"
@@ -181,16 +194,20 @@ function AddEdit(props) {
         </div>
         <div className="mb-3 col">
           <label className="form-label">
-            Booked on <span className="text-danger">*</span>
+            Receiving Amount 1 Date <span className="text-danger">*</span>
           </label>
           <input
-            name="booked"
-            defaultValue={ticket?.bookedOn}
+            name="receivingAmount1Date"
+            defaultValue={ticket?.receivingAmount1Date}
             type="date"
-            {...register("booked")}
-            className={`form-control ${errors.booked ? "is-invalid" : ""}`}
+            {...register("receivingAmount1Date")}
+            className={`form-control ${
+              errors.receivingAmount1Date ? "is-invalid" : ""
+            }`}
           />
-          <div className="invalid-feedback">{errors.booked?.message}</div>
+          <div className="invalid-feedback">
+            {errors.receivingAmount1Date?.message}
+          </div>
         </div>
       </div>
 
@@ -210,7 +227,7 @@ function AddEdit(props) {
         </div>
         <div className="mb-3 col">
           <label className="form-label">
-            Booking Code <span className="text-danger">*</span>
+            PNR <span className="text-danger">*</span>
           </label>
           <input
             name="bookcode"
@@ -225,7 +242,7 @@ function AddEdit(props) {
 
       <div className="row">
         <div className="mb-3 col">
-          <label className="form-label">travel 1</label>
+          <label className="form-label">Departure port</label>
           <input
             name="travel1"
             defaultValue={ticket?.travel1}
@@ -236,7 +253,7 @@ function AddEdit(props) {
           <div className="invalid-feedback">{errors.travel1?.message}</div>
         </div>
         <div className="mb-3 col">
-          <label className="form-label">travel 2</label>
+          <label className="form-label">Arrival port</label>
           <input
             name="travel2"
             defaultValue={ticket?.travel2}
@@ -300,6 +317,39 @@ function AddEdit(props) {
 
       <div className="row">
         <div className="mb-3 col">
+          <label className="form-label">Receiving Amount 2</label>
+          <input
+            name="receivingAmount2"
+            defaultValue={ticket?.receivingAmount2}
+            type="text"
+            {...register("receivingAmount2")}
+            className={`form-control ${
+              errors.receivingAmount2 ? "is-invalid" : ""
+            }`}
+          />
+          <div className="invalid-feedback">
+            {errors.receivingAmount2?.message}
+          </div>
+        </div>
+        <div className="mb-3 col">
+          <label className="form-label">Receiving Amount 2 Date</label>
+          <input
+            name="receivingAmount2Date"
+            defaultValue={ticket?.receivingAmount2Date}
+            type="date"
+            {...register("receivingAmount2Date")}
+            className={`form-control ${
+              errors.receivingAmount2Date ? "is-invalid" : ""
+            }`}
+          />
+          <div className="invalid-feedback">
+            {errors.receivingAmount2Date?.message}
+          </div>
+        </div>
+      </div>
+
+      <div className="row">
+        <div className="mb-3 col">
           <label className="form-label">Receiving Amount 3</label>
           <input
             name="receivingAmount3"
@@ -331,53 +381,6 @@ function AddEdit(props) {
         </div>
       </div>
 
-      <div className="row">
-        <div className="mb-3 col">
-          <label className="form-label">Receiving Amount 2</label>
-          <input
-            name="receivingAmount2"
-            defaultValue={ticket?.receivingAmount2}
-            type="text"
-            {...register("receivingAmount2")}
-            className={`form-control ${
-              errors.receivingAmount2 ? "is-invalid" : ""
-            }`}
-          />
-          <div className="invalid-feedback">
-            {errors.receivingAmount2?.message}
-          </div>
-        </div>
-        <div className="mb-3 col">
-          <label className="form-label">Receiving Amount 3 Date</label>
-          <input
-            name="receivingAmount2Date"
-            defaultValue={ticket?.receivingAmount2Date}
-            type="date"
-            {...register("receivingAmount2Date")}
-            className={`form-control ${
-              errors.receivingAmount2Date ? "is-invalid" : ""
-            }`}
-          />
-          <div className="invalid-feedback">
-            {errors.receivingAmount2Date?.message}
-          </div>
-        </div>
-      </div>
-      <div className="mb-3 col">
-        <label className="form-label">Receiving Amount 1 Date</label>
-        <input
-          name="receivingAmount1Date"
-          defaultValue={ticket?.receivingAmount1Date}
-          type="date"
-          {...register("receivingAmount1Date")}
-          className={`form-control ${
-            errors.receivingAmount1Date ? "is-invalid" : ""
-          }`}
-        />
-        <div className="invalid-feedback">
-          {errors.receivingAmount1Date?.message}
-        </div>
-      </div>
       <div className="mb-3">
         <button
           type="submit"
