@@ -216,21 +216,21 @@ function Index() {
       null,
       "right"
     );
-    row += 5;
+    row += 10;
     doc.line(10, row, 200, row);
     doc.setFontSize(10);
     row += 10;
-    doc.text("Nome: " + ticket.name, 10, row);
+    doc.text("Passeggero: " + ticket.name, 10, row);
     row += 5;
     doc.text("Data: " + ticket.bookedOn, 10, row);
     row += 5;
-    doc.text("Codice: " + ticket.bookingCode, 10, row);
+    doc.text("Codice prenotazione: " + ticket.bookingCode, 10, row);
     row += 5;
-    doc.text("Viaggio 1: " + ticket.travel1, 10, row);
+    doc.text("Porto di partenza: " + ticket.travel1, 10, row);
     row += 5;
-    doc.text("Viaggio 2: " + ticket.travel2, 10, row);
+    doc.text("Porto di arrivo: " + ticket.travel2, 10, row);
     row += 5;
-    doc.text("Biglietto: " + ticket.ticketNumber, 10, row);
+    doc.text("Numero del biglietto: " + ticket.ticketNumber, 10, row);
     row += 5;
     doc.text(
       "Pagato: " +
@@ -248,7 +248,7 @@ function Index() {
     row += 5;
     doc.text("Volo: " + ticket.flight, 10, row);
     row += 5;
-    doc.text("Telefono: " + ticket.phone, 10, row);
+    doc.text("Numero di telefono: " + ticket.phone, 10, row);
 
     doc.save(ticket.name.replace(/\W/g, "_") + "_" + ticket.id + ".pdf");
   };
