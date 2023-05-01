@@ -374,7 +374,30 @@ function Index() {
           <Column field="paymentMethod" sortable header="Pay. Method" />
           <Column field="bookedOn" sortable header="Issue Date" />
           <Column field="agent" sortable header="Agent" />
-          <Column field="phone" sortable header="Phone" />
+          <Column hidden field="phone" sortable header="Phone" />
+          <Column hidden field="cardNumber" sortable header="Card Number" />
+          <Column hidden field="flight" sortable header="Flight" />
+          <Column hidden field="receivingAmount1" header="receivingAmount 1" />
+          <Column
+            hidden
+            field="receivingAmount1Date"
+            header="receiving Amount 1 Date"
+          />
+          <Column hidden field="receivingAmount2" header="receivingAmount 2" />
+          <Column
+            hidden
+            field="receivingAmount2Date"
+            header="receiving Amount 2 Date"
+          />
+          <Column hidden field="receivingAmount3" header="receivingAmount 3" />
+          <Column
+            hidden
+            field="receivingAmount3Date"
+            header="receiving Amount 3 Date"
+          />
+          <Column hidden field="travel1" header="travel 1" />
+          <Column hidden field="travel2" header="travel 2" />
+          <Column hidden field="dates" header="dates" />
         </DataTable>
       </div>
       <Dialog
