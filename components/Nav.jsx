@@ -67,25 +67,25 @@ function Nav() {
           <li className={getActiveMenu()}>
             <Link href="/">
               <i className="fa-fw fas fa-home nav-icon"></i>
-              &nbsp;&nbsp;&nbsp;&nbsp; Home
+              &nbsp;&nbsp;&nbsp;&nbsp; Dashboard
             </Link>
           </li>
           <li className={getActiveMenu("users")}>
             <Link href="/users">
               <i className="fa-fw fas fa-users nav-icon"></i>
-              &nbsp;&nbsp;&nbsp;&nbsp; Agents List
+              &nbsp;&nbsp;&nbsp;&nbsp; Agents
             </Link>
           </li>
           <li className={getActiveMenu("tickets")}>
             <Link href="/tickets">
               <i className="fa-fw fas fa-list nav-icon"></i>
-              &nbsp;&nbsp;&nbsp;&nbsp; Tickets List
+              &nbsp;&nbsp;&nbsp;&nbsp; Tickets
             </Link>
           </li>
           <li className={getActiveMenu("upload")}>
             <Link href="/upload">
               <i className="fa-fw fas fa-upload nav-icon"></i>
-              &nbsp;&nbsp;&nbsp;&nbsp; Upload
+              &nbsp;&nbsp;&nbsp;&nbsp; Uploads
             </Link>
           </li>
           <li className="nav-item">
