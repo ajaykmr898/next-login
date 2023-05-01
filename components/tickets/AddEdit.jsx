@@ -17,8 +17,8 @@ function AddEdit(props) {
     method: Yup.string().required("Payment method is required"),
     agent: Yup.string().required("Agent is required"),
     booked: Yup.date().required("Booked On is required"),
-    bookcode: Yup.string().notRequired(),
-    ticket: Yup.string().notRequired(),
+    bookcode: Yup.string().required("Booking code is required"),
+    ticket: Yup.string().required("Ticket  number is required"),
     card: Yup.string().notRequired(),
     travel1: Yup.string().notRequired(),
     travel2: Yup.string().notRequired(),
@@ -49,9 +49,9 @@ function AddEdit(props) {
         name: data.name,
         agent: data.agent,
         paymentMethod: data.method,
-        bookingCode: data.bookcode || "",
+        bookingCode: data.bookcode,
         bookedOn: formatDate(data.booked),
-        ticketNumber: data.ticket || "",
+        ticketNumber: data.ticket,
         paidAmount: data.paid,
         receivingAmount1: data.receiving,
         receivingAmount1Date:
@@ -196,7 +196,9 @@ function AddEdit(props) {
 
       <div className="row">
         <div className="mb-3 col">
-          <label className="form-label">Ticket Number</label>
+          <label className="form-label">
+            Ticket Number <span className="text-danger">*</span>
+          </label>
           <input
             name="ticket"
             defaultValue={ticket?.ticketNumber}
@@ -207,7 +209,9 @@ function AddEdit(props) {
           <div className="invalid-feedback">{errors.ticket?.message}</div>
         </div>
         <div className="mb-3 col">
-          <label className="form-label">Booking Code</label>
+          <label className="form-label">
+            Booking Code <span className="text-danger">*</span>
+          </label>
           <input
             name="bookcode"
             defaultValue={ticket?.bookingCode}
