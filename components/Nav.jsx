@@ -12,6 +12,8 @@ function Nav() {
     users: "Agents List",
     tickets: "Tickets List",
     upload: "Upload Files",
+    "tickets/add": "Add Ticket",
+    "tickets/edit": "Edit Ticket",
   };
   const config = getConfig();
   let icon = "fa fa-plane";
@@ -33,7 +35,9 @@ function Nav() {
   if (!user) return null;
 
   function getPage() {
-    let page = window?.location?.pathname;
+    let page = window?.location?.pathname || "";
+    let parts = page.split("/");
+    page = parts.length > 3 ? "/" + parts[1] + "/" + parts[2] : page;
     page = page.replace("/", "");
     return titles[page] || "Dashboard - " + userService.userValue?.firstName;
   }

@@ -22,10 +22,5 @@ function Edit() {
       .catch(alertService.error);
   }, [router]);
 
-  return (
-    <Layout>
-      <h1>Edit Ticket</h1>
-      {ticket ? <AddEdit ticket={ticket} /> : <Spinner />}
-    </Layout>
-  );
+  return <Layout>{ticket ? <AddEdit ticket={ticket} /> : <Spinner />}</Layout>;
 }

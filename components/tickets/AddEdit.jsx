@@ -32,9 +32,6 @@ function AddEdit(props) {
     receivingAmount3Date: Yup.string().notRequired(),
   });
   const formOptions = { resolver: yupResolver(validationSchema) };
-  if (props?.ticket) {
-    formOptions.name = "aa";
-  }
 
   // get functions to build form with useForm() hook
   const { register, handleSubmit, reset, formState } = useForm(formOptions);
