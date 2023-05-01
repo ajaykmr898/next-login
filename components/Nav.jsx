@@ -66,7 +66,7 @@ function Nav() {
         <ul className="sidebar-nav">
           <li className={getActiveMenu()}>
             <Link href="/">
-              <i className="fa-fw fas fa-home nav-icon"></i>
+              <i className="fa-fw fas fa-line-chart nav-icon"></i>
               &nbsp;&nbsp;&nbsp;&nbsp; Dashboard
             </Link>
           </li>
