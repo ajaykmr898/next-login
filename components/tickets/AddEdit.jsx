@@ -25,11 +25,11 @@ function AddEdit(props) {
     dates: Yup.string().notRequired(),
     phone: Yup.string().notRequired(),
     flight: Yup.string().notRequired(),
-    receivingAmount1Date: Yup.date().notRequired(),
+    receivingAmount1Date: Yup.string().notRequired(),
     receivingAmount2: Yup.string().notRequired(),
-    receivingAmount2Date: Yup.date().notRequired(),
+    receivingAmount2Date: Yup.string().notRequired(),
     receivingAmount3: Yup.string().notRequired(),
-    receivingAmount3Date: Yup.date().notRequired(),
+    receivingAmount3Date: Yup.string().notRequired(),
   });
   const formOptions = { resolver: yupResolver(validationSchema) };
   if (props?.ticket) {
