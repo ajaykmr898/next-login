@@ -59,7 +59,7 @@ function Nav() {
         <div className="sidebar-brand">
           <h2>
             <i className={icon}></i>
-            Ticket Manager
+            &nbsp;&nbsp; Ticket Manager
           </h2>
         </div>
 
