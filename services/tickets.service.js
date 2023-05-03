@@ -187,6 +187,10 @@ async function upload(files) {
           tra = final[r][c].replace("RM*R*", "");
           tra1D = d;
         }
+        if (final[r][c].includes("K-FUSD")) {
+          tk = final[r][c + 1].replace("K-FEUR", "").trim();
+          tk2 = final[r][c + 2].replace("EUR", "").trim();
+        }
         if (final[r][c].includes("KN-I")) {
           tk = final[r][c].replace("KN-IEUR", "").trim();
           tk2 = final[r][c + 1].replace("EUR", "").trim();
