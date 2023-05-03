@@ -72,9 +72,9 @@ async function getProfit(dates) {
     }
 
     let totalReceivingAmount =
-      parseFloat(ticket.receivingAmount1) +
-      parseFloat(ticket.receivingAmount2) +
-      parseFloat(ticket.receivingAmount3);
+      (parseFloat(ticket.receivingAmount1) || 0) +
+      (parseFloat(ticket.receivingAmount2) || 0) +
+      (parseFloat(ticket.receivingAmount3) || 0);
 
     let paidAmount = parseFloat(ticket.paidAmount);
     let profit = totalReceivingAmount - paidAmount;

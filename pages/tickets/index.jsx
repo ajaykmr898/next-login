@@ -54,9 +54,9 @@ function Index() {
           : "";
         let tk2 = t.paidAmount.trim() ? parseFloat(t.paidAmount) : 0;
         let tra = t.receivingAmount1.trim()
-          ? parseFloat(t.receivingAmount1) +
-            parseFloat(t.receivingAmount2) +
-            parseFloat(t.receivingAmount3)
+          ? (parseFloat(t.receivingAmount1) || 0) +
+            (parseFloat(t.receivingAmount2) || 0) +
+            (parseFloat(t.receivingAmount3) || 0)
           : 0;
         let profit = parseFloat((tra - tk2).toFixed(2));
         return {
