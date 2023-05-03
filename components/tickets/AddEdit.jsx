@@ -25,7 +25,7 @@ function AddEdit(props) {
     dates: Yup.string().notRequired(),
     phone: Yup.string().notRequired(),
     flight: Yup.string().notRequired(),
-    receivingAmount1Date: Yup.string().required("Receiving Date is required"),
+    receivingAmount1Date: Yup.string().notRequired(),
     receivingAmount2: Yup.string().notRequired(),
     receivingAmount2Date: Yup.string().notRequired(),
     receivingAmount3: Yup.string().notRequired(),
@@ -118,9 +118,7 @@ function AddEdit(props) {
           <div className="invalid-feedback">{errors.name?.message}</div>
         </div>
         <div className="mb-3 col">
-          <label className="form-label">
-            Agent <span className="text-danger">*</span>
-          </label>
+          <label className="form-label">Agent</label>
           <input
             name="agent"
             defaultValue={ticket?.agent}
@@ -133,9 +131,7 @@ function AddEdit(props) {
       </div>
       <div className="row">
         <div className="mb-3 col-md-4 col-sm-6">
-          <label className="form-label">
-            Payment Method <span className="text-danger">*</span>
-          </label>
+          <label className="form-label">Payment Method</label>
           <input
             name="method"
             defaultValue={ticket?.paymentMethod}
@@ -176,9 +172,7 @@ function AddEdit(props) {
 
       <div className="row">
         <div className="mb-3 col">
-          <label className="form-label">
-            Receiving Amount 1 <span className="text-danger">*</span>
-          </label>
+          <label className="form-label">Receiving Amount 1</label>
           <input
             name="receiving"
             defaultValue={ticket?.receivingAmount1}
@@ -190,9 +184,7 @@ function AddEdit(props) {
           <div className="invalid-feedback">{errors.receiving?.message}</div>
         </div>
         <div className="mb-3 col">
-          <label className="form-label">
-            Receiving Amount 1 Date <span className="text-danger">*</span>
-          </label>
+          <label className="form-label">Receiving Amount 1 Date</label>
           <input
             name="receivingAmount1Date"
             defaultValue={ticket?.receivingAmount1Date}
