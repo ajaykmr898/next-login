@@ -340,6 +340,7 @@ function Index() {
           rows={25}
           dataKey="id"
           filters={filters}
+          csvSeparator=";"
           globalFilterFields={[
             "name",
             "agent",
