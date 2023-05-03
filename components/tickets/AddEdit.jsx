@@ -13,7 +13,7 @@ function AddEdit(props) {
   const validationSchema = Yup.object().shape({
     name: Yup.string().required("Customer is required"),
     paid: Yup.number().required("Paid Amount is required"),
-    receiving: Yup.number().notRequired(),
+    receiving: Yup.string().notRequired(),
     method: Yup.string().notRequired(),
     agent: Yup.string().notRequired(),
     booked: Yup.date().required("Booked On is required"),
