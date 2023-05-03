@@ -83,6 +83,7 @@ function Index() {
 
   const [filters, setFilters] = useState({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    agent: { value: null, matchMode: FilterMatchMode.CONTAINS },
   });
   const [globalFilterValue, setGlobalFilterValue] = useState("");
 
@@ -333,6 +334,7 @@ function Index() {
           size="small"
           tableStyle={{ minWidth: "100rem" }}
           ref={dt}
+          filterDisplay="row"
           value={tickets}
           paginator
           rows={25}
@@ -373,7 +375,14 @@ function Index() {
           <Column field="receivingAmountT" sortable header="Total Received" />
           <Column field="paymentMethod" sortable header="Pay. Method" />
           <Column field="bookedOn" sortable header="Issue Date" />
-          <Column field="agent" sortable header="Agent" />
+          <Column
+            filter
+            style={{ maxWidth: "12rem" }}
+            filterPlaceholder="Search by agent"
+            field="agent"
+            sortable
+            header="Agent"
+          />
           <Column hidden field="phone" sortable header="Phone" />
           <Column hidden field="cardNumber" sortable header="Card Number" />
           <Column hidden field="flight" sortable header="Flight" />
