@@ -384,6 +384,7 @@ function Index() {
             sortable
             header="Agent"
           />
+          <Column field="agentCost" sortable header="Agent Cost" />
           <Column hidden field="phone" sortable header="Phone" />
           <Column hidden field="cardNumber" sortable header="Card Number" />
           <Column hidden field="flight" sortable header="Flight" />

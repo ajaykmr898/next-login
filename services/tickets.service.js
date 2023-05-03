@@ -130,6 +130,7 @@ async function upload(files) {
       final.hasOwnProperty(3) && final[3].hasOwnProperty(6) ? final[3][6] : "-";
     let c2 = "-";
     let ag = "";
+    let ac = "";
     let mt = "";
     let d = "-";
     let dor = "-";
@@ -161,6 +162,10 @@ async function upload(files) {
         }
         if (final[r][c].includes("RM*A*")) {
           ag = final[r][c].replace("RM*A*", "");
+        }
+        if (final[r][c].includes("RM*AC*")) {
+          ac = final[r][c].replace("RM*AC*", "");
+          ac = ac.trim() ? parseFloat(ac) : 0;
         }
         if (final[r][c].includes("RM*P*")) {
           mt = final[r][c].replace("RM*P*", "");
@@ -247,6 +252,7 @@ async function upload(files) {
         name: ntp,
         bookingCode: c2,
         agent: ag,
+        agentCost: ac,
         ticketNumber: t[i],
         paymentMethod: mt,
         paidAmount: tk2,
