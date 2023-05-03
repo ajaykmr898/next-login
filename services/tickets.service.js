@@ -166,7 +166,9 @@ async function upload(files) {
           mt = final[r][c].replace("RM*P*", "");
         }
         if (final[r][c].includes("D-")) {
-          d = final[r][c].replace("D-", "").trim();
+          let dates = final[r];
+          let datesC = dates.length;
+          d = dates[datesC - 1].replace("D-", "").trim();
           dor = d;
           if (d.length === 6) {
             let y = "20" + d[0] + d[1];
