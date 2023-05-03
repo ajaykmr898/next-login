@@ -16,6 +16,7 @@ function AddEdit(props) {
     receiving: Yup.string().notRequired(),
     method: Yup.string().notRequired(),
     agent: Yup.string().notRequired(),
+    agentCost: Yup.string().notRequired(),
     booked: Yup.date().required("Booked On is required"),
     bookcode: Yup.string().required("Booking code is required"),
     ticket: Yup.string().required("Ticket  number is required"),
@@ -45,6 +46,7 @@ function AddEdit(props) {
         fileName: data.name,
         name: data.name,
         agent: data.agent,
+        agentCost: data.agentCost,
         paymentMethod: data.method,
         bookingCode: data.bookcode,
         bookedOn: formatDate(data.booked),
@@ -74,6 +76,7 @@ function AddEdit(props) {
           paid: "",
           receiving: "",
           agent: "",
+          agentCost: "",
           method: "",
           bookcode: "",
           ticket: "",
@@ -104,7 +107,7 @@ function AddEdit(props) {
   return (
     <form id="add-form" onSubmit={handleSubmit(onSubmit)}>
       <div className="row">
-        <div className="mb-3 col">
+        <div className="mb-3 col-md-4 col-sm-6">
           <label className="form-label">
             Passenger <span className="text-danger">*</span>
           </label>
@@ -117,7 +120,7 @@ function AddEdit(props) {
           />
           <div className="invalid-feedback">{errors.name?.message}</div>
         </div>
-        <div className="mb-3 col">
+        <div className="mb-3 col-md-4 col-sm-6">
           <label className="form-label">Agent</label>
           <input
             name="agent"
@@ -127,6 +130,18 @@ function AddEdit(props) {
             className={`form-control ${errors.agent ? "is-invalid" : ""}`}
           />
           <div className="invalid-feedback">{errors.agent?.message}</div>
+        </div>
+        <div className="mb-3 col-md-4 col-sm-6">
+          <label className="form-label">Agent Cost</label>
+          <input
+            name="agentCost"
+            defaultValue={ticket?.agentCost}
+            type="number"
+            step="0.01"
+            {...register("agentCost")}
+            className={`form-control ${errors.agentCost ? "is-invalid" : ""}`}
+          />
+          <div className="invalid-feedback">{errors.agentCost?.message}</div>
         </div>
       </div>
       <div className="row">
@@ -139,7 +154,7 @@ function AddEdit(props) {
             {...register("method")}
             className={`form-control ${errors.method ? "is-invalid" : ""}`}
           />
-          <div className="invalid-feedback">{errors.agent?.message}</div>
+          <div className="invalid-feedback">{errors.method?.message}</div>
         </div>
         <div className="mb-3 col-md-4 col-sm-6">
           <label className="form-label">
