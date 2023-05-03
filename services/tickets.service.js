@@ -180,16 +180,17 @@ async function upload(files) {
           }
         }
         if (final[r][c].includes("K-F")) {
-          tk = final[r][c].replace("K-FEUR", "").trim();
-          tk2 = final[r][c + 1].replace("EUR", "").trim();
+          if (final[r][c].includes("K-FEUR")) {
+            tk = final[r][c].replace("K-FEUR", "").trim();
+            tk2 = final[r][c + 1].replace("EUR", "").trim();
+          } else {
+            tk = final[r][c + 1].replace("K-FEUR", "").trim();
+            tk2 = final[r][c + 2].replace("EUR", "").trim();
+          }
         }
         if (final[r][c].includes("RM*R*")) {
           tra = final[r][c].replace("RM*R*", "");
           tra1D = d;
-        }
-        if (final[r][c].includes("K-FUSD")) {
-          tk = final[r][c + 1].replace("K-FEUR", "").trim();
-          tk2 = final[r][c + 2].replace("EUR", "").trim();
         }
         if (final[r][c].includes("KN-I")) {
           tk = final[r][c].replace("KN-IEUR", "").trim();
