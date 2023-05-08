@@ -40,6 +40,8 @@ function Home() {
   const [methodsP, setMethodsP] = useState({});
   const [agents, setAgents] = useState({});
   const [agentsP, setAgentsP] = useState({});
+  const [agentsA, setAgentsA] = useState({});
+  const [methodsA, setMethodsA] = useState({});
   const [dates, setDates] = useState({});
   const colors = [
     "rgba(255, 99, 132, 0.5)",
@@ -55,6 +57,44 @@ function Home() {
     "rgba(153, 102, 255, 0.5)",
     "rgba(255, 159, 64, 0.5)",
   ];
+
+  const pieChart4 =
+    Object.keys(agentsA).length > 0 ? (
+      <Pie
+        data={{
+          labels: Object.keys(agentsA),
+          datasets: [
+            {
+              data: Object.values(agentsA),
+              label: "Agents",
+              backgroundColor: colors.slice(),
+              borderColor: colors.slice(),
+            },
+          ],
+        }}
+      />
+    ) : (
+      <ProgressSpinner className="center" />
+    );
+
+  const pieChart5 =
+    Object.keys(methodsA).length > 0 ? (
+      <Pie
+        data={{
+          labels: Object.keys(methodsA),
+          datasets: [
+            {
+              data: Object.values(methodsA),
+              label: "Methods",
+              backgroundColor: colors.slice(),
+              borderColor: colors.slice(),
+            },
+          ],
+        }}
+      />
+    ) : (
+      <ProgressSpinner className="center" />
+    );
 
   const pieChart =
     Object.keys(agents).length > 0 ? (
@@ -193,6 +233,8 @@ function Home() {
       setMethodsP(x.methodsP);
       setAgents(x.agents);
       setAgentsP(x.agentsP);
+      setAgentsA(x.agentsA);
+      setMethodsA(x.methodsA);
     });
   }, []);
 
@@ -236,6 +278,16 @@ function Home() {
             <br />
             <h4 className="drag-text">Profit by Methods</h4>
             {pieChart3}
+          </div>
+          <div className="col-6 col-xs-12 col-xl-3">
+            <br />
+            <h4 className="drag-text">Payments by Agents</h4>
+            {pieChart4}
+          </div>
+          <div className="col-6 col-xs-12 col-xl-3">
+            <br />
+            <h4 className="drag-text">Pay. by Methods</h4>
+            {pieChart5}
           </div>
         </div>
       </div>

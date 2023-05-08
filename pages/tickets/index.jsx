@@ -83,8 +83,19 @@ function Index() {
 
   const [filters, setFilters] = useState({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    agent: { value: null, matchMode: FilterMatchMode.CONTAINS },
   });
+  const [filtersA, setFiltersA] = useState([
+    "name",
+    "agent",
+    "bookingCode",
+    "ticketNumber",
+    "paymentMethod",
+    "paidAmount",
+    "receivingAmountT",
+    "profit",
+    "bookedOn",
+    "phone",
+  ]);
   const [globalFilterValue, setGlobalFilterValue] = useState("");
 
   const onGlobalFilterChange = (e) => {
@@ -101,6 +112,26 @@ function Index() {
     Router.push("/tickets/add");
   };
 
+  const applyFilters = (e) => {
+    let selected = parseInt(e.target.value);
+    if (selected === 2) {
+      setFiltersA(["agent"]);
+    } else {
+      setFiltersA([
+        "name",
+        "agent",
+        "bookingCode",
+        "ticketNumber",
+        "paymentMethod",
+        "paidAmount",
+        "receivingAmountT",
+        "profit",
+        "bookedOn",
+        "phone",
+      ]);
+    }
+  };
+
   const renderHeader = () => {
     return (
       <div className="flex justify-content-end">
@@ -112,6 +143,18 @@ function Index() {
             placeholder="Keyword Search"
           />
         </span>
+        <select
+          className="form-select"
+          aria-label="filters"
+          onChange={(e) => {
+            applyFilters(e);
+          }}
+        >
+          <option defaultValue value="1">
+            All
+          </option>
+          <option value="2">Agent</option>
+        </select>
         <Button
           className="tb-btns"
           type="button"
@@ -334,25 +377,13 @@ function Index() {
           size="small"
           tableStyle={{ minWidth: "100rem" }}
           ref={dt}
-          filterDisplay="row"
           value={tickets}
           paginator
           rows={25}
           dataKey="id"
           filters={filters}
           csvSeparator=";"
-          globalFilterFields={[
-            "name",
-            "agent",
-            "bookingCode",
-            "ticketNumber",
-            "paymentMethod",
-            "paidAmount",
-            "receivingAmountT",
-            "profit",
-            "bookedOn",
-            "phone",
-          ]}
+          globalFilterFields={filtersA}
           header={header}
           emptyMessage="No tickets found."
         >
@@ -376,14 +407,7 @@ function Index() {
           <Column field="receivingAmountT" sortable header="Total Received" />
           <Column field="paymentMethod" sortable header="Pay. Method" />
           <Column field="bookedOn" sortable header="Issue Date" />
-          <Column
-            filter
-            style={{ maxWidth: "12rem" }}
-            filterPlaceholder="Search by agent"
-            field="agent"
-            sortable
-            header="Agent"
-          />
+          <Column field="agent" sortable header="Agent" />
           <Column field="agentCost" sortable header="Agent Cost" />
           <Column hidden field="phone" sortable header="Phone" />
           <Column hidden field="cardNumber" sortable header="Card Number" />

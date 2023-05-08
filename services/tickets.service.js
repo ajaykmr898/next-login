@@ -55,6 +55,8 @@ async function getProfit(dates) {
   let agents = {};
   let agentsP = {};
   let methodsP = {};
+  let agentsA = {};
+  let methodsA = {};
   result.map((ticket) => {
     let date = new Date(ticket.bookedOn);
     let key = months[date.getMonth()] + " " + date.getFullYear();
@@ -98,8 +100,20 @@ async function getProfit(dates) {
     } else {
       agentsP[agent] = profit;
     }
+
+    if (agentsA[agent] !== undefined) {
+      agentsA[agent] += paidAmount;
+    } else {
+      agentsA[agent] = paidAmount;
+    }
+
+    if (methodsA[method] !== undefined) {
+      methodsA[method] += paidAmount;
+    } else {
+      methodsA[method] = paidAmount;
+    }
   });
-  return { ticketsP, methods, methodsP, agents, agentsP };
+  return { ticketsP, methods, methodsP, agents, agentsP, agentsA, methodsA };
 }
 
 async function upload(files) {

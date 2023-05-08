@@ -3,7 +3,7 @@ const nextConfig = {
   reactStrictMode: true,
   publicRuntimeConfig: {
     isLocal: process.env.MONGODB_URI.includes("italy"),
-    platform1: "industicketmanager|mp->...1|gp->...!",
+    platform1: "industicketmanager|mpas->...1|gpas->...!",
     platform2: "mahindersinghitaly|Rp1",
   },
 };
