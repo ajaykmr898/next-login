@@ -264,7 +264,7 @@ function Index() {
     doc.line(10, row, 200, row);
     doc.setFontSize(10);
     row += 10;
-    doc.text("Passeggero: " + ticket.name, 10, row);
+    /*doc.text("Passeggero: " + ticket.name, 10, row);
     row += 5;
     doc.text("Data: " + ticket.bookedOn, 10, row);
     row += 5;
@@ -293,7 +293,93 @@ function Index() {
     doc.text("Volo: " + ticket.flight, 10, row);
     row += 5;
     doc.text("Numero di telefono: " + ticket.phone, 10, row);
+    row += 5;*/
 
+    const generateData = function () {
+      return [
+        {
+          A: "Nome",
+          B: ticket.name || "-",
+        },
+        {
+          A: "Data",
+          B: ticket.bookedOn || "-",
+        },
+        {
+          A: "Codice prenotazione",
+          B: ticket.bookingCode || "-",
+        },
+        { A: "Date del Viaggio", B: ticket.dates },
+        {
+          A: "Porto di partenza",
+          B: ticket.travel1 || "-",
+        },
+        {
+          A: "Porto di arrivo",
+          B: ticket.travel2 || "-",
+        },
+        {
+          A: "Numero del biglietto",
+          B: ticket.ticketNumber || "-",
+        },
+        {
+          A: "Pagato",
+          B: ticket.receivingAmount1
+            ? parseFloat(
+                parseFloat(ticket.receivingAmount1) +
+                  parseFloat(ticket.receivingAmount2) +
+                  parseFloat(ticket.receivingAmount3)
+              ).toFixed(2) + " EUR"
+            : "-",
+        },
+        {
+          A: "Metodo di pagamento",
+          B: ticket.paymentMethod || "-",
+        },
+        {
+          A: "Volo",
+          B: ticket.flight || "-",
+        },
+        {
+          A: "Numero di telefono",
+          B: ticket.phone || "-",
+        },
+      ];
+    };
+
+    function createHeaders(keys) {
+      let result = [];
+      for (let i = 0; i < keys.length; i += 1) {
+        result.push({
+          id: keys[i],
+          name: keys[i],
+          prompt: keys[i],
+          width: 120,
+          align: "center",
+          padding: 0,
+        });
+      }
+      return result;
+      //return keys;
+    }
+
+    doc.table(10, row, generateData(), createHeaders(["A", "B"]), {
+      autoSize: false,
+    });
+    row = 280;
+    doc.setFontSize(8);
+    doc.text("Indus Viaggi", 200, row, null, null, "right");
+    row += 2;
+    doc.line(10, row, 200, row);
+    row += 3;
+    doc.text(
+      "Via Don Giovanni Alai, 6/A, 42121 Reggio Emilia RE",
+      200,
+      row,
+      null,
+      null,
+      "right"
+    );
     doc.save(ticket.name.replace(/\W/g, "_") + "_" + ticket.id + ".pdf");
   };
 
