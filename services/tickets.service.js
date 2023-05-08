@@ -102,15 +102,15 @@ async function getProfit(dates) {
     }
 
     if (agentsA[agent] !== undefined) {
-      agentsA[agent] += paidAmount;
+      agentsA[agent] += totalReceivingAmount;
     } else {
-      agentsA[agent] = paidAmount;
+      agentsA[agent] = totalReceivingAmount;
     }
 
     if (methodsA[method] !== undefined) {
-      methodsA[method] += paidAmount;
+      methodsA[method] += totalReceivingAmount;
     } else {
-      methodsA[method] = paidAmount;
+      methodsA[method] = totalReceivingAmount;
     }
   });
   return { ticketsP, methods, methodsP, agents, agentsP, agentsA, methodsA };
