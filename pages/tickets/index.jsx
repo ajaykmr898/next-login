@@ -360,7 +360,7 @@ function Index() {
           id: keys[i],
           name: keys[i],
           prompt: keys[i],
-          width: 120,
+          width: keys[i] === "A" ? 70 : 170,
           align: "center",
           padding: 0,
         });

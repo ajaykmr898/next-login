@@ -16,6 +16,7 @@ function AddEdit(props) {
     receiving: Yup.string().notRequired(),
     method: Yup.string().notRequired(),
     agent: Yup.string().notRequired(),
+    iata: Yup.string().notRequired(),
     agentCost: Yup.string().notRequired(),
     booked: Yup.date().required("Booked On is required"),
     bookcode: Yup.string().required("Booking code is required"),
@@ -48,6 +49,7 @@ function AddEdit(props) {
         fileName: data.name,
         name: data.name,
         agent: data.agent,
+        iata: data.iata || "",
         agentCost: data.agentCost,
         paymentMethod: data.method,
         bookingCode: data.bookcode,
@@ -80,6 +82,7 @@ function AddEdit(props) {
           paid: "",
           receiving: "",
           agent: "",
+          iata: "",
           agentCost: "",
           method: "",
           bookcode: "",
@@ -175,6 +178,17 @@ function AddEdit(props) {
             className={`form-control ${errors.booked ? "is-invalid" : ""}`}
           />
           <div className="invalid-feedback">{errors.booked?.message}</div>
+        </div>
+        <div className="mb-3 col">
+          <label className="form-label">Iata</label>
+          <input
+            name="iata"
+            defaultValue={ticket?.iata}
+            type="text"
+            {...register("iata")}
+            className={`form-control ${errors.iata ? "is-invalid" : ""}`}
+          />
+          <div className="invalid-feedback">{errors.iata?.message}</div>
         </div>
       </div>
 
