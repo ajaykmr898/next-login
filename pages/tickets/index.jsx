@@ -158,7 +158,7 @@ function Index() {
           <option value="1">Agent Name</option>
           <option value="2">PNR</option>
           <option value="3">Ticket Number</option>
-          <option value="4">IATA</option>
+          <option value="4">Issued By</option>
           <option value="5">Passenger Name</option>
         </select>
         <Button
@@ -494,7 +494,7 @@ function Index() {
           />
           <Column field="bookingCode" sortable header="PNR" />
           <Column field="ticketNumber" sortable header="Ticket Number" />
-          <Column field="iata" sortable header="IATA" />
+          <Column field="iata" sortable header="Issued by" />
           <Column field="profit" sortable header="Profit" />
           <Column field="paidAmount" sortable header="Cost" />
           <Column field="receivingAmountT" sortable header="Total Received" />

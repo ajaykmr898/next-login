@@ -180,7 +180,7 @@ function AddEdit(props) {
           <div className="invalid-feedback">{errors.booked?.message}</div>
         </div>
         <div className="mb-3 col">
-          <label className="form-label">Iata</label>
+          <label className="form-label">Issued By</label>
           <input
             name="iata"
             defaultValue={ticket?.iata}
