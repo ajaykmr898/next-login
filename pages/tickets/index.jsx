@@ -382,7 +382,7 @@ function Index() {
           rows={25}
           dataKey="id"
           filters={filters}
-          csvSeparator=";"
+          csvSeparator=","
           globalFilterFields={filtersA}
           header={header}
           emptyMessage="No tickets found."
@@ -424,11 +424,21 @@ function Index() {
             field="receivingAmount2Date"
             header="receiving Amount 2 Date"
           />
+          <Column
+            hidden
+            field="receivingAmount2Method"
+            header="receiving Amount 2 Method"
+          />
           <Column hidden field="receivingAmount3" header="receivingAmount 3" />
           <Column
             hidden
             field="receivingAmount3Date"
             header="receiving Amount 3 Date"
+          />
+          <Column
+            hidden
+            field="receivingAmount3Method"
+            header="receiving Amount 3 Method"
           />
           <Column hidden field="travel1" header="travel 1" />
           <Column hidden field="travel2" header="travel 2" />
@@ -496,19 +506,23 @@ function Index() {
                 </td>
               </tr>
               <tr>
-                <td scope="col">Receiving Amount/Date 2</td>
+                <td scope="col">Receiving Amount/Date/Method 2</td>
                 <td scope="col">
                   {ticket.receivingAmount2}
                   {ticket.receivingAmount2Date &&
                     " - " + ticket.receivingAmount2Date}
+                  {ticket.receivingAmount2Method &&
+                    " - " + ticket.receivingAmount2Method}
                 </td>
               </tr>
               <tr>
-                <td scope="col">Receiving Amount/Date 3</td>
+                <td scope="col">Receiving Amount/Date/Method 3</td>
                 <td scope="col">
                   {ticket.receivingAmount3}
                   {ticket.receivingAmount3Date &&
                     " - " + ticket.receivingAmount3Date}
+                  {ticket.receivingAmount3Method &&
+                    " - " + ticket.receivingAmount3Method}
                 </td>
               </tr>
               <tr>

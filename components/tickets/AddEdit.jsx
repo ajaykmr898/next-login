@@ -29,8 +29,10 @@ function AddEdit(props) {
     receivingAmount1Date: Yup.string().notRequired(),
     receivingAmount2: Yup.string().notRequired(),
     receivingAmount2Date: Yup.string().notRequired(),
+    receivingAmount2Method: Yup.string().notRequired(),
     receivingAmount3: Yup.string().notRequired(),
     receivingAmount3Date: Yup.string().notRequired(),
+    receivingAmount3Method: Yup.string().notRequired(),
   });
   const formOptions = { resolver: yupResolver(validationSchema) };
 
@@ -61,6 +63,8 @@ function AddEdit(props) {
           data.receivingAmount2Date && formatDate(data.receivingAmount2Date),
         receivingAmount3Date:
           data.receivingAmount3Date && formatDate(data.receivingAmount3Date),
+        receivingAmount2Method: data.receivingAmount2Method || "",
+        receivingAmount3Method: data.receivingAmount3Method || "",
         cardNumber: data.card || "",
         travel1: data.travel1 || "",
         travel2: data.travel2 || "",
@@ -145,18 +149,7 @@ function AddEdit(props) {
         </div>
       </div>
       <div className="row">
-        <div className="mb-3 col-md-4 col-sm-6">
-          <label className="form-label">Payment Method</label>
-          <input
-            name="method"
-            defaultValue={ticket?.paymentMethod}
-            type="text"
-            {...register("method")}
-            className={`form-control ${errors.method ? "is-invalid" : ""}`}
-          />
-          <div className="invalid-feedback">{errors.method?.message}</div>
-        </div>
-        <div className="mb-3 col-md-4 col-sm-6">
+        <div className="mb-3 col">
           <label className="form-label">
             Cost <span className="text-danger">*</span>
           </label>
@@ -170,7 +163,7 @@ function AddEdit(props) {
           />
           <div className="invalid-feedback">{errors.paid?.message}</div>
         </div>
-        <div className="mb-3 col-md-4 col-sm-12">
+        <div className="mb-3 col">
           <label className="form-label">
             Issue date <span className="text-danger">*</span>
           </label>
@@ -212,6 +205,17 @@ function AddEdit(props) {
           <div className="invalid-feedback">
             {errors.receivingAmount1Date?.message}
           </div>
+        </div>
+        <div className="mb-3 col-md-4 col-sm-6">
+          <label className="form-label">Payment Method 1</label>
+          <input
+            name="method"
+            defaultValue={ticket?.paymentMethod}
+            type="text"
+            {...register("method")}
+            className={`form-control ${errors.method ? "is-invalid" : ""}`}
+          />
+          <div className="invalid-feedback">{errors.method?.message}</div>
         </div>
       </div>
 
@@ -350,6 +354,21 @@ function AddEdit(props) {
             {errors.receivingAmount2Date?.message}
           </div>
         </div>
+        <div className="mb-3 col-md-4 col-sm-6">
+          <label className="form-label">Payment Method 2</label>
+          <input
+            name="receivingAmount2Method"
+            defaultValue={ticket?.receivingAmount2Method}
+            type="text"
+            {...register("receivingAmount2Method")}
+            className={`form-control ${
+              errors.receivingAmount2Method ? "is-invalid" : ""
+            }`}
+          />
+          <div className="invalid-feedback">
+            {errors.receivingAmount2Method?.message}
+          </div>
+        </div>
       </div>
 
       <div className="row">
@@ -381,6 +400,21 @@ function AddEdit(props) {
           />
           <div className="invalid-feedback">
             {errors.receivingAmount3Date?.message}
+          </div>
+        </div>
+        <div className="mb-3 col-md-4 col-sm-6">
+          <label className="form-label">Payment Method 3</label>
+          <input
+            name="receivingAmount3Method"
+            defaultValue={ticket?.receivingAmount3Method}
+            type="text"
+            {...register("receivingAmount3Method")}
+            className={`form-control ${
+              errors.receivingAmount3Method ? "is-invalid" : ""
+            }`}
+          />
+          <div className="invalid-feedback">
+            {errors.receivingAmount3Method?.message}
           </div>
         </div>
       </div>
