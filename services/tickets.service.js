@@ -136,11 +136,11 @@ async function upload(files) {
     });
 
     // console.log(final, final.length);
-
+    let iac = { 38286592: "SCA" };
     let ard = [];
     let t = [];
     let n = [];
-    let c1 =
+    let ia =
       final.hasOwnProperty(3) && final[3].hasOwnProperty(6) ? final[3][6] : "-";
     let c2 = "-";
     let ag = "";
@@ -266,6 +266,7 @@ async function upload(files) {
         name: ntp,
         bookingCode: c2,
         agent: ag,
+        iata: iac[ia],
         agentCost: ac,
         ticketNumber: t[i],
         paymentMethod: mt,

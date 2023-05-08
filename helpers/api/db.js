@@ -46,6 +46,7 @@ function ticketsModel() {
       bookingCode: { type: String, required: false },
       agent: { type: String, required: false },
       agentCost: { type: String, required: false },
+      iata: { type: String, required: false },
       ticketNumber: { type: String, required: false },
       paymentMethod: { type: String, required: false },
       paidAmount: { type: String, required: false },

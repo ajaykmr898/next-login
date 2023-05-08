@@ -113,9 +113,10 @@ function Index() {
   };
 
   const applyFilters = (e) => {
+    let types = ["all", "agent", "bookingCode", "ticketNumber", "iata", "name"];
     let selected = parseInt(e.target.value);
-    if (selected === 2) {
-      setFiltersA(["agent"]);
+    if (selected !== 0) {
+      setFiltersA([types[selected]]);
     } else {
       setFiltersA([
         "name",
@@ -128,6 +129,7 @@ function Index() {
         "profit",
         "bookedOn",
         "phone",
+        "iata",
       ]);
     }
   };
@@ -150,10 +152,14 @@ function Index() {
             applyFilters(e);
           }}
         >
-          <option defaultValue value="1">
+          <option defaultValue value="0">
             All
           </option>
-          <option value="2">Agent</option>
+          <option value="1">Agent Name</option>
+          <option value="2">PNR</option>
+          <option value="3">Ticket Number</option>
+          <option value="4">IATA</option>
+          <option value="5">Passenger Name</option>
         </select>
         <Button
           className="tb-btns"
@@ -468,7 +474,7 @@ function Index() {
           rows={25}
           dataKey="id"
           filters={filters}
-          csvSeparator=","
+          csvSeparator=";"
           globalFilterFields={filtersA}
           header={header}
           emptyMessage="No tickets found."
@@ -488,6 +494,7 @@ function Index() {
           />
           <Column field="bookingCode" sortable header="PNR" />
           <Column field="ticketNumber" sortable header="Ticket Number" />
+          <Column field="iata" sortable header="IATA" />
           <Column field="profit" sortable header="Profit" />
           <Column field="paidAmount" sortable header="Cost" />
           <Column field="receivingAmountT" sortable header="Total Received" />
