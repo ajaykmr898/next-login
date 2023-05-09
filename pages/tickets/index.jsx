@@ -1,6 +1,8 @@
 import { Layout } from "components/users";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
+import { ColumnGroup } from "primereact/columngroup";
+import { Row } from "primereact/row";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
@@ -21,6 +23,7 @@ function Index() {
   const [ticket, setTicket] = useState(null);
   const [loading, setLoading] = useState(false);
   const [dates, setDates] = useState({ start: "", end: "" });
+  const [totals, setTotals] = useState([0, 0, 0]);
 
   useEffect(() => {
     getTickets();
@@ -72,6 +75,7 @@ function Index() {
         };
       });
       setTickets(tickets);
+      calculate(tickets, "");
       setLoading(false);
     });
   };
@@ -475,6 +479,45 @@ function Index() {
       />
     </div>
   );
+  const footerGroup = (
+    <ColumnGroup>
+      <Row>
+        <Column
+          footer="Totals:"
+          colSpan={6}
+          footerStyle={{ textAlign: "right" }}
+        />
+        <Column footer={totals[0]} />
+        <Column footer={totals[1]} />
+        <Column footer={totals[2]} />
+        <Column />
+        <Column />
+        <Column />
+        <Column />
+      </Row>
+    </ColumnGroup>
+  );
+
+  const calculate = (data) => {
+    console.log(data);
+    let tp = 0;
+    let tc = 0;
+    let tr = 0;
+    for (let i = 0; i < data.length; i++) {
+      let ttp = data[i].profit.replace("€ ", "");
+      let ttc = data[i].paidAmount.replace("€ ", "");
+      let ttr = data[i].receivingAmountT.replace("€ ", "");
+      tp += parseFloat(ttp);
+      tc += parseFloat(ttc);
+      tr += parseFloat(ttr);
+    }
+
+    setTotals([
+      "€ " + tp.toFixed(2),
+      "€ " + tc.toFixed(2),
+      "€ " + tr.toFixed(2),
+    ]);
+  };
 
   return (
     <Layout>
@@ -527,6 +570,9 @@ function Index() {
           size="small"
           tableStyle={{ minWidth: "100rem" }}
           ref={dt}
+          onValueChange={(filteredData) => {
+            calculate(filteredData);
+          }}
           value={tickets}
           paginator
           rows={25}
@@ -535,6 +581,7 @@ function Index() {
           csvSeparator=";"
           globalFilterFields={filtersA}
           header={header}
+          footerColumnGroup={footerGroup}
           emptyMessage="No tickets found."
         >
           <Column
