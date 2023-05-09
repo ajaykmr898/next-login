@@ -29,7 +29,7 @@ function Index() {
   const getTickets = (dates = null) => {
     setLoading(true);
     let start = new Date();
-    start.setMonth(start.getMonth() - 6);
+    //start.setMonth(start.getMonth() - 6);
     start.setDate(1);
     start = formatDate(start);
     let end = formatDate(new Date());
@@ -61,13 +61,14 @@ function Index() {
         let profit = parseFloat((tra - tk2).toFixed(2));
         return {
           ...t,
-          profit,
+          profit: "€ " + profit,
           bookedOn: bkd,
           receivingAmount1Date: ra1d,
           receivingAmount2Date: ra2d,
           receivingAmount3Date: ra3d,
           idP: i + 1,
-          receivingAmountT: tra,
+          receivingAmountT: "€ " + tra,
+          paidAmount: "€ " + t.paidAmount,
         };
       });
       setTickets(tickets);
@@ -274,7 +275,7 @@ function Index() {
     doc.setFontSize(14);
     row += 20;
 
-    doc.text("Passeggero", 10, row);
+    doc.text("Nome Passeggero", 10, row);
     doc.text(":", 60, row);
     doc.text(ticket.name, 65, row, { maxWidth: width }, null, "left");
     ticket.name.length > length ? (row += 10) : (row += 4);
@@ -282,7 +283,7 @@ function Index() {
     doc.line(10, row, 200, row);
     row += 7;
 
-    doc.text("Data", 10, row);
+    doc.text("Data Acquisto", 10, row);
     doc.text(":", 60, row);
     doc.text(ticket.bookedOn, 65, row, { maxWidth: width }, null, "left");
     ticket.bookedOn.length > length ? (row += 10) : (row += 4);
@@ -293,6 +294,13 @@ function Index() {
     doc.text(":", 60, row);
     doc.text(ticket.bookingCode, 65, row, { maxWidth: width }, null, "left");
     ticket.bookingCode.length > length ? (row += 10) : (row += 4);
+    doc.line(10, row, 200, row);
+    row += 7;
+
+    doc.text("Date Viaggio", 10, row);
+    doc.text(":", 60, row);
+    doc.text(ticket.dates, 65, row, { maxWidth: width }, null, "left");
+    ticket.dates.length > length ? (row += 10) : (row += 4);
     doc.line(10, row, 200, row);
     row += 7;
 
