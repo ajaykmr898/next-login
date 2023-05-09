@@ -219,12 +219,28 @@ function Home() {
     );
 
   useEffect(() => {
+    getProfit();
+  }, []);
+
+  const getProfit = (dates = null) => {
     let start = new Date();
     start.setMonth(start.getMonth() - 6);
     start.setDate(1);
     start = formatDate(start);
     let end = formatDate(new Date());
+    if (dates) {
+      start = dates.start;
+      end = dates.end;
+    }
     setDates({ start, end });
+    setProfit({});
+    setAmounts({});
+    setMethods({});
+    setMethodsP({});
+    setMethodsA({});
+    setAgents({});
+    setAgentsP({});
+    setAgentsA({});
     ticketsService.getProfit({ start, end }).then((x) => {
       console.log(x);
       setProfit(x.ticketsP);
@@ -236,61 +252,104 @@ function Home() {
       setAgentsA(x.agentsA);
       setMethodsA(x.methodsA);
     });
-  }, []);
+  };
+
+  const search = () => {
+    let start = document.getElementById("start").value;
+    let end = document.getElementById("end").value;
+    getProfit({ start, end });
+  };
 
   return (
-    <div className="p-4">
+    <>
       <div className="container">
-        <div className="center center-text">
-          From&nbsp;{formatDate(dates.start, "IT")}
-          &nbsp;To&nbsp;{formatDate(dates.end, "IT")}
-        </div>
-        <br />
-        <br />
-        <br />
         <div className="row">
-          <div className="col-md-6">
-            <h4 className="drag-text">Paid vs Received Amount</h4>
-            {barChart}
+          <div className="col-sm-5">
+            <label htmlFor="start">From Date:</label>
+            <div className="input-group">
+              <input
+                type="date"
+                className="form-control"
+                id="start"
+                defaultValue={dates.start}
+                placeholder="From"
+              />
+            </div>
           </div>
-          <div className="col-md-6">
-            <h4 className="drag-text">Profit</h4>
-            {barChart2}
+          <div className="col-sm-5">
+            <label htmlFor="end">To Date:</label>
+            <div className="input-group">
+              <input
+                type="date"
+                className="form-control"
+                id="end"
+                defaultValue={dates.end}
+                placeholder="To"
+              />
+            </div>
           </div>
-        </div>
-        <div className="row">
-          <div className="col-6 col-xs-12 col-xl-3">
-            <br />
-            <h4 className="drag-text">Agents</h4>
-            {pieChart}
-          </div>
-          <div className="col-6 col-xs-12 col-xl-3">
-            <br />
-            <h4 className="drag-text">Payment Methods</h4>
-            {pieChart2}
-          </div>
-          <div className="col-6 col-xs-12 col-xl-3">
-            <br />
-            <h4 className="drag-text">Profit by Agents</h4>
-            {pieChart1}
-          </div>
-          <div className="col-6 col-xs-12 col-xl-3">
-            <br />
-            <h4 className="drag-text">Profit by Methods</h4>
-            {pieChart3}
-          </div>
-          <div className="col-6 col-xs-12 col-xl-3">
-            <br />
-            <h4 className="drag-text">Payments by Agents</h4>
-            {pieChart4}
-          </div>
-          <div className="col-6 col-xs-12 col-xl-3">
-            <br />
-            <h4 className="drag-text">Pay. by Methods</h4>
-            {pieChart5}
+          <div className="col-sm-2">
+            <button
+              type="submit"
+              className="btn btn-block btn-primary width-search"
+              onClick={() => {
+                search();
+              }}
+            >
+              Search
+            </button>
           </div>
         </div>
       </div>
-    </div>
+      <div className="p-4">
+        <div className="container">
+          <br />
+          <br />
+          <br />
+          <div className="row">
+            <div className="col-md-6">
+              <h4 className="drag-text">Paid vs Received Amount</h4>
+              {barChart}
+            </div>
+            <div className="col-md-6">
+              <h4 className="drag-text">Profit</h4>
+              {barChart2}
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-6 col-xs-12 col-xl-3">
+              <br />
+              <h4 className="drag-text">Agents</h4>
+              {pieChart}
+            </div>
+            <div className="col-6 col-xs-12 col-xl-3">
+              <br />
+              <h4 className="drag-text">Payment Methods</h4>
+              {pieChart2}
+            </div>
+            <div className="col-6 col-xs-12 col-xl-3">
+              <br />
+              <h4 className="drag-text">Profit by Agents</h4>
+              {pieChart1}
+            </div>
+            <div className="col-6 col-xs-12 col-xl-3">
+              <br />
+              <h4 className="drag-text">Profit by Methods</h4>
+              {pieChart3}
+            </div>
+            <div className="col-6 col-xs-12 col-xl-3">
+              <br />
+              <h4 className="drag-text">Payments by Agents</h4>
+              {pieChart4}
+            </div>
+            <div className="col-6 col-xs-12 col-xl-3">
+              <br />
+              <h4 className="drag-text">Pay. by Methods</h4>
+              {pieChart5}
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
