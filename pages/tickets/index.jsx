@@ -75,7 +75,7 @@ function Index() {
         };
       });
       setTickets(tickets);
-      calculate(tickets, "");
+      onGlobalFilterChange({ target: { value: "" } });
       setLoading(false);
     });
   };
