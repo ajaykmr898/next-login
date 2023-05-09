@@ -245,6 +245,8 @@ function Index() {
     const imgData = "logo.png";
     const doc = new jsPDF();
     let row = 10;
+    let width = 130;
+    let length = 35;
     doc.addImage(imgData, "PNG", 10, 10, 40, 40);
 
     doc.setFontSize(20);
@@ -267,41 +269,89 @@ function Index() {
       "right"
     );
     row += 10;
+    doc.setDrawColor(120, 120, 120);
     doc.line(10, row, 200, row);
-    doc.setFontSize(10);
-    row += 10;
-    /*doc.text("Passeggero: " + ticket.name, 10, row);
-    row += 5;
-    doc.text("Data: " + ticket.bookedOn, 10, row);
-    row += 5;
-    doc.text("Codice prenotazione: " + ticket.bookingCode, 10, row);
-    row += 5;
-    doc.text("Porto di partenza: " + ticket.travel1, 10, row);
-    row += 5;
-    doc.text("Porto di arrivo: " + ticket.travel2, 10, row);
-    row += 5;
-    doc.text("Numero del biglietto: " + ticket.ticketNumber, 10, row);
-    row += 5;
-    doc.text(
-      "Pagato: " +
-        parseFloat(
-          parseFloat(ticket.receivingAmount1) +
-            parseFloat(ticket.receivingAmount2) +
-            parseFloat(ticket.receivingAmount3)
-        ).toFixed(2) +
-        " EUR",
-      10,
-      row
-    );
-    row += 5;
-    doc.text("Metodo di pagamento: " + ticket.paymentMethod, 10, row);
-    row += 5;
-    doc.text("Volo: " + ticket.flight, 10, row);
-    row += 5;
-    doc.text("Numero di telefono: " + ticket.phone, 10, row);
-    row += 5;*/
+    doc.setFontSize(14);
+    row += 20;
 
-    const generateData = function () {
+    doc.text("Passeggero", 10, row);
+    doc.text(":", 60, row);
+    doc.text(ticket.name, 65, row, { maxWidth: width }, null, "left");
+    ticket.name.length > length ? (row += 10) : (row += 4);
+
+    doc.line(10, row, 200, row);
+    row += 7;
+
+    doc.text("Data", 10, row);
+    doc.text(":", 60, row);
+    doc.text(ticket.bookedOn, 65, row, { maxWidth: width }, null, "left");
+    ticket.bookedOn.length > length ? (row += 10) : (row += 4);
+    doc.line(10, row, 200, row);
+    row += 7;
+
+    doc.text("Codice prenotazione", 10, row);
+    doc.text(":", 60, row);
+    doc.text(ticket.bookingCode, 65, row, { maxWidth: width }, null, "left");
+    ticket.bookingCode.length > length ? (row += 10) : (row += 4);
+    doc.line(10, row, 200, row);
+    row += 7;
+
+    doc.text("Porto di partenza", 10, row);
+    doc.text(":", 60, row);
+    doc.text(ticket.travel1, 65, row, { maxWidth: width }, null, "left");
+    ticket.travel1.length > length ? (row += 10) : (row += 4);
+    doc.line(10, row, 200, row);
+    row += 7;
+
+    doc.text("Porto di arrivo", 10, row);
+    doc.text(":", 60, row);
+    doc.text(ticket.travel2, 65, row, { maxWidth: width }, null, "left");
+    ticket.travel2.length > length ? (row += 10) : (row += 4);
+    doc.line(10, row, 200, row);
+    row += 7;
+
+    doc.text("Numero del biglietto", 10, row);
+    doc.text(":", 60, row);
+    doc.text(ticket.ticketNumber, 65, row, { maxWidth: width }, null, "left");
+    ticket.ticketNumber.length > length ? (row += 10) : (row += 4);
+    doc.line(10, row, 200, row);
+    row += 7;
+
+    doc.text("Pagato", 10, row);
+    doc.text(":", 60, row);
+    let total =
+      parseFloat(
+        parseFloat(ticket.receivingAmount1) +
+          parseFloat(ticket.receivingAmount2) +
+          parseFloat(ticket.receivingAmount3)
+      ).toFixed(2) + " EUR";
+    doc.text(total, 65, row, { maxWidth: width }, null, "left");
+    total.length > length ? (row += 10) : (row += 4);
+    doc.line(10, row, 200, row);
+    row += 7;
+
+    doc.text("Metodo di pagamento", 10, row);
+    doc.text(":", 60, row);
+    doc.text(ticket.paymentMethod, 65, row, { maxWidth: width }, null, "left");
+    ticket.paymentMethod.paymentMethod > length ? (row += 10) : (row += 4);
+    doc.line(10, row, 200, row);
+    row += 7;
+
+    doc.text("Volo", 10, row);
+    doc.text(":", 60, row);
+    doc.text(ticket.flight, 65, row, { maxWidth: width }, null, "left");
+    ticket.flight.length > length ? (row += 10) : (row += 4);
+    doc.line(10, row, 200, row);
+    row += 7;
+
+    doc.text("Numero di telefono", 10, row);
+    doc.text(":", 60, row);
+    doc.text(ticket.phone, 65, row, { maxWidth: width }, null, "left");
+    ticket.phone.length > length ? (row += 10) : (row += 4);
+    doc.line(10, row, 200, row);
+    row += 7;
+
+    /*const generateData = function () {
       return [
         {
           A: "Nome",
@@ -371,7 +421,7 @@ function Index() {
 
     doc.table(10, row, generateData(), createHeaders(["A", "B"]), {
       autoSize: false,
-    });
+    });*/
     row = 280;
     doc.setFontSize(8);
     doc.text("Indus Viaggi", 200, row, null, null, "right");
