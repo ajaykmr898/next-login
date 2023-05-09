@@ -100,6 +100,7 @@ function Index() {
     "profit",
     "bookedOn",
     "phone",
+    "iata",
   ]);
   const [globalFilterValue, setGlobalFilterValue] = useState("");
 
