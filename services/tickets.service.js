@@ -60,12 +60,22 @@ async function getProfit(filters) {
   result.map((ticket) => {
     let date = new Date(ticket.bookedOn);
     let key = months[date.getMonth()] + " " + date.getFullYear();
-    let method = ticket.paymentMethod.trim().toUpperCase() || "None";
+    let method1 =
+      (ticket.paymentMethod && ticket.paymentMethod.trim().toUpperCase()) ||
+      "None";
+    let method2 =
+      (ticket.receivingAmount2Method &&
+        ticket.receivingAmount2Method.trim().toUpperCase()) ||
+      "None";
+    let method3 =
+      (ticket.receivingAmount3Method &&
+        ticket.receivingAmount3Method.trim().toUpperCase()) ||
+      "None";
     let agent = ticket.agent.trim().toUpperCase() || "None";
-    if (methods[method] !== undefined) {
-      methods[method] += 1;
+    if (methods[method1] !== undefined) {
+      methods[method1] += 1;
     } else {
-      methods[method] = 1;
+      methods[method1] = 1;
     }
     if (agents[agent] !== undefined) {
       agents[agent] += 1;
@@ -73,10 +83,11 @@ async function getProfit(filters) {
       agents[agent] = 1;
     }
 
+    let totalReceivingAmount1 = parseFloat(ticket.receivingAmount1) || 0;
+    let totalReceivingAmount2 = parseFloat(ticket.receivingAmount2) || 0;
+    let totalReceivingAmount3 = parseFloat(ticket.receivingAmount3) || 0;
     let totalReceivingAmount =
-      (parseFloat(ticket.receivingAmount1) || 0) +
-      (parseFloat(ticket.receivingAmount2) || 0) +
-      (parseFloat(ticket.receivingAmount3) || 0);
+      totalReceivingAmount1 + totalReceivingAmount2 + totalReceivingAmount3;
 
     let paidAmount = parseFloat(ticket.paidAmount);
     let profit = totalReceivingAmount - paidAmount;
@@ -89,10 +100,10 @@ async function getProfit(filters) {
       ticketsP[key] = { totalReceivingAmount, paidAmount, profit };
     }
 
-    if (methodsP[method] !== undefined) {
-      methodsP[method] += profit;
+    if (methodsP[method1] !== undefined) {
+      methodsP[method1] += profit;
     } else {
-      methodsP[method] = profit;
+      methodsP[method1] = profit;
     }
 
     if (agentsP[agent] !== undefined) {
@@ -107,10 +118,20 @@ async function getProfit(filters) {
       agentsA[agent] = totalReceivingAmount;
     }
 
-    if (methodsA[method] !== undefined) {
-      methodsA[method] += totalReceivingAmount;
+    if (methodsA[method1] !== undefined) {
+      methodsA[method1] += totalReceivingAmount1;
     } else {
-      methodsA[method] = totalReceivingAmount;
+      methodsA[method1] = totalReceivingAmount1;
+    }
+    if (methodsA[method2] !== undefined) {
+      methodsA[method2] += totalReceivingAmount2;
+    } else {
+      methodsA[method2] = totalReceivingAmount2;
+    }
+    if (methodsA[method3] !== undefined) {
+      methodsA[method3] += totalReceivingAmount3;
+    } else {
+      methodsA[method3] = totalReceivingAmount3;
     }
   });
   return { ticketsP, methods, methodsP, agents, agentsP, agentsA, methodsA };
