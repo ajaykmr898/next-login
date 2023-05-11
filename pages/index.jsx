@@ -274,6 +274,7 @@ function Home() {
                 <option defaultValue value="bookedOn">
                   Issue Date
                 </option>
+                <option value="receivingAllDates">All Amounts Dates</option>
                 <option value="receivingAmount1Date">Amount 1 Date</option>
                 <option value="receivingAmount2Date">Amount 2 Date</option>
                 <option value="receivingAmount3Date">Amount 3 Date</option>

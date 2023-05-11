@@ -12,9 +12,25 @@ export const ticketsRepo = {
 };
 
 async function getAll(filters) {
-  return await Tickets.find({
-    [filters.type]: { $gte: filters.start, $lte: filters.end },
-  }).sort({ bookedOn: -1 });
+  let filter =
+    filters.type === "receivingAllDates"
+      ? {
+          $or: [
+            {
+              receivingAmount1Date: { $gte: filters.start, $lte: filters.end },
+            },
+            {
+              receivingAmount2Date: { $gte: filters.start, $lte: filters.end },
+            },
+            {
+              receivingAmount3Date: { $gte: filters.start, $lte: filters.end },
+            },
+          ],
+        }
+      : {
+          [filters.type]: { $gte: filters.start, $lte: filters.end },
+        };
+  return await Tickets.find(filter).sort({ bookedOn: -1 });
 }
 
 async function getById(id) {
@@ -35,9 +51,25 @@ async function _delete(id) {
 }
 
 async function getProfit(filters) {
-  return await Tickets.find({
-    [filters.type]: { $gte: filters.start, $lte: filters.end },
-  }).sort({
+  let filter =
+    filters.type === "receivingAllDates"
+      ? {
+          $or: [
+            {
+              receivingAmount1Date: { $gte: filters.start, $lte: filters.end },
+            },
+            {
+              receivingAmount2Date: { $gte: filters.start, $lte: filters.end },
+            },
+            {
+              receivingAmount3Date: { $gte: filters.start, $lte: filters.end },
+            },
+          ],
+        }
+      : {
+          [filters.type]: { $gte: filters.start, $lte: filters.end },
+        };
+  return await Tickets.find(filter).sort({
     bookedOn: 1,
   });
 }
