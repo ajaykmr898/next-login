@@ -348,8 +348,16 @@ function Index() {
 
     doc.text("Metodo di pagamento", 10, row);
     doc.text(":", 60, row);
-    doc.text(ticket.paymentMethod, 65, row, { maxWidth: width }, null, "left");
-    ticket.paymentMethod.paymentMethod > length ? (row += 10) : (row += 4);
+    let methods =
+      ticket.paymentMethod +
+      (ticket.receivingAmount2Method
+        ? " - " + ticket.receivingAmount2Method
+        : "") +
+      (ticket.receivingAmount3Method
+        ? " - " + ticket.receivingAmount3Method
+        : "");
+    doc.text(methods, 65, row, { maxWidth: width }, null, "left");
+    methods.length > length ? (row += 10) : (row += 4);
     doc.line(10, row, 200, row);
     row += 7;
 
@@ -696,23 +704,20 @@ function Index() {
                 <td scope="col">{ticket.ticketNumber}</td>
               </tr>
               <tr>
-                <td scope="col">Payment Method:</td>
-                <td scope="col">{ticket.paymentMethod}</td>
-              </tr>
-              <tr>
                 <td scope="col">Cost:</td>
                 <td scope="col">{ticket.paidAmount}</td>
               </tr>
               <tr>
-                <td scope="col">Receiving Amount/Date 1</td>
+                <td scope="col">Receiving Amount/Date 1:</td>
                 <td scope="col">
                   {ticket.receivingAmount1}
                   {ticket.receivingAmount1Date &&
                     " - " + ticket.receivingAmount1Date}
+                  {" - " + ticket.paymentMethod}
                 </td>
               </tr>
               <tr>
-                <td scope="col">Receiving Amount/Date/Method 2</td>
+                <td scope="col">Receiving Amount/Date/Method 2:</td>
                 <td scope="col">
                   {ticket.receivingAmount2}
                   {ticket.receivingAmount2Date &&
@@ -722,7 +727,7 @@ function Index() {
                 </td>
               </tr>
               <tr>
-                <td scope="col">Receiving Amount/Date/Method 3</td>
+                <td scope="col">Receiving Amount/Date/Method 3:</td>
                 <td scope="col">
                   {ticket.receivingAmount3}
                   {ticket.receivingAmount3Date &&
