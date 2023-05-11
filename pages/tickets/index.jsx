@@ -97,10 +97,11 @@ function Index() {
   const [filters, setFilters] = useState({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
   });
-  const [filtersA, setFiltersA] = useState([
+  const allFilters = [
     "name",
     "agent",
     "bookingCode",
+    "cardNumber",
     "ticketNumber",
     "paymentMethod",
     "paidAmount",
@@ -110,7 +111,8 @@ function Index() {
     "phone",
     "iata",
     "flight",
-  ]);
+  ];
+  const [filtersA, setFiltersA] = useState(allFilters);
   const [globalFilterValue, setGlobalFilterValue] = useState("");
 
   const onGlobalFilterChange = (e) => {
@@ -128,25 +130,20 @@ function Index() {
   };
 
   const applyFilters = (e) => {
-    let types = ["all", "agent", "bookingCode", "ticketNumber", "iata", "name"];
+    let types = [
+      "all",
+      "agent",
+      "bookingCode",
+      "ticketNumber",
+      "iata",
+      "name",
+      "cardNumber",
+    ];
     let selected = parseInt(e.target.value);
     if (selected !== 0) {
       setFiltersA([types[selected]]);
     } else {
-      setFiltersA([
-        "name",
-        "agent",
-        "bookingCode",
-        "ticketNumber",
-        "paymentMethod",
-        "paidAmount",
-        "receivingAmountT",
-        "profit",
-        "bookedOn",
-        "phone",
-        "iata",
-        "flight",
-      ]);
+      setFiltersA(allFilters);
     }
   };
 
@@ -176,6 +173,7 @@ function Index() {
           <option value="3">Ticket Number</option>
           <option value="4">Issued By</option>
           <option value="5">Passenger Name</option>
+          <option value="6">Card Number</option>
         </select>
         <Button
           className="tb-btns"
