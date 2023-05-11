@@ -748,7 +748,7 @@ function Index() {
                 <td scope="col">{ticket.travel2}</td>
               </tr>
               <tr>
-                <td scope="col">Volo/Nave</td>
+                <td scope="col">Flight/Vessel</td>
                 <td scope="col">{ticket.flight}</td>
               </tr>
               <tr>
