@@ -103,7 +103,7 @@ function Index() {
     "bookingCode",
     "cardNumber",
     "ticketNumber",
-    "paymentMethod",
+    "methods",
     "paidAmount",
     "receivingAmountT",
     "profit",
@@ -138,6 +138,7 @@ function Index() {
       "iata",
       "name",
       "cardNumber",
+      "methods",
     ];
     let selected = parseInt(e.target.value);
     if (selected !== 0) {
@@ -174,6 +175,7 @@ function Index() {
           <option value="4">Issued By</option>
           <option value="5">Passenger Name</option>
           <option value="6">Card Number</option>
+          <option value="7">Payment Methods</option>
         </select>
         <Button
           className="tb-btns"
