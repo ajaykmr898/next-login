@@ -62,6 +62,10 @@ function Index() {
             (parseFloat(t.receivingAmount3) || 0)
           : 0;
         let profit = parseFloat((tra - tk2).toFixed(2));
+        let methods =
+          t.paymentMethod +
+          (t.receivingAmount2Method ? " - " + t.receivingAmount2Method : "") +
+          (t.receivingAmount3Method ? " - " + t.receivingAmount3Method : "");
         return {
           ...t,
           profit: "€ " + profit,
@@ -73,6 +77,7 @@ function Index() {
           receivingAmountT: "€ " + tra,
           paidAmount: "€ " + t.paidAmount,
           agentCost: t.agentCost ? "€ " + t.agentCost : t.agentCost,
+          methods: methods,
         };
       });
       setTickets(tickets);
@@ -624,18 +629,18 @@ function Index() {
             style={{ maxWidth: "8rem" }}
             field="name"
             sortable
-            header="Passenger Name"
+            header="Passenger"
           />
           <Column field="bookingCode" sortable header="PNR" />
-          <Column field="ticketNumber" sortable header="Ticket Number" />
+          <Column field="ticketNumber" sortable header="Ticket" />
           <Column field="iata" sortable header="Issued by" />
           <Column field="profit" sortable header="Profit" />
           <Column field="paidAmount" sortable header="Cost" />
-          <Column field="receivingAmountT" sortable header="Total Received" />
-          <Column field="paymentMethod" sortable header="Pay. Method" />
+          <Column field="receivingAmountT" sortable header="Tot. Received" />
+          <Column field="methods" sortable header="Pay. Methods" />
           <Column field="bookedOn" sortable header="Issue Date" />
           <Column field="agent" sortable header="Agent" />
-          <Column field="agentCost" sortable header="Agent Cost" />
+          <Column field="agentCost" sortable header="Ag. Cost" />
           <Column hidden field="phone" sortable header="Phone" />
           <Column hidden field="cardNumber" sortable header="Card Number" />
           <Column hidden field="flight" sortable header="Flight" />
