@@ -286,6 +286,9 @@ async function upload(files) {
         dates: dstr,
         phone: p,
         flight: f,
+        refund: "",
+        refundDate: "",
+        penality: "",
       };
       fc.push(tkt);
     });

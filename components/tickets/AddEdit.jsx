@@ -34,6 +34,9 @@ function AddEdit(props) {
     receivingAmount3: Yup.string().notRequired(),
     receivingAmount3Date: Yup.string().notRequired(),
     receivingAmount3Method: Yup.string().notRequired(),
+    refund: Yup.string().notRequired(),
+    penality: Yup.string().notRequired(),
+    refundDate: Yup.string().notRequired(),
   });
   const formOptions = { resolver: yupResolver(validationSchema) };
 
@@ -56,11 +59,11 @@ function AddEdit(props) {
         bookedOn: formatDate(data.booked),
         ticketNumber: data.ticket,
         paidAmount: data.paid,
-        receivingAmount1: data.receiving,
+        receivingAmount1: data.receiving || 0,
         receivingAmount1Date:
           data.receivingAmount1Date && formatDate(data.receivingAmount1Date),
-        receivingAmount2: data.receivingAmount2 || "",
-        receivingAmount3: data.receivingAmount3 || "",
+        receivingAmount2: data.receivingAmount2 || 0,
+        receivingAmount3: data.receivingAmount3 || 0,
         receivingAmount2Date:
           data.receivingAmount2Date && formatDate(data.receivingAmount2Date),
         receivingAmount3Date:
@@ -73,6 +76,9 @@ function AddEdit(props) {
         dates: data.dates || "",
         phone: data.phone || "",
         flight: data.flight || "",
+        refund: data.refund || "",
+        penality: data.penality || "",
+        refundDate: data.refundDate || "",
       };
       if (!ticket) {
         await ticketsService.create(ticketNew);
@@ -94,6 +100,9 @@ function AddEdit(props) {
           dates: "",
           phone: "",
           flight: "",
+          refund: "",
+          penality: "",
+          refundDate: "",
         });
         alertService.success(
           "Ticket for " + ticketNew.name + " added successfully",
@@ -343,7 +352,8 @@ function AddEdit(props) {
           <input
             name="receivingAmount2"
             defaultValue={ticket?.receivingAmount2}
-            type="text"
+            type="number"
+            step="0.01"
             {...register("receivingAmount2")}
             className={`form-control ${
               errors.receivingAmount2 ? "is-invalid" : ""
@@ -391,7 +401,8 @@ function AddEdit(props) {
           <input
             name="receivingAmount3"
             defaultValue={ticket?.receivingAmount3}
-            type="text"
+            type="number"
+            step="0.01"
             {...register("receivingAmount3")}
             className={`form-control ${
               errors.receivingAmount3 ? "is-invalid" : ""
@@ -430,6 +441,44 @@ function AddEdit(props) {
           <div className="invalid-feedback">
             {errors.receivingAmount3Method?.message}
           </div>
+        </div>
+      </div>
+
+      <div className="row">
+        <div className="mb-3 col">
+          <label className="form-label">Refund</label>
+          <input
+            name="refund"
+            defaultValue={ticket?.refund}
+            type="number"
+            step="0.01"
+            {...register("refund")}
+            className={`form-control ${errors.refund ? "is-invalid" : ""}`}
+          />
+          <div className="invalid-feedback">{errors.refund?.message}</div>
+        </div>
+        <div className="mb-3 col">
+          <label className="form-label">Refund Date</label>
+          <input
+            name="refundDate"
+            defaultValue={ticket?.refundDate}
+            type="date"
+            {...register("refundDate")}
+            className={`form-control ${errors.refundDate ? "is-invalid" : ""}`}
+          />
+          <div className="invalid-feedback">{errors.refundDate?.message}</div>
+        </div>
+        <div className="mb-3 col-md-4 col-sm-6">
+          <label className="form-label">Penality</label>
+          <input
+            name="penality"
+            defaultValue={ticket?.penality}
+            type="number"
+            step="0.01"
+            {...register("penality")}
+            className={`form-control ${errors.penality ? "is-invalid" : ""}`}
+          />
+          <div className="invalid-feedback">{errors.penality?.message}</div>
         </div>
       </div>
 

@@ -375,6 +375,19 @@ function Index() {
     doc.line(10, row, 200, row);
     row += 7;
 
+    if (ticket.refund) {
+      doc.text("Rimborso", 10, row);
+      doc.text(":", 60, row);
+      let refund =
+        ticket.refund +
+        " EUR" +
+        (ticket.refundDate ? " - " + formatDate(ticket.refundDate, "IT") : "");
+      doc.text(refund, 65, row, { maxWidth: width }, null, "left");
+      refund.length > length ? (row += 10) : (row += 4);
+      doc.line(10, row, 200, row);
+      row += 7;
+    }
+
     /*const generateData = function () {
       return [
         {
@@ -764,6 +777,16 @@ function Index() {
                 <td scope="col">Phone:</td>
                 <td scope="col">{ticket.phone}</td>
               </tr>
+              {ticket.refund && (
+                <tr>
+                  <td scope="col">Refund/Date/Penality:</td>
+                  <td scope="col">
+                    {ticket.refund} EUR -{" "}
+                    {formatDate(ticket.refundDate, "IT") + " "}-
+                    {" " + (ticket.penality || 0)} EUR
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         )}

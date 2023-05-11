@@ -65,6 +65,9 @@ function ticketsModel() {
       dates: { type: String, required: false },
       phone: { type: String, required: false },
       flight: { type: String, required: false },
+      refund: { type: String, required: false },
+      penality: { type: String, required: false },
+      refundDate: { type: String, required: false },
     },
     {
       // add createdAt and updatedAt timestamps
