@@ -228,11 +228,13 @@ function Home() {
     start.setDate(1);
     start = formatDate(start);
     let end = formatDate(new Date());
+    let type = "bookedOn";
     if (dates) {
       start = dates.start;
       end = dates.end;
+      type = dates.type;
     }
-    setDates({ start, end });
+    setDates({ start, end, type });
     setProfit({});
     setAmounts({});
     setMethods({});
@@ -241,7 +243,7 @@ function Home() {
     setAgents({});
     setAgentsP({});
     setAgentsA({});
-    ticketsService.getProfit({ start, end }).then((x) => {
+    ticketsService.getProfit({ start, end, type }).then((x) => {
       console.log(x);
       setProfit(x.ticketsP);
       setAmounts(x.ticketsP);
@@ -257,14 +259,28 @@ function Home() {
   const search = () => {
     let start = document.getElementById("start").value;
     let end = document.getElementById("end").value;
-    getProfit({ start, end });
+    let type = document.getElementById("type").value;
+    getProfit({ start, end, type });
   };
 
   return (
     <>
       <div className="container">
         <div className="row">
-          <div className="col-sm-5">
+          <div className="col-sm-2">
+            <label htmlFor="type">Type:</label>
+            <div className="input-group">
+              <select id="type" className="form-select">
+                <option defaultValue value="bookedOn">
+                  Issue Date
+                </option>
+                <option value="receivingAmount1Date">Amount 1 Date</option>
+                <option value="receivingAmount2Date">Amount 2 Date</option>
+                <option value="receivingAmount3Date">Amount 3 Date</option>
+              </select>
+            </div>
+          </div>
+          <div className="col-sm-4">
             <label htmlFor="start">From Date:</label>
             <div className="input-group">
               <input
@@ -276,7 +292,7 @@ function Home() {
               />
             </div>
           </div>
-          <div className="col-sm-5">
+          <div className="col-sm-4">
             <label htmlFor="end">To Date:</label>
             <div className="input-group">
               <input

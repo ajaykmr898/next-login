@@ -11,9 +11,9 @@ export const ticketsRepo = {
   getProfit,
 };
 
-async function getAll(dates) {
+async function getAll(filters) {
   return await Tickets.find({
-    bookedOn: { $gte: dates.start, $lte: dates.end },
+    [filters.type]: { $gte: filters.start, $lte: filters.end },
   }).sort({ bookedOn: -1 });
 }
 
@@ -34,9 +34,9 @@ async function _delete(id) {
   await Tickets.findByIdAndRemove(id);
 }
 
-async function getProfit(dates) {
+async function getProfit(filters) {
   return await Tickets.find({
-    bookedOn: { $gte: dates.start, $lte: dates.end },
+    [filters.type]: { $gte: filters.start, $lte: filters.end },
   }).sort({
     bookedOn: 1,
   });

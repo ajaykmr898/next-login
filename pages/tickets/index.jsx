@@ -22,7 +22,7 @@ function Index() {
   const [deleteTicketDialog, setDeleteTicketDialog] = useState(false);
   const [ticket, setTicket] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [dates, setDates] = useState({ start: "", end: "" });
+  const [dates, setDates] = useState({ start: "", end: "", type: "" });
   const [totals, setTotals] = useState([0, 0, 0, 0]);
 
   useEffect(() => {
@@ -36,14 +36,15 @@ function Index() {
     start.setDate(1);
     start = formatDate(start);
     let end = formatDate(new Date());
+    let type = "bookedOn";
     if (dates) {
       start = dates.start;
       end = dates.end;
+      type = dates.type;
     } else {
-      setDates({ start, end });
+      setDates({ start, end, type });
     }
-
-    ticketsService.getAll({ start, end }).then((x) => {
+    ticketsService.getAll({ start, end, type }).then((x) => {
       const tickets = x.map((t, i) => {
         let bkd = formatDate(t.bookedOn, "IT");
         let ra1d = t.receivingAmount1Date
@@ -89,7 +90,8 @@ function Index() {
   const search = () => {
     let start = document.getElementById("start").value;
     let end = document.getElementById("end").value;
-    getTickets({ start, end });
+    let type = document.getElementById("type").value;
+    getTickets({ start, end, type });
   };
 
   const [filters, setFilters] = useState({
@@ -557,7 +559,20 @@ function Index() {
     <Layout>
       <div className="container">
         <div className="row">
-          <div className="col-sm-5">
+          <div className="col-sm-2">
+            <label htmlFor="type">Type:</label>
+            <div className="input-group">
+              <select id="type" className="form-select">
+                <option defaultValue value="bookedOn">
+                  Issue Date
+                </option>
+                <option value="receivingAmount1Date">Amount 1 Date</option>
+                <option value="receivingAmount2Date">Amount 2 Date</option>
+                <option value="receivingAmount3Date">Amount 3 Date</option>
+              </select>
+            </div>
+          </div>
+          <div className="col-sm-4">
             <label htmlFor="start">From Date:</label>
             <div className="input-group">
               <input
@@ -569,7 +584,7 @@ function Index() {
               />
             </div>
           </div>
-          <div className="col-sm-5">
+          <div className="col-sm-4">
             <label htmlFor="end">To Date:</label>
             <div className="input-group">
               <input

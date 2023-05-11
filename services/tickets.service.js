@@ -28,8 +28,8 @@ export const ticketsService = {
   getProfit,
 };
 
-async function getAll(dates) {
-  return await fetchWrapper.post(baseUrl, dates);
+async function getAll(filters) {
+  return await fetchWrapper.post(baseUrl, filters);
 }
 
 async function create(ticket) {
@@ -48,8 +48,8 @@ async function getById(id) {
   return await fetchWrapper.get(`${baseUrl}/${id}`);
 }
 
-async function getProfit(dates) {
-  const result = await fetchWrapper.post(baseUrl + "/profit", dates);
+async function getProfit(filters) {
+  const result = await fetchWrapper.post(baseUrl + "/profit", filters);
   let ticketsP = {};
   let methods = {};
   let agents = {};
