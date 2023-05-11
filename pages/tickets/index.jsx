@@ -101,6 +101,7 @@ function Index() {
     "bookedOn",
     "phone",
     "iata",
+    "flight",
   ]);
   const [globalFilterValue, setGlobalFilterValue] = useState("");
 
@@ -136,6 +137,7 @@ function Index() {
         "bookedOn",
         "phone",
         "iata",
+        "flight",
       ]);
     }
   };
@@ -334,9 +336,9 @@ function Index() {
     doc.text(":", 60, row);
     let total =
       parseFloat(
-        parseFloat(ticket.receivingAmount1) +
-          parseFloat(ticket.receivingAmount2) +
-          parseFloat(ticket.receivingAmount3)
+        (parseFloat(ticket.receivingAmount1) || 0) +
+          (parseFloat(ticket.receivingAmount2) || 0) +
+          (parseFloat(ticket.receivingAmount3) || 0)
       ).toFixed(2) + " EUR";
     doc.text(total, 65, row, { maxWidth: width }, null, "left");
     total.length > length ? (row += 10) : (row += 4);
