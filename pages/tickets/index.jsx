@@ -23,7 +23,7 @@ function Index() {
   const [ticket, setTicket] = useState(null);
   const [loading, setLoading] = useState(false);
   const [dates, setDates] = useState({ start: "", end: "" });
-  const [totals, setTotals] = useState([0, 0, 0]);
+  const [totals, setTotals] = useState([0, 0, 0, 0]);
 
   useEffect(() => {
     getTickets();
@@ -72,6 +72,7 @@ function Index() {
           idP: i + 1,
           receivingAmountT: "€ " + tra,
           paidAmount: "€ " + t.paidAmount,
+          agentCost: t.agentCost ? "€ " + t.agentCost : t.agentCost,
         };
       });
       setTickets(tickets);
@@ -352,7 +353,7 @@ function Index() {
     doc.line(10, row, 200, row);
     row += 7;
 
-    doc.text("Volo", 10, row);
+    doc.text("Volo/Nave", 10, row);
     doc.text(":", 60, row);
     doc.text(ticket.flight, 65, row, { maxWidth: width }, null, "left");
     ticket.flight.length > length ? (row += 10) : (row += 4);
@@ -496,7 +497,7 @@ function Index() {
         <Column />
         <Column />
         <Column />
-        <Column />
+        <Column footer={totals[3]} />
       </Row>
     </ColumnGroup>
   );
@@ -506,19 +507,23 @@ function Index() {
     let tp = 0;
     let tc = 0;
     let tr = 0;
+    let ta = 0;
     for (let i = 0; i < data.length; i++) {
       let ttp = data[i].profit.replace("€ ", "");
       let ttc = data[i].paidAmount.replace("€ ", "");
       let ttr = data[i].receivingAmountT.replace("€ ", "");
+      let tta = data[i].agentCost ? data[i].agentCost.replace("€ ", "") : 0;
       tp += parseFloat(ttp);
       tc += parseFloat(ttc);
       tr += parseFloat(ttr);
+      ta += parseFloat(tta);
     }
 
     setTotals([
       "€ " + tp.toFixed(2),
       "€ " + tc.toFixed(2),
       "€ " + tr.toFixed(2),
+      "€ " + ta.toFixed(2),
     ]);
   };
 
@@ -741,6 +746,10 @@ function Index() {
               <tr>
                 <td scope="col">Travel2:</td>
                 <td scope="col">{ticket.travel2}</td>
+              </tr>
+              <tr>
+                <td scope="col">Volo/Nave</td>
+                <td scope="col">{ticket.flight}</td>
               </tr>
               <tr>
                 <td scope="col">Dates:</td>
