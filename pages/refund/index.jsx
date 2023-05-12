@@ -484,44 +484,40 @@ function Index() {
   const footerGroup = (
     <ColumnGroup>
       <Row>
-        {/*<Column
+        <Column
           footer="Totals:"
-          colSpan={6}
+          colSpan={3}
           footerStyle={{ textAlign: "right" }}
         />
         <Column footer={totals[0]} />
+        <Column />
         <Column footer={totals[1]} />
         <Column footer={totals[2]} />
         <Column />
         <Column />
         <Column />
-        <Column footer={totals[3]} />*/}
       </Row>
     </ColumnGroup>
   );
 
   const calculate = (data) => {
     console.log(data);
+    let tr = 0;
     let tp = 0;
     let tc = 0;
-    let tr = 0;
-    let ta = 0;
     for (let i = 0; i < data.length; i++) {
-      let ttp = data[i].profit.replace("€ ", "");
-      let ttc = data[i].paidAmount.replace("€ ", "");
-      let ttr = data[i].receivingAmountT.replace("€ ", "");
-      let tta = data[i].agentCost ? data[i].agentCost.replace("€ ", "") : 0;
+      let ttr = data[i].refund ? data[i].refund.replace("€ ", "") : 0;
+      let ttp = data[i].penality ? data[i].penality.replace("€ ", "") : 0;
+      let ttc = data[i].refund ? data[i].refund.replace("€ ", "") : 0;
+      tr += parseFloat(ttr);
       tp += parseFloat(ttp);
       tc += parseFloat(ttc);
-      tr += parseFloat(ttr);
-      ta += parseFloat(tta);
     }
 
     setTotals([
+      "€ " + tr.toFixed(2),
       "€ " + tp.toFixed(2),
       "€ " + tc.toFixed(2),
-      "€ " + tr.toFixed(2),
-      "€ " + ta.toFixed(2),
     ]);
   };
 
@@ -605,48 +601,19 @@ function Index() {
           emptyMessage="No tickets found."
         >
           <Column
-            style={{ maxWidth: "1rem" }}
             header="Actions"
             body={actionBodyTemplate}
             exportable={false}
           ></Column>
-          <Column style={{ maxWidth: "1rem" }} field="idP" header="Id" />
-          <Column
-            style={{ maxWidth: "2rem" }}
-            field="name"
-            sortable
-            header="Passenger"
-          />
-          <Column
-            field="refund"
-            style={{ maxWidth: "1rem" }}
-            sortable
-            header="Refund"
-          />
-          <Column
-            field="refundDate"
-            style={{ maxWidth: "1rem" }}
-            sortable
-            header="Refund Date"
-          />
-          <Column
-            field="penality"
-            style={{ maxWidth: "1rem" }}
-            sortable
-            header="Penality"
-          />
-          <Column
-            style={{ maxWidth: "1rem" }}
-            field="bookingCode"
-            sortable
-            header="PNR"
-          />
-          <Column
-            style={{ maxWidth: "2rem" }}
-            field="ticketNumber"
-            sortable
-            header="Ticket"
-          />
+          <Column field="idP" header="Id" />
+          <Column field="name" sortable header="Passenger" />
+          <Column field="refund" sortable header="Refund" />
+          <Column field="refundDate" sortable header="Refund Date" />
+          <Column field="penality" sortable header="Penality" />
+          <Column field="refund" sortable header="Returned" />
+          <Column field="refundDate" sortable header="Returned Date" />
+          <Column field="bookingCode" sortable header="PNR" />
+          <Column field="ticketNumber" sortable header="Ticket" />
           <Column hidden field="iata" sortable header="Issued by" />
           <Column hidden field="profit" sortable header="Profit" />
           <Column hidden field="paidAmount" sortable header="Cost" />
@@ -657,12 +624,7 @@ function Index() {
             header="Tot. Received"
           />
           <Column hidden field="methods" sortable header="Pay. Methods" />
-          <Column
-            style={{ maxWidth: "1rem" }}
-            field="bookedOn"
-            sortable
-            header="Issue Date"
-          />
+          <Column field="bookedOn" sortable header="Issue Date" />
           <Column hidden field="agent" sortable header="Agent" />
           <Column hidden field="agentCost" sortable header="Ag. Cost" />
           <Column hidden field="phone" sortable header="Phone" />
@@ -807,14 +769,23 @@ function Index() {
                 <td scope="col">{ticket.phone}</td>
               </tr>
               {ticket.refund && (
-                <tr>
-                  <td scope="col">Refund/Date/Penality:</td>
-                  <td scope="col">
-                    {ticket.refund} EUR -{" "}
-                    {formatDate(ticket.refundDate, "IT") + " "}-
-                    {" " + (ticket.penality || 0)} EUR
-                  </td>
-                </tr>
+                <>
+                  <tr>
+                    <td scope="col">Refund/Date/Penality:</td>
+                    <td scope="col">
+                      {ticket.refund + " - "}
+                      {ticket.refundDate && ticket.refundDate + " - "}
+                      {ticket.penality}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td scope="col">Return/Date:</td>
+                    <td scope="col">
+                      {ticket.refund + " - "}
+                      {ticket.refundDate && ticket.refundDate}
+                    </td>
+                  </tr>
+                </>
               )}
             </tbody>
           </table>
