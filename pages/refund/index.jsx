@@ -496,6 +496,7 @@ function Index() {
         <Column />
         <Column />
         <Column />
+        <Column />
       </Row>
     </ColumnGroup>
   );
