@@ -29,7 +29,47 @@ export const ticketsService = {
 };
 
 async function getAll(filters) {
-  return await fetchWrapper.post(baseUrl, filters);
+  const response = await fetchWrapper.post(baseUrl, filters);
+  const tickets = response.map((t, i) => {
+    let bkd = formatDate(t.bookedOn, "IT");
+    let ra1d = t.receivingAmount1Date
+      ? formatDate(t.receivingAmount1Date, "IT")
+      : "";
+    let ra2d = t.receivingAmount2Date
+      ? formatDate(t.receivingAmount2Date, "IT")
+      : "";
+    let ra3d = t.receivingAmount3Date
+      ? formatDate(t.receivingAmount3Date, "IT")
+      : "";
+    let tk2 = t.paidAmount.trim() ? parseFloat(t.paidAmount) : 0;
+    let tra = t.receivingAmount1.trim()
+      ? (parseFloat(t.receivingAmount1) || 0) +
+        (parseFloat(t.receivingAmount2) || 0) +
+        (parseFloat(t.receivingAmount3) || 0)
+      : 0;
+    let profit = parseFloat((tra - tk2).toFixed(2));
+    let methods =
+      t.paymentMethod +
+      (t.receivingAmount2Method ? " - " + t.receivingAmount2Method : "") +
+      (t.receivingAmount3Method ? " - " + t.receivingAmount3Method : "");
+    return {
+      ...t,
+      profit: "€ " + profit,
+      bookedOn: bkd,
+      receivingAmount1Date: ra1d,
+      receivingAmount2Date: ra2d,
+      receivingAmount3Date: ra3d,
+      idP: i + 1,
+      receivingAmountT: "€ " + tra,
+      paidAmount: "€ " + t.paidAmount,
+      agentCost: t.agentCost ? "€ " + t.agentCost : t.agentCost,
+      methods: methods,
+      refund: t.refund ? "€ " + t.refund : t.refund,
+      refundDate: t.refundDate ? formatDate(t.refundDate, "IT") : t.refundDate,
+      penality: t.penality ? "€ " + t.penality : t.penality,
+    };
+  });
+  return tickets;
 }
 
 async function create(ticket) {

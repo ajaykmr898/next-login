@@ -30,6 +30,17 @@ async function getAll(filters) {
       : {
           [filters.type]: { $gte: filters.start, $lte: filters.end },
         };
+
+  if (filters?.refund) {
+    filter = {
+      ...filter,
+      $and: [
+        { refund: { $ne: null } },
+        { refund: { $ne: "" } },
+        { iata: { $eq: "SCA" } },
+      ],
+    };
+  }
   return await Tickets.find(filter).sort({ bookedOn: -1 });
 }
 

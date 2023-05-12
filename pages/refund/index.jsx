@@ -22,7 +22,12 @@ function Index() {
   const [deleteTicketDialog, setDeleteTicketDialog] = useState(false);
   const [ticket, setTicket] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [dates, setDates] = useState({ start: "", end: "", type: "" });
+  const [dates, setDates] = useState({
+    start: "",
+    end: "",
+    type: "",
+    refund: true,
+  });
   const [totals, setTotals] = useState([0, 0, 0, 0]);
 
   useEffect(() => {
@@ -37,14 +42,15 @@ function Index() {
     start = formatDate(start);
     let end = formatDate(new Date());
     let type = "bookedOn";
+    let refund = true;
     if (dates) {
       start = dates.start;
       end = dates.end;
       type = dates.type;
     } else {
-      setDates({ start, end, type });
+      setDates({ start, end, type, refund });
     }
-    ticketsService.getAll({ start, end, type }).then((tickets) => {
+    ticketsService.getAll({ start, end, type, refund }).then((tickets) => {
       setTickets(tickets);
       onGlobalFilterChange({ target: { value: "" } });
       setLoading(false);
@@ -478,7 +484,7 @@ function Index() {
   const footerGroup = (
     <ColumnGroup>
       <Row>
-        <Column
+        {/*<Column
           footer="Totals:"
           colSpan={6}
           footerStyle={{ textAlign: "right" }}
@@ -489,7 +495,7 @@ function Index() {
         <Column />
         <Column />
         <Column />
-        <Column footer={totals[3]} />
+        <Column footer={totals[3]} />*/}
       </Row>
     </ColumnGroup>
   );
@@ -599,28 +605,66 @@ function Index() {
           emptyMessage="No tickets found."
         >
           <Column
-            style={{ maxWidth: "6rem" }}
+            style={{ maxWidth: "1rem" }}
             header="Actions"
             body={actionBodyTemplate}
             exportable={false}
           ></Column>
-          <Column field="idP" header="Id" />
+          <Column style={{ maxWidth: "1rem" }} field="idP" header="Id" />
           <Column
-            style={{ maxWidth: "8rem" }}
+            style={{ maxWidth: "2rem" }}
             field="name"
             sortable
             header="Passenger"
           />
-          <Column field="bookingCode" sortable header="PNR" />
-          <Column field="ticketNumber" sortable header="Ticket" />
-          <Column field="iata" sortable header="Issued by" />
-          <Column field="profit" sortable header="Profit" />
-          <Column field="paidAmount" sortable header="Cost" />
-          <Column field="receivingAmountT" sortable header="Tot. Received" />
-          <Column field="methods" sortable header="Pay. Methods" />
-          <Column field="bookedOn" sortable header="Issue Date" />
-          <Column field="agent" sortable header="Agent" />
-          <Column field="agentCost" sortable header="Ag. Cost" />
+          <Column
+            field="refund"
+            style={{ maxWidth: "1rem" }}
+            sortable
+            header="Refund"
+          />
+          <Column
+            field="refundDate"
+            style={{ maxWidth: "1rem" }}
+            sortable
+            header="Refund Date"
+          />
+          <Column
+            field="penality"
+            style={{ maxWidth: "1rem" }}
+            sortable
+            header="Penality"
+          />
+          <Column
+            style={{ maxWidth: "1rem" }}
+            field="bookingCode"
+            sortable
+            header="PNR"
+          />
+          <Column
+            style={{ maxWidth: "2rem" }}
+            field="ticketNumber"
+            sortable
+            header="Ticket"
+          />
+          <Column hidden field="iata" sortable header="Issued by" />
+          <Column hidden field="profit" sortable header="Profit" />
+          <Column hidden field="paidAmount" sortable header="Cost" />
+          <Column
+            hidden
+            field="receivingAmountT"
+            sortable
+            header="Tot. Received"
+          />
+          <Column hidden field="methods" sortable header="Pay. Methods" />
+          <Column
+            style={{ maxWidth: "1rem" }}
+            field="bookedOn"
+            sortable
+            header="Issue Date"
+          />
+          <Column hidden field="agent" sortable header="Agent" />
+          <Column hidden field="agentCost" sortable header="Ag. Cost" />
           <Column hidden field="phone" sortable header="Phone" />
           <Column hidden field="cardNumber" sortable header="Card Number" />
           <Column hidden field="flight" sortable header="Flight" />

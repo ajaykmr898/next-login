@@ -7,13 +7,14 @@ export { Nav };
 
 function Nav() {
   const [user, setUser] = useState(null);
-  const pages = ["users", "tickets", "upload"];
+  const pages = ["users", "tickets", "upload", "refund"];
   const titles = {
     users: "Agents List",
     tickets: "Tickets List",
     upload: "Upload Files",
     "tickets/add": "Add Ticket",
     "tickets/edit": "Edit Ticket",
+    refund: "Refunds",
   };
   const config = getConfig();
   let icon = "fa fa-plane";
@@ -80,6 +81,12 @@ function Nav() {
             <Link href="/tickets">
               <i className="fa-fw fas fa-list nav-icon"></i>
               &nbsp;&nbsp;&nbsp;&nbsp; Tickets
+            </Link>
+          </li>
+          <li className={getActiveMenu("refund")}>
+            <Link href="/refund">
+              <i className="fa-fw fas fa-wallet nav-icon"></i>
+              &nbsp;&nbsp;&nbsp;&nbsp; Refunds
             </Link>
           </li>
           <li className={getActiveMenu("upload")}>
