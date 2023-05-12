@@ -356,9 +356,7 @@ function Index() {
       doc.text("Rimborso", 10, row);
       doc.text(":", 60, row);
       let refund =
-        ticket.refund +
-        " EUR" +
-        (ticket.refundDate ? " - " + formatDate(ticket.refundDate, "IT") : "");
+        ticket.refund + (ticket.refundDate ? " - " + ticket.refundDate : "");
       doc.text(refund, 65, row, { maxWidth: width }, null, "left");
       refund.length > length ? (row += 10) : (row += 4);
       doc.line(10, row, 200, row);
