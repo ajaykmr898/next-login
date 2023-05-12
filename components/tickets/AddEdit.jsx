@@ -37,6 +37,8 @@ function AddEdit(props) {
     refund: Yup.string().notRequired(),
     penality: Yup.string().notRequired(),
     refundDate: Yup.string().notRequired(),
+    returned: Yup.string().notRequired(),
+    returnedDate: Yup.string().notRequired(),
   });
   const formOptions = { resolver: yupResolver(validationSchema) };
 
@@ -79,6 +81,8 @@ function AddEdit(props) {
         refund: data.refund || "",
         penality: data.penality || "",
         refundDate: data.refundDate || "",
+        returned: data.returned || "",
+        returnedDate: data.returnedDate || "",
       };
       if (!ticket) {
         await ticketsService.create(ticketNew);
@@ -103,6 +107,8 @@ function AddEdit(props) {
           refund: "",
           penality: "",
           refundDate: "",
+          returned: "",
+          returnedDate: "",
         });
         alertService.success(
           "Ticket for " + ticketNew.name + " added successfully",
@@ -479,6 +485,35 @@ function AddEdit(props) {
             className={`form-control ${errors.penality ? "is-invalid" : ""}`}
           />
           <div className="invalid-feedback">{errors.penality?.message}</div>
+        </div>
+      </div>
+
+      <div className="row">
+        <div className="mb-3 col">
+          <label className="form-label">Returned</label>
+          <input
+            name="returned"
+            defaultValue={ticket?.returned}
+            type="number"
+            step="0.01"
+            {...register("returned")}
+            className={`form-control ${errors.returned ? "is-invalid" : ""}`}
+          />
+          <div className="invalid-feedback">{errors.returned?.message}</div>
+        </div>
+        <div className="mb-3 col">
+          <label className="form-label">Returned Date</label>
+          <input
+            name="returnedDate"
+            defaultValue={ticket?.returnedDate}
+            type="date"
+            step="0.01"
+            {...register("returnedDate")}
+            className={`form-control ${
+              errors.returnedDate ? "is-invalid" : ""
+            }`}
+          />
+          <div className="invalid-feedback">{errors.returnedDate?.message}</div>
         </div>
       </div>
 

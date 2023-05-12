@@ -352,13 +352,14 @@ function Index() {
     doc.line(10, row, 200, row);
     row += 7;
 
-    if (ticket.refund) {
+    if (ticket.returned) {
       doc.text("Rimborso", 10, row);
       doc.text(":", 60, row);
-      let refund =
-        ticket.refund + (ticket.refundDate ? " - " + ticket.refundDate : "");
-      doc.text(refund, 65, row, { maxWidth: width }, null, "left");
-      refund.length > length ? (row += 10) : (row += 4);
+      let returned =
+        ticket.returned +
+        (ticket.returnedDate ? " - " + ticket.returnedDate : "");
+      doc.text(returned, 65, row, { maxWidth: width }, null, "left");
+      returned.length > length ? (row += 10) : (row += 4);
       doc.line(10, row, 200, row);
       row += 7;
     }
@@ -507,7 +508,7 @@ function Index() {
     for (let i = 0; i < data.length; i++) {
       let ttr = data[i].refund ? data[i].refund.replace("€ ", "") : 0;
       let ttp = data[i].penality ? data[i].penality.replace("€ ", "") : 0;
-      let ttc = data[i].refund ? data[i].refund.replace("€ ", "") : 0;
+      let ttc = data[i].returned ? data[i].returned.replace("€ ", "") : 0;
       tr += parseFloat(ttr);
       tp += parseFloat(ttp);
       tc += parseFloat(ttc);
@@ -609,8 +610,8 @@ function Index() {
           <Column field="refund" sortable header="Refund" />
           <Column field="refundDate" sortable header="Refund Date" />
           <Column field="penality" sortable header="Penality" />
-          <Column field="refund" sortable header="Returned" />
-          <Column field="refundDate" sortable header="Returned Date" />
+          <Column field="returned" sortable header="Returned" />
+          <Column field="returnedDate" sortable header="Returned Date" />
           <Column field="bookingCode" sortable header="PNR" />
           <Column field="ticketNumber" sortable header="Ticket" />
           <Column hidden field="iata" sortable header="Issued by" />
@@ -780,8 +781,8 @@ function Index() {
                   <tr>
                     <td scope="col">Return/Date:</td>
                     <td scope="col">
-                      {ticket.refund + " - "}
-                      {ticket.refundDate && ticket.refundDate}
+                      {ticket.returned && ticket.returned + " - "}
+                      {ticket.returnedDate && ticket.returnedDate}
                     </td>
                   </tr>
                 </>

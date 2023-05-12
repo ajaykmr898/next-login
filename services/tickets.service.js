@@ -66,6 +66,10 @@ async function getAll(filters) {
       methods: methods,
       refund: t.refund ? "€ " + t.refund : t.refund,
       refundDate: t.refundDate ? formatDate(t.refundDate, "IT") : t.refundDate,
+      returned: t.returned ? "€ " + t.returned : t.returned,
+      returnedDate: t.returnedDate
+        ? formatDate(t.returnedDate, "IT")
+        : t.returnedDate,
       penality: t.penality ? "€ " + t.penality : t.penality,
     };
   });
@@ -350,6 +354,8 @@ async function upload(files) {
         refund: "",
         refundDate: "",
         penality: "",
+        returned: "",
+        returnedDate: "",
       };
       fc.push(tkt);
     });
