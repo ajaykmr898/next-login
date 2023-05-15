@@ -37,7 +37,7 @@ async function getAll(filters) {
       $and: [
         { refund: { $ne: null } },
         { refund: { $ne: "" } },
-        { iata: { $eq: "SCA" } },
+        /*{ iata: { $eq: "SCA" } },*/
       ],
     };
   }
