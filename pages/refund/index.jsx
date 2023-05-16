@@ -489,10 +489,10 @@ function Index() {
           footerStyle={{ textAlign: "right" }}
         />
         <Column footer={totals[0]} />
-        <Column />
         <Column footer={totals[1]} />
-        <Column footer={totals[2]} />
         <Column />
+        <Column footer={totals[2]} />
+        <Column footer={totals[3]} />`
         <Column />
         <Column />
         <Column />
@@ -502,6 +502,7 @@ function Index() {
 
   const calculate = (data) => {
     console.log(data);
+    let ts = 0;
     let tr = 0;
     let tp = 0;
     let tc = 0;
@@ -509,12 +510,15 @@ function Index() {
       let ttr = data[i].refund ? data[i].refund.replace("€ ", "") : 0;
       let ttp = data[i].penality ? data[i].penality.replace("€ ", "") : 0;
       let ttc = data[i].returned ? data[i].returned.replace("€ ", "") : 0;
+      let tts = data[i].supplied ? data[i].supplied.replace("€ ", "") : 0;
+      ts += parseFloat(tts);
       tr += parseFloat(ttr);
       tp += parseFloat(ttp);
       tc += parseFloat(ttc);
     }
 
     setTotals([
+      "€ " + ts.toFixed(2),
       "€ " + tr.toFixed(2),
       "€ " + tp.toFixed(2),
       "€ " + tc.toFixed(2),
@@ -607,6 +611,7 @@ function Index() {
           ></Column>
           <Column field="idP" header="Id" />
           <Column field="name" sortable header="Passenger" />
+          <Column field="supplied" sortable header="Supplied SCA" />
           <Column field="refund" sortable header="Refund" />
           <Column field="refundDate" sortable header="Refund Date" />
           <Column field="penality" sortable header="Penality" />

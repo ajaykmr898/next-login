@@ -52,6 +52,9 @@ async function getAll(filters) {
       t.paymentMethod +
       (t.receivingAmount2Method ? " - " + t.receivingAmount2Method : "") +
       (t.receivingAmount3Method ? " - " + t.receivingAmount3Method : "");
+    let penality = t.refund
+      ? parseFloat(t.paidAmount) - parseFloat(t.refund)
+      : "";
     return {
       ...t,
       profit: "€ " + profit,
@@ -70,7 +73,8 @@ async function getAll(filters) {
       returnedDate: t.returnedDate
         ? formatDate(t.returnedDate, "IT")
         : t.returnedDate,
-      penality: t.penality ? "€ " + t.penality : t.penality,
+      supplied: t.supplied ? "€ " + t.supplied : t.supplied,
+      penality: penality !== "" ? "€ " + parseFloat(penality).toFixed(2) : "",
     };
   });
   return tickets;
@@ -353,7 +357,7 @@ async function upload(files) {
         flight: f,
         refund: "",
         refundDate: "",
-        penality: "",
+        supplied: "",
         returned: "",
         returnedDate: "",
       };

@@ -35,7 +35,7 @@ function AddEdit(props) {
     receivingAmount3Date: Yup.string().notRequired(),
     receivingAmount3Method: Yup.string().notRequired(),
     refund: Yup.string().notRequired(),
-    penality: Yup.string().notRequired(),
+    supplied: Yup.string().notRequired(),
     refundDate: Yup.string().notRequired(),
     returned: Yup.string().notRequired(),
     returnedDate: Yup.string().notRequired(),
@@ -79,7 +79,7 @@ function AddEdit(props) {
         phone: data.phone || "",
         flight: data.flight || "",
         refund: data.refund || "",
-        penality: data.penality || "",
+        supplied: data.supplied || "",
         refundDate: data.refundDate || "",
         returned: data.returned || "",
         returnedDate: data.returnedDate || "",
@@ -105,7 +105,7 @@ function AddEdit(props) {
           phone: "",
           flight: "",
           refund: "",
-          penality: "",
+          supplied: "",
           refundDate: "",
           returned: "",
           returnedDate: "",
@@ -475,16 +475,16 @@ function AddEdit(props) {
           <div className="invalid-feedback">{errors.refundDate?.message}</div>
         </div>
         <div className="mb-3 col-md-4 col-sm-6">
-          <label className="form-label">Penality</label>
+          <label className="form-label">Supplied SCA</label>
           <input
             name="penality"
-            defaultValue={ticket?.penality}
+            defaultValue={ticket?.supplied}
             type="number"
             step="0.01"
-            {...register("penality")}
-            className={`form-control ${errors.penality ? "is-invalid" : ""}`}
+            {...register("supplied")}
+            className={`form-control ${errors.supplied ? "is-invalid" : ""}`}
           />
-          <div className="invalid-feedback">{errors.penality?.message}</div>
+          <div className="invalid-feedback">{errors.supplied?.message}</div>
         </div>
       </div>
 

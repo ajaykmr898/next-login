@@ -8,11 +8,15 @@ function Budget(props) {
   const [total, setTotal] = useState(0);
   console.log("1,2");
 
-  // 0 rinominare penality in supplied
-  //1 prendere lista dei ticket con refund (non completamente gestito) [con refund] // e supplied < cost
-  //2 sceglere quali refund usare -> adjustTotal
+  //0 rinominare penality in supplied
+  //1 prendere lista dei ticket con refund (non completamente gestito) [con refund e supplied < cost]
+  //2 sceglere quali refund usare e fare adjustTotal
   //3 far vedere lista dei ticket non ancora completamente gestiti con budget verso SCA
-  //4 visualizzare tutte le operazioni nella tabella nuova
+  //6 visualizzare tutte le operazioni nella tabella nuova
+  // nome, pnr, biglietto, cost, refund, supplied, balance (r - total s), s date
+  //4 aggiornare supplied del biglietto ogni volta che il biglietto viene selezionato
+  //5 salvare nella nuova tabella i movimenti sui biglietti se scelti per refund o supply
+  //una riga per ogni use refund o set supply
 
   async function onSubmit(e) {
     e.preventDefault();
@@ -41,7 +45,7 @@ function Budget(props) {
       <div className="row">
         <div className="col-sm-4">
           <label className="form-label">
-            Budget <span className="text-danger">*</span>
+            Budget: <span className="text-danger">*</span>
           </label>
           <input
             name="budget"
@@ -58,7 +62,7 @@ function Budget(props) {
           <div className="text-center mt-3">+</div>
         </div>
         <div className="col-sm-4">
-          <label className="form-label">Refund</label>
+          <label className="form-label">Refund:</label>
           <input
             name="refund"
             disabled
@@ -73,7 +77,7 @@ function Budget(props) {
           <div className="text-center mt-3">=</div>
         </div>{" "}
         <div className="col-sm-1">
-          <br />
+          <label>Total:</label>
           <div className="text-center mt-3">{total}</div>
         </div>
         <div className="col-sm-1">
