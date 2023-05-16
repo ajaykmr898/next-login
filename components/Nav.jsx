@@ -7,7 +7,7 @@ export { Nav };
 
 function Nav() {
   const [user, setUser] = useState(null);
-  const pages = ["users", "tickets", "upload", "refund"];
+  const pages = ["users", "tickets", "upload", "refund", "seller"];
   const titles = {
     users: "Agents List",
     tickets: "Tickets List",
@@ -15,6 +15,8 @@ function Nav() {
     "tickets/add": "Add Ticket",
     "tickets/edit": "Edit Ticket",
     refund: "Refunds",
+    seller: "Provider",
+    "seller/transfer": "Transfer Amount",
   };
   const config = getConfig();
   let icon = "fa fa-plane";
@@ -87,6 +89,12 @@ function Nav() {
             <Link href="/refund">
               <i className="fa-fw fas fa-wallet nav-icon"></i>
               &nbsp;&nbsp;&nbsp;&nbsp; Refunds
+            </Link>
+          </li>
+          <li className={getActiveMenu("seller")}>
+            <Link href="/seller">
+              <i className="fa-fw fas fa-shop nav-icon"></i>
+              &nbsp;&nbsp;&nbsp;&nbsp; Provider
             </Link>
           </li>
           <li className={getActiveMenu("upload")}>

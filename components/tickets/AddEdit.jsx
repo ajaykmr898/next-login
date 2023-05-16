@@ -507,7 +507,6 @@ function AddEdit(props) {
             name="returnedDate"
             defaultValue={ticket?.returnedDate}
             type="date"
-            step="0.01"
             {...register("returnedDate")}
             className={`form-control ${
               errors.returnedDate ? "is-invalid" : ""
