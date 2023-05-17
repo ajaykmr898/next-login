@@ -31,6 +31,7 @@ function Budget(props) {
           let remained = e.paidAmount - (e.supplied || 0);
           return {
             ...e,
+            supplied: e.supplied ? e.supplied : 0,
             remained: parseFloat(remained).toFixed(2),
           };
         });
