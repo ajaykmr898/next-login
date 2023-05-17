@@ -27,7 +27,13 @@ export const ticketsService = {
   getById,
   getProfit,
   getRefunds,
+  getTicketsForSupply,
 };
+
+async function getTicketsForSupply(filters = {}) {
+  const response = await fetchWrapper.post(baseUrl + "/supply", filters);
+  return response;
+}
 
 async function getAll(filters) {
   const response = await fetchWrapper.post(baseUrl, filters);
@@ -97,7 +103,7 @@ async function getById(id) {
   return await fetchWrapper.get(`${baseUrl}/${id}`);
 }
 
-async function getRefunds(filters) {
+async function getRefunds(filters = {}) {
   const result = await fetchWrapper.post(baseUrl + "/refund", filters);
   return result;
 }

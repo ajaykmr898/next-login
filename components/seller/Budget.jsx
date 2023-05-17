@@ -5,6 +5,7 @@ export { Budget };
 
 function Budget(props) {
   const refunds = props.refunds;
+  const [tickets, setTickets] = useState([]);
   const [total, setTotal] = useState(0);
   const [refundTot, setRefundTot] = useState(0);
   const [budgetTot, setBudgetTot] = useState(0);
@@ -24,7 +25,18 @@ function Budget(props) {
     e.preventDefault();
     alertService.clear();
     try {
-      console.log("3");
+      if (total > 0) {
+        const res = await ticketsService.getTicketsForSupply();
+        const res2 = res.map((e) => {
+          let remained = e.paidAmount - (e.supplied || 0);
+          return {
+            ...e,
+            remained: parseFloat(remained).toFixed(2),
+          };
+        });
+        setTickets(res2);
+        console.log("3", res2, changes);
+      }
       //alertService.success("Budget added successfully", true);
     } catch (error) {
       alertService.error(error);
@@ -63,7 +75,7 @@ function Budget(props) {
       if (toAdd && remainedI) {
         toAdd = parseFloat(toAdd);
         remainedI = parseFloat(remainedI);
-        if (toAdd <= remainedI) {
+        if (toAdd <= remainedI && toAdd > 0) {
           changesT.push({ id, toAdd, remainedI });
           number += toAdd;
           document.getElementsByClassName(
@@ -83,6 +95,10 @@ function Budget(props) {
       setRefundTot(number);
       adjustTotal(number, "r");
     }
+  }
+
+  function manageSupplied(id) {
+    console.log("here", id);
   }
 
   return (
@@ -124,7 +140,7 @@ function Budget(props) {
           </div>{" "}
           <div className="col-sm-1">
             <label>Total:</label>
-            <div className="text-center mt-3">{total}</div>
+            <div className="text-center mt-3">€ {total}</div>
           </div>
           <div className="col-sm-1">
             <br />
@@ -146,7 +162,9 @@ function Budget(props) {
               aria-expanded="true"
               aria-controls="collapseOne"
             >
-              {refunds.length ? "Refunds" : "No tickets with refund"}
+              {refunds.length
+                ? refunds.length + " Refunds"
+                : "No tickets with refund"}
             </button>
           </h2>
           <div
@@ -179,6 +197,7 @@ function Budget(props) {
                         placeholder="remained to use"
                         type="number"
                         step="0.01"
+                        min="0"
                         max={r.remained}
                       />
                       &nbsp;
@@ -191,6 +210,75 @@ function Budget(props) {
                       <label
                         hidden
                         className={`remained-ko-${r.id} text-danger`}
+                      >
+                        <i className="fa fa-times"></i>
+                      </label>
+                    </li>
+                    <br />
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
+      <br />
+      <div className="accordion" id="accordionExample1">
+        <div className="accordion-item">
+          <h2 className="accordion-header" id="headingOne">
+            <button
+              className="accordion-button"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapseOne1"
+              aria-expanded="true"
+              aria-controls="collapseOne"
+            >
+              {tickets.length
+                ? tickets.length + " Tickets"
+                : "No tickets to adjust"}
+            </button>
+          </h2>
+          <div
+            id="collapseOne1"
+            className="accordion-collapse collapse collapse"
+            aria-labelledby="headingOne"
+            data-bs-parent="#accordionExample1"
+          >
+            <div className="accordion-body">
+              {tickets.map((r, i) => {
+                return (
+                  <div key={i}>
+                    <li className={"tickets-" + i}>
+                      {r.name} - {r.bookingCode} - cost: € {r.paidAmount} -
+                      supplied: € {r.supplied} - remained: € {r.remained}
+                      &nbsp;-&nbsp;
+                      <input
+                        className={"tickets tickets-input-" + r.id}
+                        placeholder="insert to supply"
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        max={r.remained}
+                      />
+                      &nbsp;
+                      <button
+                        onClick={() => {
+                          manageSupplied(r.id);
+                        }}
+                      >
+                        Ok
+                      </button>
+                      &nbsp;
+                      <label
+                        hidden
+                        className={`tickets-ok-${r.id} text-success`}
+                      >
+                        <i className="fa fa-check"></i>
+                      </label>
+                      <label
+                        hidden
+                        className={`tickets-ko-${r.id} text-danger`}
                       >
                         <i className="fa fa-times"></i>
                       </label>
