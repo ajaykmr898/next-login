@@ -6,8 +6,10 @@ export { Budget };
 function Budget(props) {
   const refunds = props.refunds;
   const [tickets, setTickets] = useState([]);
+  const [delta, setDelta] = useState(0);
   const [total, setTotal] = useState(0);
   const [refundTot, setRefundTot] = useState(0);
+  const [date, setDate] = useState(null);
   const [budgetTot, setBudgetTot] = useState(0);
   const [changes, setChanges] = useState([]);
 
@@ -17,26 +19,39 @@ function Budget(props) {
   //3 far vedere lista dei ticket non ancora completamente gestiti con budget verso SCA
   //6 visualizzare tutte le operazioni nella tabella nuova
   // nome, pnr, biglietto, cost, refund, supplied, balance (r - total s), s date
-  //4 aggiornare supplied del biglietto ogni volta che il biglietto viene selezionato
+  //4 aggiornare supplied/date del biglietto ogni volta che il biglietto viene selezionato
   //5 salvare nella nuova tabella i movimenti sui biglietti se scelti per refund o supply
-  //una riga per ogni use refund o set supply
+  //una riga per ogni bonifico e use refund o set supply
+
+  useEffect(() => {
+    getTickets();
+  }, []);
+
+  async function getTickets() {
+    const res = await ticketsService.getTicketsForSupply();
+    const res2 = res.map((e) => {
+      let remained = e.paidAmount - (e.supplied || 0);
+      return {
+        ...e,
+        supplied: e.supplied ? e.supplied : 0,
+        remained: parseFloat(remained).toFixed(2),
+      };
+    });
+    setTickets(res2);
+  }
 
   async function onSubmit(e) {
     e.preventDefault();
     alertService.clear();
+    const dateT = document.getElementById("budget-date").value;
+    setDate(dateT);
+    setDelta(total);
     try {
-      if (total > 0) {
-        const res = await ticketsService.getTicketsForSupply();
-        const res2 = res.map((e) => {
-          let remained = e.paidAmount - (e.supplied || 0);
-          return {
-            ...e,
-            supplied: e.supplied ? e.supplied : 0,
-            remained: parseFloat(remained).toFixed(2),
-          };
-        });
-        setTickets(res2);
-        console.log("3", res2, changes);
+      if (total > 0 && dateT) {
+        document.getElementById("budget").disabled = true;
+        document.getElementById("budget-date").disabled = true;
+        document.getElementById("add").disabled = true;
+        console.log("3", changes, dateT);
       }
       //alertService.success("Budget added successfully", true);
     } catch (error) {
@@ -98,20 +113,56 @@ function Budget(props) {
     }
   }
 
-  function manageSupplied(id) {
-    console.log("here", id);
+  function manageSupplied(id, remained, supplied) {
+    let number = document.getElementsByClassName("tickets-input-" + id)[0]
+      .value;
+    supplied = parseFloat(supplied);
+    number = parseFloat(number);
+    remained = parseFloat(remained);
+    let deltaI = parseFloat(delta);
+    if (
+      !isNaN(number) &&
+      number >= 0 &&
+      number <= deltaI &&
+      number <= remained
+    ) {
+      number = number + supplied;
+      number = number.toFixed(2);
+      ticketsService.update(id, { supplied: number }).then((res) => {
+        let deltaT = deltaI - number;
+        deltaT = parseFloat(deltaT).toFixed(2);
+        // disable
+        document.getElementsByClassName("tickets-btn-" + id)[0].disabled = true;
+        setDelta(deltaT);
+      });
+    }
+    // prendere numero
+    // aggiornare db
+    // togleire da budget rimasto
   }
 
   return (
     <>
       <form id="add-form" onSubmit={(e) => onSubmit(e)}>
         <div className="row">
-          <div className="col-sm-4">
+          <div className="col-sm-3">
             <label className="form-label">
-              Budget: <span className="text-danger">*</span>
+              Bonifico Date: <span className="text-danger">*</span>
+            </label>
+            <input
+              name="budget-date"
+              id="budget-date"
+              type="date"
+              className="form-control"
+            />
+          </div>
+          <div className="col-sm-2">
+            <label className="form-label">
+              Bonifico: <span className="text-danger">*</span>
             </label>
             <input
               name="budget"
+              id="budget"
               type="number"
               step="0.01"
               onChange={(e) => {
@@ -124,7 +175,7 @@ function Budget(props) {
             <br />
             <div className="text-center mt-3">+</div>
           </div>
-          <div className="col-sm-4">
+          <div className="col-sm-2">
             <label className="form-label">Refund:</label>
             <input
               name="refund"
@@ -140,12 +191,16 @@ function Budget(props) {
             <div className="text-center mt-3">=</div>
           </div>{" "}
           <div className="col-sm-1">
-            <label>Total:</label>
+            <div className="text-center">Total:</div>
             <div className="text-center mt-3">€ {total}</div>
           </div>
           <div className="col-sm-1">
+            <div className="text-center">Remained:</div>
+            <div className="text-center mt-3">€ {delta}</div>
+          </div>
+          <div className="col-sm-1">
             <br />
-            <button type="submit" className="btn btn-primary me-2">
+            <button type="submit" id="add" className="btn btn-primary me-2">
               Add
             </button>
           </div>
@@ -190,8 +245,8 @@ function Budget(props) {
                 return (
                   <div key={i}>
                     <li className={"refund-" + i}>
-                      {r.name} - {r.bookingCode} - refund: € {r.refund} -
-                      supplied: € {r.supplied} - remained: € {r.remained}
+                      {r.name} - {r.bookingCode} - refund: € {r.refund} - paid
+                      SCA: € {r.supplied} - remained: € {r.remained}
                       &nbsp;-&nbsp;
                       <input
                         className={"remained remained-input-" + r.id}
@@ -251,8 +306,8 @@ function Budget(props) {
                 return (
                   <div key={i}>
                     <li className={"tickets-" + i}>
-                      {r.name} - {r.bookingCode} - cost: € {r.paidAmount} -
-                      supplied: € {r.supplied} - remained: € {r.remained}
+                      {r.name} - {r.bookingCode} - cost: € {r.paidAmount} - paid
+                      SCA: € {r.supplied} - remained: € {r.remained}
                       &nbsp;-&nbsp;
                       <input
                         className={"tickets tickets-input-" + r.id}
@@ -264,8 +319,9 @@ function Budget(props) {
                       />
                       &nbsp;
                       <button
+                        className={"tickets-btn-" + r.id}
                         onClick={() => {
-                          manageSupplied(r.id);
+                          manageSupplied(r.id, r.remained, r.supplied);
                         }}
                       >
                         Ok
