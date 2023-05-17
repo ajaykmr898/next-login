@@ -12,7 +12,7 @@ function Budget(props) {
 
   //0 - rinominare penality in supplied
   //1 - prendere lista dei ticket con refund (non completamente gestito) [con sca e refund e supplied < cost]
-  //2 sceglere quali refund usare e fare adjustTotal
+  //2 - sceglere quali refund usare e fare adjustTotal
   //3 far vedere lista dei ticket non ancora completamente gestiti con budget verso SCA
   //6 visualizzare tutte le operazioni nella tabella nuova
   // nome, pnr, biglietto, cost, refund, supplied, balance (r - total s), s date
@@ -66,6 +66,15 @@ function Budget(props) {
         if (toAdd <= remainedI) {
           changesT.push({ id, toAdd, remainedI });
           number += toAdd;
+          document.getElementsByClassName(
+            "remained-ok-" + id
+          )[0].hidden = false;
+          document.getElementsByClassName("remained-ko-" + id)[0].hidden = true;
+        } else {
+          document.getElementsByClassName(
+            "remained-ko-" + id
+          )[0].hidden = false;
+          document.getElementsByClassName("remained-ok-" + id)[0].hidden = true;
         }
       }
     }
@@ -172,6 +181,19 @@ function Budget(props) {
                         step="0.01"
                         max={r.remained}
                       />
+                      &nbsp;
+                      <label
+                        hidden
+                        className={`remained-ok-${r.id} text-success`}
+                      >
+                        <i className="fa fa-check"></i>
+                      </label>
+                      <label
+                        hidden
+                        className={`remained-ko-${r.id} text-danger`}
+                      >
+                        <i className="fa fa-times"></i>
+                      </label>
                     </li>
                     <br />
                   </div>
