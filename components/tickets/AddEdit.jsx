@@ -79,9 +79,9 @@ function AddEdit(props) {
         phone: data.phone || "",
         flight: data.flight || "",
         refund: data.refund || "",
-        supplied: data.supplied || "",
+        supplied: data.supplied || 0,
         refundDate: data.refundDate || "",
-        returned: data.returned || "",
+        returned: data.returned || 0,
         returnedDate: data.returnedDate || "",
       };
       if (!ticket) {

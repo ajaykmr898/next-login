@@ -16,7 +16,7 @@ function Nav() {
     "tickets/edit": "Edit Ticket",
     refund: "Refunds",
     seller: "Provider",
-    "seller/transfer": "Transfer Amount",
+    "seller/transfer": "Transfer Amount SCA",
   };
   const config = getConfig();
   let icon = "fa fa-plane";

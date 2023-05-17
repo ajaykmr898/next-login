@@ -26,6 +26,7 @@ export const ticketsService = {
   upload,
   getById,
   getProfit,
+  getRefunds,
 };
 
 async function getAll(filters) {
@@ -94,6 +95,11 @@ async function _delete(id) {
 
 async function getById(id) {
   return await fetchWrapper.get(`${baseUrl}/${id}`);
+}
+
+async function getRefunds(filters) {
+  const result = await fetchWrapper.post(baseUrl + "/refund", filters);
+  return result;
 }
 
 async function getProfit(filters) {
@@ -357,8 +363,8 @@ async function upload(files) {
         flight: f,
         refund: "",
         refundDate: "",
-        supplied: "",
-        returned: "",
+        supplied: 0,
+        returned: 0,
         returnedDate: "",
       };
       fc.push(tkt);
