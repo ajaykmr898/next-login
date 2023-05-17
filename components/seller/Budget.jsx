@@ -128,12 +128,12 @@ function Budget(props) {
     ) {
       number = number + supplied;
       number = number.toFixed(2);
-      ticketsService.update(id, { supplied: number }).then((res) => {
-        let deltaT = deltaI - number;
-        deltaT = parseFloat(deltaT).toFixed(2);
-        document.getElementsByClassName("tickets-btn-" + id)[0].disabled = true;
-        setDelta(deltaT);
-      });
+      //ticketsService.update(id, { supplied: number }).then((res) => {
+      let deltaT = deltaI - number;
+      deltaT = parseFloat(deltaT).toFixed(2);
+      document.getElementsByClassName("tickets-btn-" + id)[0].disabled = true;
+      setDelta(deltaT);
+      //});
     }
     // prendere numero
     // aggiornare db
