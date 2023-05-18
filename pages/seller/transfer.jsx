@@ -17,6 +17,7 @@ function Add() {
         let remained = e.refund - (e.refundUsed || 0);
         return {
           ...e,
+          refundUsed: e.refundUsed || 0,
           remained: parseFloat(remained).toFixed(2),
         };
       });
