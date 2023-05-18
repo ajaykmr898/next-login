@@ -491,8 +491,9 @@ function Index() {
         <Column footer={totals[0]} />
         <Column footer={totals[1]} />
         <Column />
+        <Column footer={totals[4]} />
         <Column footer={totals[2]} />
-        <Column footer={totals[3]} />`
+        <Column footer={totals[3]} />
         <Column />
         <Column />
         <Column />
@@ -506,15 +507,18 @@ function Index() {
     let tr = 0;
     let tp = 0;
     let tc = 0;
+    let tu = 0;
     for (let i = 0; i < data.length; i++) {
       let ttr = data[i].refund ? data[i].refund.replace("€ ", "") : 0;
       let ttp = data[i].penality ? data[i].penality.replace("€ ", "") : 0;
       let ttc = data[i].returned ? data[i].returned.replace("€ ", "") : 0;
       let tts = data[i].supplied ? data[i].supplied.replace("€ ", "") : 0;
+      let ttu = data[i].refundUsed ? data[i].refundUsed.replace("€ ", "") : 0;
       ts += parseFloat(tts);
       tr += parseFloat(ttr);
       tp += parseFloat(ttp);
       tc += parseFloat(ttc);
+      tu += parseFloat(ttu);
     }
 
     setTotals([
@@ -522,6 +526,7 @@ function Index() {
       "€ " + tr.toFixed(2),
       "€ " + tp.toFixed(2),
       "€ " + tc.toFixed(2),
+      "€ " + tu.toFixed(2),
     ]);
   };
 
