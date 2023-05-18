@@ -15,7 +15,7 @@ function Nav() {
     "tickets/add": "Add Ticket",
     "tickets/edit": "Edit Ticket",
     refund: "Refunds",
-    seller: "Provider",
+    seller: "SCA Transfers",
     "seller/transfer": "Transfer Amount SCA",
   };
   const config = getConfig();
@@ -93,8 +93,8 @@ function Nav() {
           </li>
           <li className={getActiveMenu("seller")}>
             <Link href="/seller">
-              <i className="fa-fw fas fa-shop nav-icon"></i>
-              &nbsp;&nbsp;&nbsp;&nbsp; Provider
+              <i className="fa-fw fas fa-money-check-dollar nav-icon"></i>
+              &nbsp;&nbsp;&nbsp;&nbsp; SCA Transfers
             </Link>
           </li>
           <li className={getActiveMenu("upload")}>

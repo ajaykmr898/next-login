@@ -614,6 +614,7 @@ function Index() {
           <Column field="supplied" sortable header="Supplied SCA" />
           <Column field="refund" sortable header="Refund" />
           <Column field="refundDate" sortable header="Refund Date" />
+          <Column field="refundUsed" sortable header="Refund Used" />
           <Column field="penality" sortable header="Penality" />
           <Column field="returned" sortable header="Returned" />
           <Column field="returnedDate" sortable header="Returned Date" />

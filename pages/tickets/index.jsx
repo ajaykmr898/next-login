@@ -616,6 +616,7 @@ function Index() {
           <Column hidden field="penality" sortable header="Penality" />
           <Column hidden field="returned" sortable header="Returned" />
           <Column hidden field="returnedDate" sortable header="Returned Date" />
+          <Column hidden field="refundUsed" sortable header="Refund Used" />
           <Column field="bookingCode" sortable header="PNR" />
           <Column field="ticketNumber" sortable header="Ticket" />
           <Column field="iata" sortable header="Issued by" />
@@ -770,11 +771,12 @@ function Index() {
               {ticket.refund && (
                 <>
                   <tr>
-                    <td scope="col">Refund/Date/Penality:</td>
+                    <td scope="col">Refund/Date/Penality/Used:</td>
                     <td scope="col">
                       {ticket.refund + " - "}
                       {ticket.refundDate && ticket.refundDate + " - "}
-                      {ticket.penality}
+                      {ticket.penality + " - "}
+                      {ticket.refundUsed}
                     </td>
                   </tr>
                   <tr>

@@ -8,13 +8,13 @@ export default Add;
 
 function Add() {
   useEffect(() => {
-    getRefunds();
+    getRefundsForSupply();
   }, []);
 
-  function getRefunds() {
-    ticketsService.getRefunds({}).then((x) => {
+  function getRefundsForSupply() {
+    ticketsService.getRefundsForSupply({}).then((x) => {
       const refunds = x.map((e) => {
-        let remained = e.refund - (e.supplied || 0);
+        let remained = e.refund - (e.refundUsed || 0);
         return {
           ...e,
           remained: parseFloat(remained).toFixed(2),

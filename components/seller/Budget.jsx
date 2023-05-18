@@ -11,7 +11,8 @@ function Budget(props) {
   const [refundTot, setRefundTot] = useState(0);
   const [date, setDate] = useState(null);
   const [budgetTot, setBudgetTot] = useState(0);
-  const [changes, setChanges] = useState([]);
+  const [changesRefunds, setChangesRefunds] = useState([]);
+  const [changesSupplied, setChangesSupplied] = useState([]);
 
   //0 - rinominare penality in supplied
   //1 - prendere lista dei ticket con refund (non completamente gestito) [con sca e refund e supplied < cost]
@@ -24,6 +25,7 @@ function Budget(props) {
   //una riga per ogni bonifico e use refund o set supply
 
   useEffect(() => {
+    document.getElementById("complete").disabled = true;
     getTickets();
   }, []);
 
@@ -38,9 +40,40 @@ function Budget(props) {
       };
     });
     setTickets(res2);
+    disableEnableInputsOnDeltaZeroOrBudgetFieldsNotSet("d");
   }
 
-  async function onSubmit(e) {
+  function disableInputsForTransferAndRefunds() {
+    document.getElementById("budget").disabled = true;
+    document.getElementById("budget-date").disabled = true;
+    document.getElementById("add").disabled = true;
+    document.getElementById("remained-button").disabled = true;
+    let elements = document.getElementsByClassName("remained");
+    for (let i = 0; i < elements.length; i++) {
+      elements[i].disabled = true;
+    }
+  }
+
+  function disableEnableInputsOnDeltaZeroOrBudgetFieldsNotSet(type) {
+    let disabled = type === "d";
+    let elements = document.getElementsByClassName("tickets-field");
+    for (let i = 0; i < elements.length; i++) {
+      elements[i].disabled = disabled;
+    }
+  }
+
+  async function onComplete(e) {
+    e.preventDefault();
+    let deltaI = parseFloat(delta).toFixed(2);
+    if (deltaI === "0.00" && changesSupplied.length > 0) {
+      console.log("save");
+    } else {
+      console.log("no");
+    }
+    console.log("here1", date, changesRefunds, changesSupplied);
+  }
+
+  function onAdd(e) {
     e.preventDefault();
     alertService.clear();
     const dateT = document.getElementById("budget-date").value;
@@ -48,12 +81,9 @@ function Budget(props) {
     setDelta(total);
     try {
       if (total > 0 && dateT) {
-        document.getElementById("budget").disabled = true;
-        document.getElementById("budget-date").disabled = true;
-        document.getElementById("add").disabled = true;
-        console.log("3", changes, dateT);
+        disableInputsForTransferAndRefunds();
+        disableEnableInputsOnDeltaZeroOrBudgetFieldsNotSet("e");
       }
-      //alertService.success("Budget added successfully", true);
     } catch (error) {
       alertService.error(error);
       console.error(error);
@@ -107,7 +137,7 @@ function Budget(props) {
       }
     }
     if (changesT) {
-      setChanges(changesT);
+      setChangesRefunds(changesT);
       setRefundTot(number);
       adjustTotal(number, "r");
     }
@@ -116,37 +146,52 @@ function Budget(props) {
   function manageSupplied(id, remained, supplied) {
     let number = document.getElementsByClassName("tickets-input-" + id)[0]
       .value;
+    let numberI = parseFloat(number);
     supplied = parseFloat(supplied);
     number = parseFloat(number);
     remained = parseFloat(remained);
     let deltaI = parseFloat(delta);
     if (
       !isNaN(number) &&
-      number >= 0 &&
+      number > 0 &&
       number <= deltaI &&
       number <= remained
     ) {
       number = number + supplied;
       number = number.toFixed(2);
-      //ticketsService.update(id, { supplied: number }).then((res) => {
-      let deltaT = deltaI - number;
+      //ticketsService
+      //.update(id, { supplied: number })
+      //.then((res) => {
+      let deltaT = deltaI - numberI;
       deltaT = parseFloat(deltaT).toFixed(2);
+      numberI = numberI.toFixed(2);
       document.getElementsByClassName("tickets-btn-" + id)[0].disabled = true;
+      document.getElementsByClassName("tickets-ko-" + id)[0].hidden = true;
+      document.getElementsByClassName("tickets-ok-" + id)[0].hidden = false;
+      let newSupplies = [...changesSupplied];
+      newSupplies.push({ id, supplied: numberI, total: number });
+      setChangesSupplied(newSupplies);
       setDelta(deltaT);
+
+      if (deltaT === "0.00") {
+        document.getElementById("complete").disabled = false;
+        disableEnableInputsOnDeltaZeroOrBudgetFieldsNotSet("d");
+      }
+      //})
+      //.catch((err) => {
+      //document.getElementsByClassName("tickets-ko-" + id)[0].hidden = false;
+      //document.getElementsByClassName("tickets-ok-" + id)[0].hidden = true;
       //});
     }
-    // prendere numero
-    // aggiornare db
-    // togleire da budget rimasto
   }
 
   return (
     <>
-      <form id="add-form" onSubmit={(e) => onSubmit(e)}>
+      <form id="add-form" onSubmit={(e) => onAdd(e)}>
         <div className="row">
-          <div className="col-sm-3">
+          <div className="col-md-2">
             <label className="form-label">
-              Bonifico Date: <span className="text-danger">*</span>
+              Date: <span className="text-danger">*</span>
             </label>
             <input
               name="budget-date"
@@ -155,7 +200,7 @@ function Budget(props) {
               className="form-control"
             />
           </div>
-          <div className="col-sm-2">
+          <div className="col-md-2">
             <label className="form-label">
               Bonifico: <span className="text-danger">*</span>
             </label>
@@ -170,11 +215,7 @@ function Budget(props) {
               className="form-control"
             />
           </div>
-          <div className="col-sm-1">
-            <br />
-            <div className="text-center mt-3">+</div>
-          </div>
-          <div className="col-sm-2">
+          <div className="col-md-2">
             <label className="form-label">Refund:</label>
             <input
               name="refund"
@@ -185,22 +226,29 @@ function Budget(props) {
               className="form-control"
             />
           </div>
-          <div className="col-sm-1">
-            <br />
-            <div className="text-center mt-3">=</div>
-          </div>{" "}
-          <div className="col-sm-1">
-            <div className="text-center">Total:</div>
-            <div className="text-center mt-3">€ {total}</div>
+          <div className="col-md-2">
+            <div className="text-center">Total - Remained</div>
+            <div className="text-center mt-3">
+              € {total} - € {delta}
+            </div>
           </div>
-          <div className="col-sm-1">
-            <div className="text-center">Remained:</div>
-            <div className="text-center mt-3">€ {delta}</div>
-          </div>
-          <div className="col-sm-1">
+          <div className="col-md-2">
             <br />
             <button type="submit" id="add" className="btn btn-primary me-2">
-              Add
+              Start Transferring
+            </button>
+          </div>
+          <div className="col-md-2">
+            <br />
+            <button
+              onClick={(e) => {
+                onComplete(e);
+              }}
+              type="button"
+              id="complete"
+              className="btn btn-success me-2"
+            >
+              Complete Transfer
             </button>
           </div>
         </div>
@@ -232,9 +280,10 @@ function Budget(props) {
               <button
                 onClick={() => addRefunds()}
                 style={{ float: "right" }}
-                className="btn btn-success"
+                id="remained-button"
+                className="btn btn-primary"
               >
-                Ok
+                Add to Bonifico
               </button>
             ) : (
               ""
@@ -244,8 +293,8 @@ function Budget(props) {
                 return (
                   <div key={i}>
                     <li className={"refund-" + i}>
-                      {r.name} - {r.bookingCode} - refund: € {r.refund} - paid
-                      SCA: € {r.supplied} - remained: € {r.remained}
+                      {r.name} - {r.bookingCode} - refund: € {r.refund} - refund
+                      used SCA: € {r.refundUsed} - remained: € {r.remained}
                       &nbsp;-&nbsp;
                       <input
                         className={"remained remained-input-" + r.id}
@@ -309,7 +358,9 @@ function Budget(props) {
                       SCA: € {r.supplied} - remained: € {r.remained}
                       &nbsp;-&nbsp;
                       <input
-                        className={"tickets tickets-input-" + r.id}
+                        className={
+                          "tickets tickets-field tickets-input-" + r.id
+                        }
                         placeholder="insert to supply"
                         type="number"
                         step="0.01"
@@ -318,7 +369,7 @@ function Budget(props) {
                       />
                       &nbsp;
                       <button
-                        className={"tickets-btn-" + r.id}
+                        className={"tickets-field tickets-btn-" + r.id}
                         onClick={() => {
                           manageSupplied(r.id, r.remained, r.supplied);
                         }}

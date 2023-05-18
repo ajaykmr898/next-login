@@ -35,6 +35,7 @@ function AddEdit(props) {
     receivingAmount3Date: Yup.string().notRequired(),
     receivingAmount3Method: Yup.string().notRequired(),
     refund: Yup.string().notRequired(),
+    refundUsed: Yup.string().notRequired(),
     supplied: Yup.string().notRequired(),
     refundDate: Yup.string().notRequired(),
     returned: Yup.string().notRequired(),
@@ -79,6 +80,7 @@ function AddEdit(props) {
         phone: data.phone || "",
         flight: data.flight || "",
         refund: data.refund || "",
+        refundUsed: data.refundUsed || 0,
         supplied: data.supplied || 0,
         refundDate: data.refundDate || "",
         returned: data.returned || 0,
@@ -105,6 +107,7 @@ function AddEdit(props) {
           phone: "",
           flight: "",
           refund: "",
+          refundUsed: "",
           supplied: "",
           refundDate: "",
           returned: "",
@@ -475,9 +478,9 @@ function AddEdit(props) {
           <div className="invalid-feedback">{errors.refundDate?.message}</div>
         </div>
         <div className="mb-3 col-md-4 col-sm-6">
-          <label className="form-label">Supplied SCA</label>
+          <label className="form-label">Paid SCA</label>
           <input
-            name="penality"
+            name="supplied"
             defaultValue={ticket?.supplied}
             type="number"
             step="0.01"
@@ -489,8 +492,20 @@ function AddEdit(props) {
       </div>
 
       <div className="row">
+        <div className="mb-3 col-md-4 col-sm-6">
+          <label className="form-label">Refund Used</label>
+          <input
+            name="refundUsed"
+            defaultValue={ticket?.refundUsed}
+            type="number"
+            step="0.01"
+            {...register("refundUsed")}
+            className={`form-control ${errors.refundUsed ? "is-invalid" : ""}`}
+          />
+          <div className="invalid-feedback">{errors.refundUsed?.message}</div>
+        </div>
         <div className="mb-3 col">
-          <label className="form-label">Returned</label>
+          <label className="form-label">Returned Customer</label>
           <input
             name="returned"
             defaultValue={ticket?.returned}

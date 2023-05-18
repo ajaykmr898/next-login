@@ -26,7 +26,7 @@ export const ticketsService = {
   upload,
   getById,
   getProfit,
-  getRefunds,
+  getRefundsForSupply,
   getTicketsForSupply,
 };
 
@@ -75,6 +75,7 @@ async function getAll(filters) {
       agentCost: t.agentCost ? "€ " + t.agentCost : t.agentCost,
       methods: methods,
       refund: t.refund ? "€ " + t.refund : t.refund,
+      refundUsed: t.refundUsed ? "€ " + t.refundUsed : t.refundUsed,
       refundDate: t.refundDate ? formatDate(t.refundDate, "IT") : t.refundDate,
       returned: t.returned ? "€ " + t.returned : t.returned,
       returnedDate: t.returnedDate
@@ -103,7 +104,7 @@ async function getById(id) {
   return await fetchWrapper.get(`${baseUrl}/${id}`);
 }
 
-async function getRefunds(filters = {}) {
+async function getRefundsForSupply(filters = {}) {
   const result = await fetchWrapper.post(baseUrl + "/refund", filters);
   return result;
 }
@@ -160,38 +161,68 @@ async function getProfit(filters) {
       ticketsP[key] = { totalReceivingAmount, paidAmount, profit };
     }
 
-    if (methodsP[method1] !== undefined) {
-      methodsP[method1] += profit;
+    if (
+      [
+        "receivingAmount1Date",
+        "receivingAmount2Date",
+        "receivingAmount3Date",
+      ].includes(filters.type)
+    ) {
+      if (filters.type === "receivingAmount1Date") {
+        if (methodsA[method1] !== undefined) {
+          methodsA[method1] += totalReceivingAmount1;
+        } else {
+          methodsA[method1] = totalReceivingAmount1;
+        }
+      }
+      if (filters.type === "receivingAmount2Date") {
+        if (methodsA[method2] !== undefined) {
+          methodsA[method2] += totalReceivingAmount2;
+        } else {
+          methodsA[method2] = totalReceivingAmount2;
+        }
+      }
+      if (filters.type === "receivingAmount3Date") {
+        if (methodsA[method3] !== undefined) {
+          methodsA[method3] += totalReceivingAmount3;
+        } else {
+          methodsA[method3] = totalReceivingAmount3;
+        }
+      }
     } else {
-      methodsP[method1] = profit;
-    }
+      if (methodsP[method1] !== undefined) {
+        methodsP[method1] += profit;
+      } else {
+        methodsP[method1] = profit;
+      }
 
-    if (agentsP[agent] !== undefined) {
-      agentsP[agent] += profit;
-    } else {
-      agentsP[agent] = profit;
-    }
+      if (agentsP[agent] !== undefined) {
+        agentsP[agent] += profit;
+      } else {
+        agentsP[agent] = profit;
+      }
 
-    if (agentsA[agent] !== undefined) {
-      agentsA[agent] += totalReceivingAmount;
-    } else {
-      agentsA[agent] = totalReceivingAmount;
-    }
+      if (agentsA[agent] !== undefined) {
+        agentsA[agent] += totalReceivingAmount;
+      } else {
+        agentsA[agent] = totalReceivingAmount;
+      }
 
-    if (methodsA[method1] !== undefined) {
-      methodsA[method1] += totalReceivingAmount1;
-    } else {
-      methodsA[method1] = totalReceivingAmount1;
-    }
-    if (methodsA[method2] !== undefined) {
-      methodsA[method2] += totalReceivingAmount2;
-    } else {
-      methodsA[method2] = totalReceivingAmount2;
-    }
-    if (methodsA[method3] !== undefined) {
-      methodsA[method3] += totalReceivingAmount3;
-    } else {
-      methodsA[method3] = totalReceivingAmount3;
+      if (methodsA[method1] !== undefined) {
+        methodsA[method1] += totalReceivingAmount1;
+      } else {
+        methodsA[method1] = totalReceivingAmount1;
+      }
+      if (methodsA[method2] !== undefined) {
+        methodsA[method2] += totalReceivingAmount2;
+      } else {
+        methodsA[method2] = totalReceivingAmount2;
+      }
+      if (methodsA[method3] !== undefined) {
+        methodsA[method3] += totalReceivingAmount3;
+      } else {
+        methodsA[method3] = totalReceivingAmount3;
+      }
     }
   });
   return { ticketsP, methods, methodsP, agents, agentsP, agentsA, methodsA };

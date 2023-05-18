@@ -66,6 +66,7 @@ function ticketsModel() {
       phone: { type: String, required: false },
       flight: { type: String, required: false },
       refund: { type: String, required: false },
+      refundUsed: { type: String, required: false },
       supplied: { type: String, required: false },
       refundDate: { type: String, required: false },
       returned: { type: String, required: false },

@@ -1,10 +1,10 @@
 import { apiHandler, ticketsRepo } from "helpers/api";
 
 export default apiHandler({
-  post: getRefunds,
+  post: getRefundsForSupply,
 });
 
-async function getRefunds(req, res) {
-  const tickets = await ticketsRepo.getRefunds(req.body);
+async function getRefundsForSupply(req, res) {
+  const tickets = await ticketsRepo.getRefundsForSupply(req.body);
   return res.status(200).json(tickets);
 }

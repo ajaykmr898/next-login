@@ -1,7 +1,6 @@
 import { ticketsService, userService } from "services";
 import { Doughnut, Chart, Pie } from "react-chartjs-2";
 import { useEffect, useState } from "react";
-import { ProgressSpinner } from "primereact/progressspinner";
 import React from "react";
 import {
   Chart as ChartJS,
@@ -74,7 +73,7 @@ function Home() {
         }}
       />
     ) : (
-      <ProgressSpinner className="center" />
+      <div className="text-center">No Data to show</div>
     );
 
   const pieChart5 =
@@ -93,7 +92,7 @@ function Home() {
         }}
       />
     ) : (
-      <ProgressSpinner className="center" />
+      <div className="text-center">No Data to show</div>
     );
 
   const pieChart =
@@ -112,7 +111,7 @@ function Home() {
         }}
       />
     ) : (
-      <ProgressSpinner className="center" />
+      <div className="text-center">No Data to show</div>
     );
 
   const pieChart1 =
@@ -131,7 +130,7 @@ function Home() {
         }}
       />
     ) : (
-      <ProgressSpinner className="center" />
+      <div className="text-center">No Data to show</div>
     );
 
   const pieChart2 =
@@ -150,7 +149,7 @@ function Home() {
         }}
       />
     ) : (
-      <ProgressSpinner className="center" />
+      <div className="text-center">No Data to show</div>
     );
 
   const pieChart3 =
@@ -169,7 +168,7 @@ function Home() {
         }}
       />
     ) : (
-      <ProgressSpinner className="center" />
+      <div className="text-center">No Data to show</div>
     );
 
   const barChart =
@@ -195,7 +194,7 @@ function Home() {
         }}
       />
     ) : (
-      <ProgressSpinner className="center" />
+      <div className="text-center">No Data to show</div>
     );
 
   const barChart2 =
@@ -215,7 +214,7 @@ function Home() {
         }}
       />
     ) : (
-      <ProgressSpinner className="center" />
+      <div className="text-center">No Data to show</div>
     );
 
   useEffect(() => {

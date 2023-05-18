@@ -9,7 +9,7 @@ export const ticketsRepo = {
   update,
   delete: _delete,
   getProfit,
-  getRefunds,
+  getRefundsForSupply,
   getTicketsForSupply,
 };
 
@@ -22,7 +22,7 @@ async function getTicketsForSupply(filters) {
   return await Tickets.find(filter).sort({ bookedOn: -1 });
 }
 
-async function getRefunds(filters) {
+async function getRefundsForSupply(filters) {
   let filter = {
     ...filters,
     $and: [
@@ -30,7 +30,7 @@ async function getRefunds(filters) {
       { refund: { $ne: "" } },
       { iata: { $eq: "SCA" } },
     ],
-    $expr: { $gt: [{ $toDouble: "$refund" }, { $toDouble: "$supplied" }] },
+    $expr: { $gt: [{ $toDouble: "$refund" }, { $toDouble: "$refundUsed" }] },
   };
   return await Tickets.find(filter).sort({ bookedOn: -1 });
 }
