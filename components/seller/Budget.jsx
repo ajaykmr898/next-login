@@ -1,5 +1,7 @@
 import { alertService, ticketsService } from "services";
 import React, { useEffect, useState } from "react";
+import { Dialog } from "primereact/dialog";
+import { Button } from "primereact/button";
 
 export { Budget };
 
@@ -13,14 +15,36 @@ function Budget(props) {
   const [budgetTot, setBudgetTot] = useState(0);
   const [changesRefunds, setChangesRefunds] = useState([]);
   const [changesSupplied, setChangesSupplied] = useState([]);
+  const [supplytDialog, setSupplytDialog] = useState(false);
+
+  const supplytDialogFooter = (
+    <div>
+      <Button
+        label="No"
+        icon="fa fa-times"
+        className="p-button-text"
+        onClick={() => {
+          setSupplytDialog(false);
+        }}
+      />
+      <Button
+        label="Yes"
+        icon="fa fa-check"
+        className="p-button-text"
+        onClick={(e) => {
+          onComplete(e);
+        }}
+      />
+    </div>
+  );
 
   //0 - rinominare penality in supplied
   //1 - prendere lista dei ticket con refund (non completamente gestito) [con sca e refund e supplied < cost]
   //2 - sceglere quali refund usare e fare adjustTotal
-  //3 far vedere lista dei ticket non ancora completamente gestiti con budget verso SCA
+  //3 - far vedere lista dei ticket non ancora completamente gestiti con budget verso SCA
   //6 visualizzare tutte le operazioni nella tabella nuova
   // nome, pnr, biglietto, cost, refund, supplied, balance (r - total s), s date
-  //4 aggiornare supplied/date del biglietto ogni volta che il biglietto viene selezionato
+  //4 - aggiornare supplied/date del biglietto ogni volta che il biglietto viene selezionato
   //5 salvare nella nuova tabella i movimenti sui biglietti se scelti per refund o supply
   //una riga per ogni bonifico e use refund o set supply
 
@@ -63,10 +87,40 @@ function Budget(props) {
   }
 
   async function onComplete(e) {
+    setSupplytDialog(false);
     e.preventDefault();
     let deltaI = parseFloat(delta).toFixed(2);
     if (deltaI === "0.00" && changesSupplied.length > 0) {
-      console.log("save");
+      let errorR = false;
+      let errorS = false;
+      let errorN = false;
+      // save changesRefunds total in refundUsed
+      changesRefunds.map((e) => {
+        /*ticketsService
+          .update(e.id, { refundUsed: e.total })
+          .catch((err) => (errorR = true));*/
+      });
+      if (!errorR) {
+        // save changesSupplied total in supplied
+        changesSupplied.map((e) => {
+          /*ticketsService
+            .update(e.id, { supplied: e.total })
+            .catch((err) => (errorS = true));*/
+        });
+        if (!errorS) {
+          // save operations in new table to show in sca page
+          errorN = false;
+        }
+        if (!errorR && !errorS && !errorN) {
+          if (confirm("Saved successfully")) {
+            window.location.reload();
+          } else {
+            window.location.reload();
+          }
+        } else {
+          alert("Errors occurred while saving");
+        }
+      }
     } else {
       console.log("no");
     }
@@ -114,16 +168,20 @@ function Budget(props) {
     let changesT = [];
     let number = 0;
     for (let i = 0; i < elements.length; i++) {
-      let toAdd = elements[i].value.trim() || "";
+      let used = elements[i].value.trim() || "";
       let id = (elements[i].classList[1] || "").replace("remained-input-", "");
-      let remainedI = refunds.filter((e) => e.id === id) || [];
-      remainedI = remainedI.length && remainedI[0]["remained"];
-      if (toAdd && remainedI) {
-        toAdd = parseFloat(toAdd);
+      let remainedA = refunds.filter((e) => e.id === id) || [];
+      let remainedI = remainedA.length && remainedA[0]["remained"];
+      let refundUsed = (remainedA.length && remainedA[0]["refundUsed"]) || 0;
+      if (used && remainedI) {
+        used = parseFloat(used);
         remainedI = parseFloat(remainedI);
-        if (toAdd <= remainedI && toAdd > 0) {
-          changesT.push({ id, toAdd, remainedI });
-          number += toAdd;
+        if (used <= remainedI && used > 0) {
+          console.log(remainedA);
+          let total = parseFloat(refundUsed) + used;
+          total = total.toFixed(2);
+          changesT.push({ id, used, total });
+          number += used;
           document.getElementsByClassName(
             "remained-ok-" + id
           )[0].hidden = false;
@@ -169,7 +227,7 @@ function Budget(props) {
       document.getElementsByClassName("tickets-ko-" + id)[0].hidden = true;
       document.getElementsByClassName("tickets-ok-" + id)[0].hidden = false;
       let newSupplies = [...changesSupplied];
-      newSupplies.push({ id, supplied: numberI, total: number });
+      newSupplies.push({ id, paid: numberI, total: number });
       setChangesSupplied(newSupplies);
       setDelta(deltaT);
 
@@ -242,7 +300,7 @@ function Budget(props) {
             <br />
             <button
               onClick={(e) => {
-                onComplete(e);
+                setSupplytDialog(true);
               }}
               type="button"
               id="complete"
@@ -289,39 +347,54 @@ function Budget(props) {
               ""
             )}
             <div className="accordion-body">
-              {refunds.map((r, i) => {
-                return (
-                  <div key={i}>
-                    <li className={"refund-" + i}>
-                      {r.name} - {r.bookingCode} - refund: € {r.refund} - refund
-                      used SCA: € {r.refundUsed} - remained: € {r.remained}
-                      &nbsp;-&nbsp;
-                      <input
-                        className={"remained remained-input-" + r.id}
-                        placeholder="remained to use"
-                        type="number"
-                        step="0.01"
-                        min="0"
-                        max={r.remained}
-                      />
-                      &nbsp;
-                      <label
-                        hidden
-                        className={`remained-ok-${r.id} text-success`}
-                      >
-                        <i className="fa fa-check"></i>
-                      </label>
-                      <label
-                        hidden
-                        className={`remained-ko-${r.id} text-danger`}
-                      >
-                        <i className="fa fa-times"></i>
-                      </label>
-                    </li>
-                    <br />
-                  </div>
-                );
-              })}
+              <table className="table table-sm">
+                <thead>
+                  <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">PNR</th>
+                    <th scope="col">Refund</th>
+                    <th scope="col">Refund used SCA</th>
+                    <th scope="col">Remained</th>
+                    <th scope="col">Add</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {refunds.map((r, i) => {
+                    return (
+                      <tr key={i}>
+                        <td>{r.name}</td>
+                        <td>{r.bookingCode}</td>
+                        <td>€ {r.refund}</td>
+                        <td>€ {r.refundUsed}</td>
+                        <td>€ {r.remained}</td>
+                        <td>
+                          <input
+                            className={"remained remained-input-" + r.id}
+                            placeholder="remained to use"
+                            type="number"
+                            step="0.01"
+                            min="0"
+                            max={r.remained}
+                          />
+                          &nbsp;
+                          <label
+                            hidden
+                            className={`remained-ok-${r.id} text-success`}
+                          >
+                            <i className="fa fa-check"></i>
+                          </label>
+                          <label
+                            hidden
+                            className={`remained-ko-${r.id} text-danger`}
+                          >
+                            <i className="fa fa-times"></i>
+                          </label>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
@@ -350,54 +423,83 @@ function Budget(props) {
             data-bs-parent="#accordionExample1"
           >
             <div className="accordion-body">
-              {tickets.map((r, i) => {
-                return (
-                  <div key={i}>
-                    <li className={"tickets-" + i}>
-                      {r.name} - {r.bookingCode} - cost: € {r.paidAmount} - paid
-                      SCA: € {r.supplied} - remained: € {r.remained}
-                      &nbsp;-&nbsp;
-                      <input
-                        className={
-                          "tickets tickets-field tickets-input-" + r.id
-                        }
-                        placeholder="insert to supply"
-                        type="number"
-                        step="0.01"
-                        min="0"
-                        max={r.remained}
-                      />
-                      &nbsp;
-                      <button
-                        className={"tickets-field tickets-btn-" + r.id}
-                        onClick={() => {
-                          manageSupplied(r.id, r.remained, r.supplied);
-                        }}
-                      >
-                        Ok
-                      </button>
-                      &nbsp;
-                      <label
-                        hidden
-                        className={`tickets-ok-${r.id} text-success`}
-                      >
-                        <i className="fa fa-check"></i>
-                      </label>
-                      <label
-                        hidden
-                        className={`tickets-ko-${r.id} text-danger`}
-                      >
-                        <i className="fa fa-times"></i>
-                      </label>
-                    </li>
-                    <br />
-                  </div>
-                );
-              })}
+              <table className="table table-sm">
+                <thead>
+                  <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">PNR</th>
+                    <th scope="col">Cost</th>
+                    <th scope="col">Paid SCA</th>
+                    <th scope="col">Remained</th>
+                    <th scope="col">Add</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {tickets.map((r, i) => {
+                    return (
+                      <tr key={i}>
+                        <td>{r.name}</td>
+                        <td>{r.bookingCode}</td>
+                        <td>€ {r.paidAmount}</td>
+                        <td>€ {r.supplied}</td>
+                        <td>€ {r.remained}</td>
+                        <td>
+                          <input
+                            className={
+                              "tickets tickets-field tickets-input-" + r.id
+                            }
+                            placeholder="insert to supply"
+                            type="number"
+                            step="0.01"
+                            min="0"
+                            max={r.remained}
+                          />
+                          &nbsp;
+                          <button
+                            className={"tickets-field tickets-btn-" + r.id}
+                            onClick={() => {
+                              manageSupplied(r.id, r.remained, r.supplied);
+                            }}
+                          >
+                            Ok
+                          </button>
+                          &nbsp;
+                          <label
+                            hidden
+                            className={`tickets-ok-${r.id} text-success`}
+                          >
+                            <i className="fa fa-check"></i>
+                          </label>
+                          <label
+                            hidden
+                            className={`tickets-ko-${r.id} text-danger`}
+                          >
+                            <i className="fa fa-times"></i>
+                          </label>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
       </div>
+      <Dialog
+        visible={supplytDialog}
+        header="Confirm"
+        modal
+        footer={supplytDialogFooter}
+        onHide={() => {
+          setSupplytDialog(false);
+        }}
+      >
+        <div className="confirmation-content">
+          <i className="fa fa-triangle mr-3" />
+          <span>Are you sure?</span>
+        </div>
+      </Dialog>
     </>
   );
 }
