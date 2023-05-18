@@ -782,11 +782,12 @@ function Index() {
               {ticket.refund && (
                 <>
                   <tr>
-                    <td scope="col">Refund/Date/Penality:</td>
+                    <td scope="col">Refund/Date/Penality/Used:</td>
                     <td scope="col">
                       {ticket.refund + " - "}
                       {ticket.refundDate && ticket.refundDate + " - "}
-                      {ticket.penality}
+                      {ticket.penality + " - "}
+                      {ticket.refundUsed}
                     </td>
                   </tr>
                   <tr>
