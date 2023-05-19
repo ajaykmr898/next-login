@@ -1,7 +1,7 @@
 export * from "./alert.service";
 export * from "./user.service";
 export * from "./tickets.service";
-
+export * from "./operations.service";
 export function formatDate(date, format = "DB") {
   let d = new Date(date),
     month = "" + (d.getMonth() + 1),

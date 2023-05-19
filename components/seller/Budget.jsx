@@ -1,4 +1,9 @@
-import { alertService, ticketsService } from "services";
+import {
+  alertService,
+  ticketsService,
+  operationsService,
+  formatDate,
+} from "services";
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 
@@ -71,7 +76,7 @@ function Budget(props) {
   //6 visualizzare tutte le operazioni nella tabella nuova
   // nome, pnr, biglietto, cost, refund, supplied, balance (r - total s), s date
   //4 - aggiornare supplied/date del biglietto ogni volta che il biglietto viene selezionato
-  //5 salvare nella nuova tabella i movimenti sui biglietti se scelti per refund o supply
+  //5 - salvare nella nuova tabella i movimenti sui biglietti se scelti per refund o supply
   //una riga per ogni bonifico e use refund o set supply
 
   useEffect(() => {
@@ -121,20 +126,42 @@ function Budget(props) {
       // save changesRefunds total in refundUsed
       console.log(date, changesRefunds, changesSupplied);
       changesRefunds.map((e) => {
-        /*ticketsService
+        ticketsService
           .update(e.id, { refundUsed: e.total })
-          .catch((err) => (errorR = true));*/
+          .catch((err) => (errorR = true));
       });
       if (!errorR) {
         // save changesSupplied total in supplied
         changesSupplied.map((e) => {
-          /*ticketsService
+          ticketsService
             .update(e.id, { supplied: e.total })
-            .catch((err) => (errorS = true));*/
+            .catch((err) => (errorS = true));
         });
         if (!errorS) {
+          let transferName = Date.now();
           // save operations in new table to show in sca page
-          errorN = false;
+          changesRefunds.map((e) => {
+            let data = {
+              transferName,
+              ticketId: e.id,
+              transferDate: formatDate(date, "DB"),
+              operation: "refundUsed",
+              ticketRefundUsed: e.used,
+              suppliedTicket: "",
+            };
+            operationsService.create(data).catch((err) => (errorN = true));
+          });
+          changesSupplied.map((e) => {
+            let data = {
+              transferName,
+              ticketId: e.id,
+              transferDate: formatDate(date, "DB"),
+              operation: "paidSCA",
+              ticketRefundUsed: "",
+              suppliedTicket: e.paid,
+            };
+            operationsService.create(data).catch((err) => (errorN = true));
+          });
         }
       }
       return { errorR, errorS, errorN };
@@ -234,9 +261,6 @@ function Budget(props) {
     ) {
       number = number + supplied;
       number = number.toFixed(2);
-      //ticketsService
-      //.update(id, { supplied: number })
-      //.then((res) => {
       let deltaT = deltaI - numberI;
       deltaT = parseFloat(deltaT).toFixed(2);
       numberI = numberI.toFixed(2);
@@ -252,11 +276,9 @@ function Budget(props) {
         document.getElementById("complete").disabled = false;
         disableEnableInputsOnDeltaZeroOrBudgetFieldsNotSet("d");
       }
-      //})
-      //.catch((err) => {
-      //document.getElementsByClassName("tickets-ko-" + id)[0].hidden = false;
-      //document.getElementsByClassName("tickets-ok-" + id)[0].hidden = true;
-      //});
+    } else {
+      document.getElementsByClassName("tickets-ko-" + id)[0].hidden = false;
+      document.getElementsByClassName("tickets-ok-" + id)[0].hidden = true;
     }
   }
 

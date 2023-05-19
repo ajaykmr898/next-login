@@ -8,6 +8,7 @@ mongoose.Promise = global.Promise;
 export const db = {
   User: userModel(),
   Tickets: ticketsModel(),
+  Operations: operationsModel(),
 };
 
 // mongoose models with schema definitions
@@ -88,4 +89,33 @@ function ticketsModel() {
   });
 
   return mongoose.models.Tickets || mongoose.model("Tickets", schema);
+}
+
+function operationsModel() {
+  const schema = new Schema(
+    {
+      transferName: { type: String, required: false },
+      ticketId: { type: mongoose.Schema.ObjectId, required: false },
+      transferDate: { type: String, required: false },
+      operation: { type: String, required: false },
+      ticketRefundUsed: { type: String, required: false },
+      //totalRefund: { type: String, required: false },
+      suppliedTicket: { type: String, required: false },
+      //totalSupplied: { type: String, required: false },
+    },
+    {
+      // add createdAt and updatedAt timestamps
+      timestamps: true,
+      strict: false,
+    }
+  );
+  schema.set("toJSON", {
+    virtuals: true,
+    versionKey: false,
+    transform: function (doc, ret) {
+      delete ret._id;
+      delete ret.hash;
+    },
+  });
+  return mongoose.models.Operations || mongoose.model("Operations", schema);
 }

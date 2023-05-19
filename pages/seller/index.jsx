@@ -1,169 +1,56 @@
 import { Layout } from "components/users";
-import { DataTable } from "primereact/datatable";
-import { Column } from "primereact/column";
-import { InputText } from "primereact/inputtext";
-import { Button } from "primereact/button";
-import { FilterMatchMode } from "primereact/api";
 import React, { useState, useEffect, useRef } from "react";
 import Router from "next/router";
-import { formatDate, ticketsService } from "../../services";
+import { formatDate, operationsService } from "../../services";
 
 export default Index;
 
 function Index() {
-  const [tickets, setTickets] = useState([]);
-  const dt = useRef(null);
-  const [loading, setLoading] = useState(false);
+  const [operations, setOperations] = useState([]);
   const [dates, setDates] = useState({
     start: "",
     end: "",
     type: "",
-    refund: true,
   });
-
   useEffect(() => {
-    getTickets();
+    getOperations();
   }, []);
 
-  const getTickets = (dates = null) => {
-    setLoading(true);
+  const getOperations = (dates = null) => {
     let start = new Date();
-    //start.setMonth(start.getMonth() - 6);
+    start.setMonth(start.getMonth() - 6);
     start.setDate(1);
     start = formatDate(start);
     let end = formatDate(new Date());
-    let type = "bookedOn";
-    let refund = true;
+    let type = "transferDate";
     if (dates) {
       start = dates.start;
       end = dates.end;
       type = dates.type;
     } else {
-      setDates({ start, end, type, refund });
+      setDates({ start, end, type });
     }
-    ticketsService.getAll({ start, end, type, refund }).then((tickets) => {
-      setTickets([]);
-      onGlobalFilterChange({ target: { value: "" } });
-      setLoading(false);
+    operationsService.getAll({ start, end, type }).then((res) => {
+      const operationsI = res.reduce((group, arr) => {
+        const { transferName } = arr;
+        group[transferName] = group[transferName] ?? [];
+        group[transferName].push(arr);
+        return group;
+      }, {});
+      console.log(operationsI);
+      setOperations(operationsI);
     });
-  };
-
-  const search = () => {
-    let start = document.getElementById("start").value;
-    let end = document.getElementById("end").value;
-    let type = document.getElementById("type").value;
-    getTickets({ start, end, type });
-  };
-
-  const [filters, setFilters] = useState({
-    global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-  });
-  const allFilters = [
-    "name",
-    "agent",
-    "bookingCode",
-    "cardNumber",
-    "ticketNumber",
-    "methods",
-    "paidAmount",
-    "receivingAmountT",
-    "profit",
-    "bookedOn",
-    "phone",
-    "iata",
-    "flight",
-  ];
-  const [filtersA, setFiltersA] = useState(allFilters);
-  const [globalFilterValue, setGlobalFilterValue] = useState("");
-
-  const onGlobalFilterChange = (e) => {
-    const value = e.target.value;
-    let _filters = { ...filters };
-
-    _filters["global"].value = value;
-
-    setFilters(_filters);
-    setGlobalFilterValue(value);
   };
 
   const addNew = () => {
     Router.push("/seller/transfer");
   };
 
-  const applyFilters = (e) => {
-    let types = [
-      "all",
-      "agent",
-      "bookingCode",
-      "ticketNumber",
-      "iata",
-      "name",
-      "cardNumber",
-      "methods",
-    ];
-    let selected = parseInt(e.target.value);
-    if (selected !== 0) {
-      setFiltersA([types[selected]]);
-    } else {
-      setFiltersA(allFilters);
-    }
-  };
-
-  const renderHeader = () => {
-    return (
-      <div className="flex justify-content-end">
-        <span className="p-input-icon-left">
-          <i className="pi pi-search" />
-          <InputText
-            value={globalFilterValue}
-            onChange={onGlobalFilterChange}
-            placeholder="Keyword Search"
-          />
-        </span>
-        <select
-          className="form-select"
-          aria-label="filters"
-          onChange={(e) => {
-            applyFilters(e);
-          }}
-        >
-          <option defaultValue value="0">
-            All
-          </option>
-          <option value="1">Agent Name</option>
-          <option value="2">PNR</option>
-          <option value="3">Ticket Number</option>
-          <option value="4">Issued By</option>
-          <option value="5">Passenger Name</option>
-          <option value="6">Card Number</option>
-          <option value="7">Payment Methods</option>
-        </select>
-        <Button
-          className="tb-btns"
-          type="button"
-          icon="fa fa-file-excel"
-          rounded
-          onClick={() => exportCSV(false)}
-          data-pr-tooltip="CSV"
-          severity="success"
-        />
-        <Button
-          className="tb-btns"
-          type="button"
-          icon="fa fa-plus"
-          rounded
-          onClick={() => addNew()}
-          data-pr-tooltip="CSV"
-          severity="primary"
-        />
-      </div>
-    );
-  };
-
-  const header = renderHeader();
-
-  const exportCSV = (selectionOnly) => {
-    dt.current.exportCSV({ selectionOnly });
+  const search = () => {
+    let start = document.getElementById("start").value;
+    let end = document.getElementById("end").value;
+    let type = document.getElementById("type").value;
+    getOperations({ start, end, type });
   };
 
   return (
@@ -174,17 +61,11 @@ function Index() {
             <label htmlFor="type">Type:</label>
             <div className="input-group">
               <select id="type" className="form-select">
-                <option defaultValue value="bookedOn">
-                  Issue Date
-                </option>
-                <option value="receivingAllDates">All Amounts Dates</option>
-                <option value="receivingAmount1Date">Amount 1 Date</option>
-                <option value="receivingAmount2Date">Amount 2 Date</option>
-                <option value="receivingAmount3Date">Amount 3 Date</option>
+                <option value="transferDate">Transfer Date</option>
               </select>
             </div>
           </div>
-          <div className="col-sm-4">
+          <div className="col-sm-3">
             <label htmlFor="start">From Date:</label>
             <div className="input-group">
               <input
@@ -196,7 +77,7 @@ function Index() {
               />
             </div>
           </div>
-          <div className="col-sm-4">
+          <div className="col-sm-3">
             <label htmlFor="end">To Date:</label>
             <div className="input-group">
               <input
@@ -216,33 +97,165 @@ function Index() {
                 search();
               }}
             >
-              Search
+              Search Transfers
+            </button>
+          </div>
+          <div className="col-sm-2">
+            <button
+              className="btn btn-block btn-success width-search"
+              onClick={() => {
+                addNew();
+              }}
+            >
+              New Transfer
             </button>
           </div>
         </div>
       </div>
       <br />
       <div className="card">
-        <DataTable
-          paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-          rowsPerPageOptions={[25, 50, 100, 250, 500]}
-          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-          loading={loading}
-          size="small"
-          ref={dt}
-          value={tickets}
-          paginator
-          rows={25}
-          dataKey="id"
-          filters={filters}
-          csvSeparator=";"
-          globalFilterFields={filtersA}
-          header={header}
-          emptyMessage="No tickets found."
-        >
-          <Column header="Actions" exportable={false}></Column>
-          <Column field="idP" header="Id" />
-        </DataTable>
+        <div className="container">
+          <div className="table-responsive">
+            <br />
+            <table className="table table-striped accordion">
+              {Object.keys(operations).length ? (
+                <tbody>
+                  {Object.keys(operations).map((key, i) => {
+                    return (
+                      <React.Fragment key={"i" + i}>
+                        <tr data-bs-toggle="collapse" data-bs-target={"#r" + i}>
+                          <th scope="row">
+                            {i + 1} - Bonifico
+                            {" - " + operations[key][0]["transferDate"]}
+                            <i className="fa fa-chevron-down tb-btns"></i>
+                          </th>
+                        </tr>
+                        <tr
+                          className="collapse accordion-collapse"
+                          id={"r" + i}
+                          data-bs-parent=".table"
+                        >
+                          <td>
+                            <table className="table table-striped accordion">
+                              {Object.keys(operations[key]).length ? (
+                                <tbody>
+                                  <tr>
+                                    <td scope="row">Name</td>
+                                    <td scope="row">PNR</td>
+                                    <td scope="row">Operation</td>
+                                    <td scope="row">Cost</td>
+                                    <td scope="row">Total Paid to SCA</td>
+                                    <td scope="row">Remained to pay SCA</td>
+                                    <td scope="row">
+                                      Transferred with Operation
+                                    </td>
+                                    <td scope="row">Total Refund</td>
+                                    <td scope="row">Refund Used</td>
+                                    <td scope="row">Remained refund</td>
+                                    <td scope="row">
+                                      Refund Used with Operation
+                                    </td>
+                                  </tr>
+                                  {Object.keys(operations[key]).map(
+                                    (key2, i2) => {
+                                      return (
+                                        <React.Fragment key={"i2" + i2}>
+                                          <tr>
+                                            <td scope="row">
+                                              {
+                                                operations[key][key2][
+                                                  "ticket"
+                                                ][0]["name"]
+                                              }
+                                            </td>
+                                            <td scope="row">
+                                              {
+                                                operations[key][key2][
+                                                  "ticket"
+                                                ][0]["bookingCode"]
+                                              }
+                                            </td>
+                                            <td scope="row">
+                                              {
+                                                operations[key][key2][
+                                                  "operation"
+                                                ]
+                                              }
+                                            </td>
+                                            <td scope="row">
+                                              {
+                                                operations[key][key2][
+                                                  "ticket"
+                                                ][0]["paidAmount"]
+                                              }
+                                            </td>
+                                            <td scope="row">
+                                              {
+                                                operations[key][key2][
+                                                  "ticket"
+                                                ][0]["supplied"]
+                                              }
+                                            </td>
+                                            <td scope="row">
+                                              {
+                                                operations[key][key2][
+                                                  "ticket"
+                                                ][0]["ticketNumber"]
+                                              }
+                                            </td>
+                                            <td scope="row">
+                                              {
+                                                operations[key][key2][
+                                                  "suppliedTicket"
+                                                ]
+                                              }
+                                            </td>
+                                            <td scope="row">
+                                              {
+                                                operations[key][key2][
+                                                  "ticket"
+                                                ][0]["refund"]
+                                              }
+                                            </td>
+                                            <td scope="row">
+                                              {
+                                                operations[key][key2][
+                                                  "ticket"
+                                                ][0]["refundUsed"]
+                                              }
+                                            </td>
+                                            <td scope="row">
+                                              {
+                                                operations[key][key2][
+                                                  "ticket"
+                                                ][0]["ticketNumber"]
+                                              }
+                                            </td>
+                                            <td scope="row">
+                                              {
+                                                operations[key][key2][
+                                                  "ticketRefundUsed"
+                                                ]
+                                              }
+                                            </td>
+                                          </tr>
+                                        </React.Fragment>
+                                      );
+                                    }
+                                  )}
+                                </tbody>
+                              ) : null}
+                            </table>
+                          </td>
+                        </tr>
+                      </React.Fragment>
+                    );
+                  })}
+                </tbody>
+              ) : null}
+            </table>
+          </div>
+        </div>
       </div>
     </Layout>
   );

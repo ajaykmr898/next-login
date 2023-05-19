@@ -4,6 +4,7 @@ export * from "./error-handler";
 export * from "./jwt-middleware";
 export * from "./users-repo";
 export * from "./tickets-repo";
+export * from "./operations-repo";
 
 export function formatDate(date, format = "DB") {
   let d = new Date(date),
