@@ -247,7 +247,7 @@ function Index() {
               ) : (
                 <tbody>
                   <tr>
-                    <td>No transfers found</td>
+                    <td>No transfers found.</td>
                   </tr>
                 </tbody>
               )}
