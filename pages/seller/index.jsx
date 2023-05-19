@@ -162,17 +162,13 @@ function Index() {
                                         <React.Fragment key={"i2" + i2}>
                                           <tr>
                                             <td scope="row">
-                                              {
-                                                operations[key][key2][
-                                                  "ticket"
-                                                ][0]["name"]
-                                              }
+                                              {operations[key][key2]["name"]}
                                             </td>
                                             <td scope="row">
                                               {
                                                 operations[key][key2][
-                                                  "ticket"
-                                                ][0]["bookingCode"]
+                                                  "bookingCode"
+                                                ]
                                               }
                                             </td>
                                             <td scope="row">
@@ -185,22 +181,22 @@ function Index() {
                                             <td scope="row">
                                               {
                                                 operations[key][key2][
-                                                  "ticket"
-                                                ][0]["paidAmount"]
+                                                  "paidAmount"
+                                                ]
                                               }
                                             </td>
                                             <td scope="row">
                                               {
                                                 operations[key][key2][
-                                                  "ticket"
-                                                ][0]["supplied"]
+                                                  "supplied"
+                                                ]
                                               }
                                             </td>
                                             <td scope="row">
                                               {
                                                 operations[key][key2][
-                                                  "ticket"
-                                                ][0]["ticketNumber"]
+                                                  "remainedSupplied"
+                                                ]
                                               }
                                             </td>
                                             <td scope="row">
@@ -211,24 +207,20 @@ function Index() {
                                               }
                                             </td>
                                             <td scope="row">
+                                              {operations[key][key2]["refund"]}
+                                            </td>
+                                            <td scope="row">
                                               {
                                                 operations[key][key2][
-                                                  "ticket"
-                                                ][0]["refund"]
+                                                  "refundUsed"
+                                                ]
                                               }
                                             </td>
                                             <td scope="row">
                                               {
                                                 operations[key][key2][
-                                                  "ticket"
-                                                ][0]["refundUsed"]
-                                              }
-                                            </td>
-                                            <td scope="row">
-                                              {
-                                                operations[key][key2][
-                                                  "ticket"
-                                                ][0]["ticketNumber"]
+                                                  "remainedRefund"
+                                                ]
                                               }
                                             </td>
                                             <td scope="row">
