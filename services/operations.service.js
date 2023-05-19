@@ -33,6 +33,9 @@ async function getAll(filters) {
       refundUsed: "€ " + refundUsed.toFixed(2),
       name: e.ticket[0].name,
       bookingCode: e.ticket[0].bookingCode,
+      totalOperation: e.totalOperation ? "€ " + e.totalOperation : "",
+      transferAmountTotalOperation: "€ " + e.transferAmountTotalOperation,
+      refundAmountTotalOperation: "€ " + e.refundAmountTotalOperation,
     };
   });
   return data;

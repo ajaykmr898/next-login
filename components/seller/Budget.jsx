@@ -143,6 +143,7 @@ function Budget(props) {
           changesRefunds.map((e) => {
             let data = {
               transferName,
+              totalOperation: total,
               transferAmountTotalOperation: total,
               refundAmountTotalOperation: refundTot,
               ticketId: e.id,
@@ -156,6 +157,7 @@ function Budget(props) {
           changesSupplied.map((e) => {
             let data = {
               transferName,
+              totalOperation: total,
               transferAmountTotalOperation: total,
               refundAmountTotalOperation: refundTot,
               ticketId: e.id,
