@@ -73,7 +73,7 @@ function Budget(props) {
   //1 - prendere lista dei ticket con refund (non completamente gestito) [con sca e refund e supplied < cost]
   //2 - sceglere quali refund usare e fare adjustTotal
   //3 - far vedere lista dei ticket non ancora completamente gestiti con budget verso SCA
-  //6 visualizzare tutte le operazioni nella tabella nuova
+  //6 - visualizzare tutte le operazioni nella tabella nuova
   // nome, pnr, biglietto, cost, refund, supplied, balance (r - total s), s date
   //4 - aggiornare supplied/date del biglietto ogni volta che il biglietto viene selezionato
   //5 - salvare nella nuova tabella i movimenti sui biglietti se scelti per refund o supply
