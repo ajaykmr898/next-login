@@ -133,7 +133,10 @@ function Index() {
                               ]*/}
                             {/*" + Refund: " +
                               operations[key][0]["refundAmountTotalOperation"]*/}
-                            {" - " + operations[key][0]["totalOperation"]}
+                            {" - " +
+                              operations[key][0][
+                                "transferAmountTotalOperation"
+                              ]}
                             <i className="fa fa-chevron-down tb-btns"></i>
                           </th>
                         </tr>
