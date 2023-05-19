@@ -466,7 +466,7 @@ function Budget(props) {
             data-bs-parent="#accordionExample1"
           >
             <div className="accordion-body">
-              <table className="table table-stacked table-sm">
+              <table className="table table-striped table-sm">
                 <thead>
                   <tr>
                     <th scope="col">Name</th>
