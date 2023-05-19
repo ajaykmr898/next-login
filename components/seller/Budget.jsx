@@ -386,7 +386,7 @@ function Budget(props) {
               ""
             )}
             <div className="accordion-body">
-              <table className="table table-sm">
+              <table className="table table-striped table-sm">
                 <thead>
                   <tr>
                     <th scope="col">Name</th>
