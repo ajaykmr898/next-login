@@ -95,6 +95,8 @@ function operationsModel() {
   const schema = new Schema(
     {
       transferName: { type: String, required: false },
+      transferAmountTotalOperation: { type: String, required: false },
+      refundAmountTotalOperation: { type: String, required: false },
       ticketId: { type: mongoose.Schema.ObjectId, required: false },
       transferDate: { type: String, required: false },
       operation: { type: String, required: false },

@@ -143,6 +143,8 @@ function Budget(props) {
           changesRefunds.map((e) => {
             let data = {
               transferName,
+              transferAmountTotalOperation: total,
+              refundAmountTotalOperation: refundTot,
               ticketId: e.id,
               transferDate: formatDate(date, "DB"),
               operation: "refundUsed",
@@ -154,6 +156,8 @@ function Budget(props) {
           changesSupplied.map((e) => {
             let data = {
               transferName,
+              transferAmountTotalOperation: total,
+              refundAmountTotalOperation: refundTot,
               ticketId: e.id,
               transferDate: formatDate(date, "DB"),
               operation: "paidSCA",
@@ -462,7 +466,7 @@ function Budget(props) {
             data-bs-parent="#accordionExample1"
           >
             <div className="accordion-body">
-              <table className="table table-sm">
+              <table className="table table-stacked table-sm">
                 <thead>
                   <tr>
                     <th scope="col">Name</th>
