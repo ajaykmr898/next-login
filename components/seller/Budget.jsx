@@ -1,7 +1,6 @@
 import { alertService, ticketsService } from "services";
 import React, { useEffect, useState } from "react";
-import { Dialog } from "primereact/dialog";
-import { Button } from "primereact/button";
+import Swal from "sweetalert2";
 
 export { Budget };
 
@@ -15,28 +14,55 @@ function Budget(props) {
   const [budgetTot, setBudgetTot] = useState(0);
   const [changesRefunds, setChangesRefunds] = useState([]);
   const [changesSupplied, setChangesSupplied] = useState([]);
-  const [supplytDialog, setSupplytDialog] = useState(false);
 
-  const supplytDialogFooter = (
-    <div>
-      <Button
-        label="No"
-        icon="fa fa-times"
-        className="p-button-text"
-        onClick={() => {
-          setSupplytDialog(false);
-        }}
-      />
-      <Button
-        label="Yes"
-        icon="fa fa-check"
-        className="p-button-text"
-        onClick={(e) => {
-          onComplete(e);
-        }}
-      />
-    </div>
-  );
+  const swal = Swal.mixin({
+    customClass: {
+      confirmButton: "m-1 btn btn-success",
+      cancelButton: "btn btn-danger",
+    },
+    buttonsStyling: false,
+  });
+
+  function ask() {
+    swal
+      .fire({
+        title: "Are you sure?",
+        text: "You want to save operations to database?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes",
+        cancelButtonText: "Cancel",
+        reverseButtons: true,
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          const resp = onComplete();
+          if (resp) {
+            let { errorR, errorS, errorN } = resp;
+
+            if (!errorR && !errorS && !errorN) {
+              swal
+                .fire(
+                  "Saved",
+                  "Your operations has been saved successfully.",
+                  "success"
+                )
+                .then((res) => {
+                  if (res.isDismissed || res.isConfirmed) {
+                    window.location.reload();
+                  }
+                });
+            } else {
+              swal.fire(
+                "Error!",
+                "An error occurred while saving operations.",
+                "error"
+              );
+            }
+          }
+        }
+      });
+  }
 
   //0 - rinominare penality in supplied
   //1 - prendere lista dei ticket con refund (non completamente gestito) [con sca e refund e supplied < cost]
@@ -86,15 +112,14 @@ function Budget(props) {
     }
   }
 
-  async function onComplete(e) {
-    setSupplytDialog(false);
-    e.preventDefault();
+  function onComplete() {
     let deltaI = parseFloat(delta).toFixed(2);
     if (deltaI === "0.00" && changesSupplied.length > 0) {
       let errorR = false;
       let errorS = false;
       let errorN = false;
       // save changesRefunds total in refundUsed
+      console.log(date, changesRefunds, changesSupplied);
       changesRefunds.map((e) => {
         /*ticketsService
           .update(e.id, { refundUsed: e.total })
@@ -111,20 +136,12 @@ function Budget(props) {
           // save operations in new table to show in sca page
           errorN = false;
         }
-        if (!errorR && !errorS && !errorN) {
-          if (confirm("Saved successfully")) {
-            window.location.reload();
-          } else {
-            window.location.reload();
-          }
-        } else {
-          alert("Errors occurred while saving");
-        }
       }
-    } else {
+      return { errorR, errorS, errorN };
+    } /*else {
       console.log("no");
-    }
-    console.log("here1", date, changesRefunds, changesSupplied);
+    }*/
+    return null;
   }
 
   function onAdd(e) {
@@ -299,8 +316,8 @@ function Budget(props) {
           <div className="col-md-2">
             <br />
             <button
-              onClick={(e) => {
-                setSupplytDialog(true);
+              onClick={() => {
+                ask();
               }}
               type="button"
               id="complete"
@@ -352,8 +369,8 @@ function Budget(props) {
                   <tr>
                     <th scope="col">Name</th>
                     <th scope="col">PNR</th>
-                    <th scope="col">Refund</th>
-                    <th scope="col">Refund used SCA</th>
+                    <th scope="col">Total Refund</th>
+                    <th scope="col">Refund Used</th>
                     <th scope="col">Remained</th>
                     <th scope="col">Add</th>
                   </tr>
@@ -429,9 +446,9 @@ function Budget(props) {
                     <th scope="col">Name</th>
                     <th scope="col">PNR</th>
                     <th scope="col">Cost</th>
-                    <th scope="col">Paid SCA</th>
+                    <th scope="col">Paid to SCA</th>
                     <th scope="col">Remained</th>
-                    <th scope="col">Add</th>
+                    <th scope="col">Pay</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -448,7 +465,7 @@ function Budget(props) {
                             className={
                               "tickets tickets-field tickets-input-" + r.id
                             }
-                            placeholder="insert to supply"
+                            placeholder="remained to pay"
                             type="number"
                             step="0.01"
                             min="0"
@@ -486,20 +503,6 @@ function Budget(props) {
           </div>
         </div>
       </div>
-      <Dialog
-        visible={supplytDialog}
-        header="Confirm"
-        modal
-        footer={supplytDialogFooter}
-        onHide={() => {
-          setSupplytDialog(false);
-        }}
-      >
-        <div className="confirmation-content">
-          <i className="fa fa-triangle mr-3" />
-          <span>Are you sure?</span>
-        </div>
-      </Dialog>
     </>
   );
 }
