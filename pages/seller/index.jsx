@@ -252,7 +252,13 @@ function Index() {
                     );
                   })}
                 </tbody>
-              ) : null}
+              ) : (
+                <tbody>
+                  <tr>
+                    <td>No transfers found</td>
+                  </tr>
+                </tbody>
+              )}
             </table>
           </div>
         </div>
