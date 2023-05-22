@@ -108,6 +108,7 @@ function Budget(props) {
     let elements = document.getElementsByClassName("tickets-field");
     for (let i = 0; i < elements.length; i++) {
       if (disabled) {
+        console.log("here", elements);
         elements[i].setAttribute("disabled", "disabled");
       } else {
         elements[i].removeAttribute("disabled");
