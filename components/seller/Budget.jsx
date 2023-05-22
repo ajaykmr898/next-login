@@ -72,7 +72,9 @@ function Budget(props) {
 
   useEffect(() => {
     document.getElementById("complete").setAttribute("disabled", "disabled");
-    getTickets();
+    getTickets().then((res) => {
+      disableEnableInputsOnDeltaZeroOrBudgetFieldsNotSet("d");
+    });
   }, []);
 
   async function getTickets() {
@@ -85,8 +87,6 @@ function Budget(props) {
         remained: parseFloat(remained).toFixed(2),
       };
     });
-
-    disableEnableInputsOnDeltaZeroOrBudgetFieldsNotSet("d");
     setTickets(res2);
   }
 
