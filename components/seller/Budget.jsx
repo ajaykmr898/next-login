@@ -71,7 +71,7 @@ function Budget(props) {
   }
 
   useEffect(() => {
-    document.getElementById("complete").disabled = true;
+    document.getElementById("complete").setAttribute("disabled", "disabled");
     getTickets();
   }, []);
 
@@ -90,13 +90,15 @@ function Budget(props) {
   }
 
   function disableInputsForTransferAndRefunds() {
-    document.getElementById("budget").disabled = true;
-    document.getElementById("budget-date").disabled = true;
-    document.getElementById("add").disabled = true;
-    document.getElementById("remained-button").disabled = true;
+    document.getElementById("budget").setAttribute("disabled", "disabled");
+    document.getElementById("budget-date").setAttribute("disabled", "disabled");
+    document.getElementById("add").setAttribute("disabled", "disabled");
+    document
+      .getElementById("remained-button")
+      .setAttribute("disabled", "disabled");
     let elements = document.getElementsByClassName("remained");
     for (let i = 0; i < elements.length; i++) {
-      elements[i].disabled = true;
+      elements[i].setAttribute("disabled", "disabled");
     }
   }
 
@@ -104,11 +106,15 @@ function Budget(props) {
     let disabled = type === "d";
     let elements = document.getElementsByClassName("tickets-field");
     for (let i = 0; i < elements.length; i++) {
-      elements[i].disabled = disabled;
+      if (disabled) {
+        elements[i].setAttribute("disabled", "disabled");
+      } else {
+        elements[i].removeAttribute("disabled");
+      }
     }
     let elements2 = document.getElementsByClassName("tickets-field-edit");
     for (let i = 0; i < elements2.length; i++) {
-      elements2[i].disabled = true;
+      elements2[i].setAttribute("disabled", "disabled");
     }
   }
 
@@ -247,11 +253,15 @@ function Budget(props) {
     deltaI = deltaI + numberI;
     setDelta(deltaI);
     document.getElementsByClassName("tickets-input-" + id)[0].value = 0;
-    document.getElementsByClassName("tickets-btn-ok-" + id)[0].disabled = false;
-    document.getElementsByClassName(
-      "tickets-btn-edit-" + id
-    )[0].disabled = true;
-    document.getElementsByClassName("tickets-input-" + id)[0].disabled = false;
+    document
+      .getElementsByClassName("tickets-btn-ok-" + id)[0]
+      .removeAttribute("disabled");
+    document
+      .getElementsByClassName("tickets-btn-edit-" + id)[0]
+      .setAttribute("disabled", "disabled");
+    document
+      .getElementsByClassName("tickets-input-" + id)[0]
+      .removeAttribute("disabled");
   }
 
   function addSupplied(id, remained, supplied) {
@@ -273,15 +283,17 @@ function Budget(props) {
       let deltaT = deltaI - numberI;
       deltaT = parseFloat(deltaT).toFixed(2);
       numberI = numberI.toFixed(2);
-      document.getElementsByClassName(
-        "tickets-btn-ok-" + id
-      )[0].disabled = true;
+      document
+        .getElementsByClassName("tickets-btn-ok-" + id)[0]
+        .setAttribute("disabled", "disabled");
       document.getElementsByClassName("tickets-ko-" + id)[0].hidden = true;
       document.getElementsByClassName("tickets-ok-" + id)[0].hidden = false;
-      document.getElementsByClassName(
-        "tickets-btn-edit-" + id
-      )[0].disabled = false;
-      document.getElementsByClassName("tickets-input-" + id)[0].disabled = true;
+      document
+        .getElementsByClassName("tickets-btn-edit-" + id)[0]
+        .removeAttribute("disabled");
+      document
+        .getElementsByClassName("tickets-input-" + id)[0]
+        .setAttribute("disabled", "disabled");
       let newSupplies = [...changesSupplied];
       const found = newSupplies.some((el) => el.id === id);
       if (found) {
@@ -292,7 +304,7 @@ function Budget(props) {
       setDelta(deltaT);
 
       if (deltaT === "0.00") {
-        document.getElementById("complete").disabled = false;
+        document.getElementById("complete").removeAttribute("disabled");
         disableEnableInputsOnDeltaZeroOrBudgetFieldsNotSet("d");
       }
     } else {
