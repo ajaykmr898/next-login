@@ -253,11 +253,13 @@ function Index() {
                   })}
                 </tbody>
               ) : !operations ? (
-                <tr>
-                  <td colSpan="4">
-                    <Spinner />
-                  </td>
-                </tr>
+                <tbody>
+                  <tr>
+                    <td colSpan="4">
+                      <Spinner />
+                    </td>
+                  </tr>
+                </tbody>
               ) : (
                 <tbody>
                   <tr>

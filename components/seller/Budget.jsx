@@ -6,12 +6,13 @@ import {
 } from "services";
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
+import { Spinner } from "components";
 
 export { Budget };
 
 function Budget(props) {
   const refunds = props.refunds;
-  const [tickets, setTickets] = useState([]);
+  const [tickets, setTickets] = useState(null);
   const [delta, setDelta] = useState(0);
   const [total, setTotal] = useState(0);
   const [refundTot, setRefundTot] = useState(0);
@@ -380,7 +381,7 @@ function Budget(props) {
             aria-labelledby="headingOne"
             data-bs-parent="#accordionExample"
           >
-            <div style={{ "text-align": "center" }}>
+            <div style={{ textAlign: "center" }}>
               {refunds.length ? (
                 <button
                   onClick={() => addRefunds()}
@@ -460,7 +461,7 @@ function Budget(props) {
               aria-expanded="true"
               aria-controls="collapseOne"
             >
-              {tickets.length
+              {tickets && tickets.length
                 ? tickets.length + " Tickets"
                 : "No tickets to adjust"}
             </button>
@@ -485,51 +486,59 @@ function Budget(props) {
                     </tr>
                   </thead>
                   <tbody>
-                    {tickets.map((r, i) => {
-                      return (
-                        <tr key={i}>
-                          <td>{r.name}</td>
-                          <td>{r.bookingCode}</td>
-                          <td>€ {r.paidAmount}</td>
-                          <td>€ {r.supplied}</td>
-                          <td>€ {r.remained}</td>
-                          <td>
-                            <input
-                              className={
-                                "tickets tickets-field tickets-input-" + r.id
-                              }
-                              placeholder="remained to pay"
-                              type="number"
-                              step="0.01"
-                              min="0"
-                              max={r.remained}
-                            />
-                            &nbsp;
-                            <button
-                              className={"tickets-field tickets-btn-" + r.id}
-                              onClick={() => {
-                                manageSupplied(r.id, r.remained, r.supplied);
-                              }}
-                            >
-                              Ok
-                            </button>
-                            &nbsp;
-                            <label
-                              hidden
-                              className={`tickets-ok-${r.id} text-success`}
-                            >
-                              <i className="fa fa-check"></i>
-                            </label>
-                            <label
-                              hidden
-                              className={`tickets-ko-${r.id} text-danger`}
-                            >
-                              <i className="fa fa-times"></i>
-                            </label>
-                          </td>
-                        </tr>
-                      );
-                    })}
+                    {tickets &&
+                      tickets.map((r, i) => {
+                        return (
+                          <tr key={i}>
+                            <td>{r.name}</td>
+                            <td>{r.bookingCode}</td>
+                            <td>€ {r.paidAmount}</td>
+                            <td>€ {r.supplied}</td>
+                            <td>€ {r.remained}</td>
+                            <td>
+                              <input
+                                className={
+                                  "tickets tickets-field tickets-input-" + r.id
+                                }
+                                placeholder="remained to pay"
+                                type="number"
+                                step="0.01"
+                                min="0"
+                                max={r.remained}
+                              />
+                              &nbsp;
+                              <button
+                                className={"tickets-field tickets-btn-" + r.id}
+                                onClick={() => {
+                                  manageSupplied(r.id, r.remained, r.supplied);
+                                }}
+                              >
+                                Ok
+                              </button>
+                              &nbsp;
+                              <label
+                                hidden
+                                className={`tickets-ok-${r.id} text-success`}
+                              >
+                                <i className="fa fa-check"></i>
+                              </label>
+                              <label
+                                hidden
+                                className={`tickets-ko-${r.id} text-danger`}
+                              >
+                                <i className="fa fa-times"></i>
+                              </label>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    {!tickets && (
+                      <tr>
+                        <td colSpan="4">
+                          <Spinner />
+                        </td>
+                      </tr>
+                    )}
                   </tbody>
                 </table>
               </div>
