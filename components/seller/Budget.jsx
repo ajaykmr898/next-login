@@ -541,7 +541,7 @@ function Budget(props) {
                                   editSupplied(r.id, r.remained, r.supplied);
                                 }}
                               >
-                                <i className="fa fa-pen"></i>
+                                <i className="fa fa-pencil"></i>
                               </button>
                               &nbsp;
                               <label
