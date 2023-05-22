@@ -54,7 +54,7 @@ function Index() {
                     href={`/users/edit/${user.id}`}
                     className="btn btn-sm btn-primary me-1"
                   >
-                    <i className="fa fa-pencil"></i>Edit
+                    <i className="fa fa-pencil"></i>
                   </Link>
                   <button
                     onClick={() => deleteUser(user.id)}
