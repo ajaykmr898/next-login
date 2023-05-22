@@ -111,6 +111,7 @@ function Budget(props) {
         console.log("here", elements);
         elements[i].setAttribute("disabled", "disabled");
       } else {
+        console.log("here2", type, elements);
         elements[i].removeAttribute("disabled");
       }
     }
