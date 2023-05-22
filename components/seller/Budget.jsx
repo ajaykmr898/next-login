@@ -86,7 +86,7 @@ function Budget(props) {
   // - totals in db bonifico
   // excel sca page
   // save errors
-  // only refund
+  // - only refund
 
   useEffect(() => {
     document.getElementById("complete").disabled = true;
