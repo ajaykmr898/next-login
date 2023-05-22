@@ -70,24 +70,6 @@ function Budget(props) {
       });
   }
 
-  //0 - rinominare penality in supplied
-  //1 - prendere lista dei ticket con refund (non completamente gestito) [con sca e refund e supplied < cost]
-  //2 - sceglere quali refund usare e fare adjustTotal
-  //3 - far vedere lista dei ticket non ancora completamente gestiti con budget verso SCA
-  //6 - visualizzare tutte le operazioni nella tabella nuova
-  // nome, pnr, biglietto, cost, refund, supplied, balance (r - total s), s date
-  //4 - aggiornare supplied/date del biglietto ogni volta che il biglietto viene selezionato
-  //5 - salvare nella nuova tabella i movimenti sui biglietti se scelti per refund o supply
-  //una riga per ogni bonifico e use refund o set supply
-
-  // edit
-  // array[0]
-  // - insert many
-  // - totals in db bonifico
-  // excel sca page
-  // save errors
-  // - only refund
-
   useEffect(() => {
     document.getElementById("complete").disabled = true;
     getTickets();
@@ -123,6 +105,10 @@ function Budget(props) {
     let elements = document.getElementsByClassName("tickets-field");
     for (let i = 0; i < elements.length; i++) {
       elements[i].disabled = disabled;
+    }
+    let elements2 = document.getElementsByClassName("tickets-field-edit");
+    for (let i = 0; i < elements2.length; i++) {
+      elements2[i].disabled = true;
     }
   }
 
@@ -253,7 +239,22 @@ function Budget(props) {
     }
   }
 
-  function manageSupplied(id, remained, supplied) {
+  function editSupplied(id, remained, supplied) {
+    let number = document.getElementsByClassName("tickets-input-" + id)[0]
+      .value;
+    let numberI = parseFloat(number);
+    let deltaI = parseFloat(delta);
+    deltaI = deltaI + numberI;
+    setDelta(deltaI);
+    document.getElementsByClassName("tickets-input-" + id)[0].value = 0;
+    document.getElementsByClassName("tickets-btn-ok-" + id)[0].disabled = false;
+    document.getElementsByClassName(
+      "tickets-btn-edit-" + id
+    )[0].disabled = true;
+    document.getElementsByClassName("tickets-input-" + id)[0].disabled = false;
+  }
+
+  function addSupplied(id, remained, supplied) {
     let number = document.getElementsByClassName("tickets-input-" + id)[0]
       .value;
     let numberI = parseFloat(number);
@@ -272,10 +273,20 @@ function Budget(props) {
       let deltaT = deltaI - numberI;
       deltaT = parseFloat(deltaT).toFixed(2);
       numberI = numberI.toFixed(2);
-      document.getElementsByClassName("tickets-btn-" + id)[0].disabled = true;
+      document.getElementsByClassName(
+        "tickets-btn-ok-" + id
+      )[0].disabled = true;
       document.getElementsByClassName("tickets-ko-" + id)[0].hidden = true;
       document.getElementsByClassName("tickets-ok-" + id)[0].hidden = false;
+      document.getElementsByClassName(
+        "tickets-btn-edit-" + id
+      )[0].disabled = false;
+      document.getElementsByClassName("tickets-input-" + id)[0].disabled = true;
       let newSupplies = [...changesSupplied];
+      const found = newSupplies.some((el) => el.id === id);
+      if (found) {
+        newSupplies = newSupplies.filter((e) => e.id !== id);
+      }
       newSupplies.push({ id, paid: numberI, total: number, type: "supplied" });
       setChangesSupplied(newSupplies);
       setDelta(deltaT);
@@ -288,6 +299,8 @@ function Budget(props) {
       document.getElementsByClassName("tickets-ko-" + id)[0].hidden = false;
       document.getElementsByClassName("tickets-ok-" + id)[0].hidden = true;
     }
+
+    return false;
   }
 
   return (
@@ -508,12 +521,27 @@ function Budget(props) {
                               />
                               &nbsp;
                               <button
-                                className={"tickets-field tickets-btn-" + r.id}
+                                className={
+                                  "tickets-field tickets-field-ok tickets-btn-ok-" +
+                                  r.id
+                                }
                                 onClick={() => {
-                                  manageSupplied(r.id, r.remained, r.supplied);
+                                  addSupplied(r.id, r.remained, r.supplied);
                                 }}
                               >
                                 Ok
+                              </button>
+                              &nbsp;
+                              <button
+                                className={
+                                  "tickets-field tickets-field-edit tickets-btn-edit-" +
+                                  r.id
+                                }
+                                onClick={() => {
+                                  editSupplied(r.id, r.remained, r.supplied);
+                                }}
+                              >
+                                <i className="fa fa-pen"></i>
                               </button>
                               &nbsp;
                               <label
