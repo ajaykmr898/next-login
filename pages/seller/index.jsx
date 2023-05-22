@@ -2,11 +2,12 @@ import { Layout } from "components/users";
 import React, { useState, useEffect, useRef } from "react";
 import Router from "next/router";
 import { formatDate, operationsService } from "../../services";
+import { Spinner } from "components";
 
 export default Index;
 
 function Index() {
-  const [operations, setOperations] = useState([]);
+  const [operations, setOperations] = useState(null);
   const [dates, setDates] = useState({
     start: "",
     end: "",
@@ -117,7 +118,7 @@ function Index() {
           <div className="table-responsive">
             <br />
             <table className="table table-striped accordion">
-              {Object.keys(operations).length ? (
+              {operations && Object.keys(operations).length ? (
                 <tbody>
                   {Object.keys(operations).map((key, i) => {
                     return (
@@ -251,6 +252,12 @@ function Index() {
                     );
                   })}
                 </tbody>
+              ) : !operations ? (
+                <tr>
+                  <td colSpan="4">
+                    <Spinner />
+                  </td>
+                </tr>
               ) : (
                 <tbody>
                   <tr>
