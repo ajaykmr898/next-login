@@ -43,9 +43,9 @@ function Budget(props) {
         if (result.isConfirmed) {
           const resp = onComplete();
           if (resp) {
-            let { errorR, errorS, errorN } = resp;
+            let { errorI, errorU } = resp;
 
-            if (!errorR && !errorS && !errorN) {
+            if (!errorI && !errorU) {
               swal
                 .fire(
                   "Saved",
@@ -78,6 +78,14 @@ function Budget(props) {
   //4 - aggiornare supplied/date del biglietto ogni volta che il biglietto viene selezionato
   //5 - salvare nella nuova tabella i movimenti sui biglietti se scelti per refund o supply
   //una riga per ogni bonifico e use refund o set supply
+
+  // edit
+  // array[0]
+  // - insert many
+  // - totals in db bonifico
+  // excel sca page
+  // save errors
+  // only refund
 
   useEffect(() => {
     document.getElementById("complete").disabled = true;
@@ -120,57 +128,48 @@ function Budget(props) {
   function onComplete() {
     let deltaI = parseFloat(delta).toFixed(2);
     if (deltaI === "0.00" && changesSupplied.length > 0) {
-      let errorR = false;
-      let errorS = false;
-      let errorN = false;
-      // save changesRefunds total in refundUsed
-      console.log(date, changesRefunds, changesSupplied);
-      changesRefunds.map((e) => {
-        ticketsService
-          .update(e.id, { refundUsed: e.total })
-          .catch((err) => (errorR = true));
-      });
-      if (!errorR) {
-        // save changesSupplied total in supplied
-        changesSupplied.map((e) => {
-          ticketsService
-            .update(e.id, { supplied: e.total })
-            .catch((err) => (errorS = true));
-        });
-        if (!errorS) {
-          let transferName = Date.now();
-          // save operations in new table to show in sca page
-          changesRefunds.map((e) => {
-            let data = {
-              transferName,
-              totalOperation: total,
-              transferAmountTotalOperation: total,
-              refundAmountTotalOperation: refundTot,
-              ticketId: e.id,
-              transferDate: formatDate(date, "DB"),
-              operation: "refundUsed",
-              ticketRefundUsed: e.used,
-              suppliedTicket: "",
-            };
-            operationsService.create(data).catch((err) => (errorN = true));
-          });
-          changesSupplied.map((e) => {
-            let data = {
-              transferName,
-              totalOperation: total,
-              transferAmountTotalOperation: total,
-              refundAmountTotalOperation: refundTot,
-              ticketId: e.id,
-              transferDate: formatDate(date, "DB"),
-              operation: "paidSCA",
-              ticketRefundUsed: "",
-              suppliedTicket: e.paid,
-            };
-            operationsService.create(data).catch((err) => (errorN = true));
-          });
+      let errorU = false;
+      let errorI = false;
+      const allTotals = [...changesSupplied, ...changesRefunds];
+      //console.log(allTotals);
+      let transferName = Date.now();
+      allTotals.map((e) => {
+        let params = {};
+        if (e.type === "supplied") {
+          params = { supplied: e.total };
+        } else {
+          params = { refundUsed: e.total };
         }
-      }
-      return { errorR, errorS, errorN };
+        ticketsService.update(e.id, params).catch((err) => (errorU = true));
+        let data = {};
+        if (e.type === "supplied") {
+          data = {
+            transferName,
+            totalOperation: total,
+            transferAmountTotalOperation: budgetTot,
+            refundAmountTotalOperation: refundTot,
+            ticketId: e.id,
+            transferDate: formatDate(date, "DB"),
+            operation: "Paid to SCA",
+            ticketRefundUsed: "",
+            suppliedTicket: e.paid,
+          };
+        } else {
+          data = {
+            transferName,
+            totalOperation: total,
+            transferAmountTotalOperation: budgetTot,
+            refundAmountTotalOperation: refundTot,
+            ticketId: e.id,
+            transferDate: formatDate(date, "DB"),
+            operation: "Refund Used",
+            ticketRefundUsed: e.used,
+            suppliedTicket: "",
+          };
+        }
+        operationsService.create(data).catch((err) => (errorI = true));
+      });
+      return { errorU, errorI };
     } /*else {
       console.log("no");
     }*/
@@ -222,16 +221,18 @@ function Budget(props) {
       let id = (elements[i].classList[1] || "").replace("remained-input-", "");
       let remainedA = refunds.filter((e) => e.id === id) || [];
       let remainedI = remainedA.length && remainedA[0]["remained"];
-      let refundUsed = (remainedA.length && remainedA[0]["refundUsed"]) || 0;
+      let refundUsed = remainedA.length && remainedA[0]["refundUsed"];
       if (used && remainedI) {
         used = parseFloat(used);
         remainedI = parseFloat(remainedI);
         if (used <= remainedI && used > 0) {
           console.log(remainedA);
           let total = parseFloat(refundUsed) + used;
-          total = total.toFixed(2);
-          changesT.push({ id, used, total });
           number += used;
+          total = total.toFixed(2);
+          used = used.toFixed(2);
+          changesT.push({ id, used, total, type: "refund" });
+
           document.getElementsByClassName(
             "remained-ok-" + id
           )[0].hidden = false;
@@ -274,7 +275,7 @@ function Budget(props) {
       document.getElementsByClassName("tickets-ko-" + id)[0].hidden = true;
       document.getElementsByClassName("tickets-ok-" + id)[0].hidden = false;
       let newSupplies = [...changesSupplied];
-      newSupplies.push({ id, paid: numberI, total: number });
+      newSupplies.push({ id, paid: numberI, total: number, type: "supplied" });
       setChangesSupplied(newSupplies);
       setDelta(deltaT);
 
@@ -379,67 +380,70 @@ function Budget(props) {
             aria-labelledby="headingOne"
             data-bs-parent="#accordionExample"
           >
-            {refunds.length ? (
-              <button
-                onClick={() => addRefunds()}
-                style={{ float: "right" }}
-                id="remained-button"
-                className="btn btn-primary"
-              >
-                Add to Bonifico
-              </button>
-            ) : (
-              ""
-            )}
+            <div style={{ "text-align": "center" }}>
+              {refunds.length ? (
+                <button
+                  onClick={() => addRefunds()}
+                  id="remained-button"
+                  className="btn btn-primary"
+                >
+                  Add to Bonifico
+                </button>
+              ) : (
+                ""
+              )}
+            </div>
             <div className="accordion-body">
-              <table className="table table-striped table-sm">
-                <thead>
-                  <tr>
-                    <th scope="col">Name</th>
-                    <th scope="col">PNR</th>
-                    <th scope="col">Total Refund</th>
-                    <th scope="col">Refund Used</th>
-                    <th scope="col">Remained</th>
-                    <th scope="col">Add</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {refunds.map((r, i) => {
-                    return (
-                      <tr key={i}>
-                        <td>{r.name}</td>
-                        <td>{r.bookingCode}</td>
-                        <td>€ {r.refund}</td>
-                        <td>€ {r.refundUsed}</td>
-                        <td>€ {r.remained}</td>
-                        <td>
-                          <input
-                            className={"remained remained-input-" + r.id}
-                            placeholder="remained to use"
-                            type="number"
-                            step="0.01"
-                            min="0"
-                            max={r.remained}
-                          />
-                          &nbsp;
-                          <label
-                            hidden
-                            className={`remained-ok-${r.id} text-success`}
-                          >
-                            <i className="fa fa-check"></i>
-                          </label>
-                          <label
-                            hidden
-                            className={`remained-ko-${r.id} text-danger`}
-                          >
-                            <i className="fa fa-times"></i>
-                          </label>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+              <div className="table-responsive">
+                <table className="table table-striped table-sm">
+                  <thead>
+                    <tr>
+                      <th scope="col">Name</th>
+                      <th scope="col">PNR</th>
+                      <th scope="col">Total Refund</th>
+                      <th scope="col">Refund Used</th>
+                      <th scope="col">Remained</th>
+                      <th scope="col">Add</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {refunds.map((r, i) => {
+                      return (
+                        <tr key={i}>
+                          <td>{r.name}</td>
+                          <td>{r.bookingCode}</td>
+                          <td>€ {r.refund}</td>
+                          <td>€ {r.refundUsed}</td>
+                          <td>€ {r.remained}</td>
+                          <td>
+                            <input
+                              className={"remained remained-input-" + r.id}
+                              placeholder="remained to use"
+                              type="number"
+                              step="0.01"
+                              min="0"
+                              max={r.remained}
+                            />
+                            &nbsp;
+                            <label
+                              hidden
+                              className={`remained-ok-${r.id} text-success`}
+                            >
+                              <i className="fa fa-check"></i>
+                            </label>
+                            <label
+                              hidden
+                              className={`remained-ko-${r.id} text-danger`}
+                            >
+                              <i className="fa fa-times"></i>
+                            </label>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
@@ -468,65 +472,67 @@ function Budget(props) {
             data-bs-parent="#accordionExample1"
           >
             <div className="accordion-body">
-              <table className="table table-striped table-sm">
-                <thead>
-                  <tr>
-                    <th scope="col">Name</th>
-                    <th scope="col">PNR</th>
-                    <th scope="col">Cost</th>
-                    <th scope="col">Paid to SCA</th>
-                    <th scope="col">Remained</th>
-                    <th scope="col">Pay</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {tickets.map((r, i) => {
-                    return (
-                      <tr key={i}>
-                        <td>{r.name}</td>
-                        <td>{r.bookingCode}</td>
-                        <td>€ {r.paidAmount}</td>
-                        <td>€ {r.supplied}</td>
-                        <td>€ {r.remained}</td>
-                        <td>
-                          <input
-                            className={
-                              "tickets tickets-field tickets-input-" + r.id
-                            }
-                            placeholder="remained to pay"
-                            type="number"
-                            step="0.01"
-                            min="0"
-                            max={r.remained}
-                          />
-                          &nbsp;
-                          <button
-                            className={"tickets-field tickets-btn-" + r.id}
-                            onClick={() => {
-                              manageSupplied(r.id, r.remained, r.supplied);
-                            }}
-                          >
-                            Ok
-                          </button>
-                          &nbsp;
-                          <label
-                            hidden
-                            className={`tickets-ok-${r.id} text-success`}
-                          >
-                            <i className="fa fa-check"></i>
-                          </label>
-                          <label
-                            hidden
-                            className={`tickets-ko-${r.id} text-danger`}
-                          >
-                            <i className="fa fa-times"></i>
-                          </label>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+              <div className="table-responsive">
+                <table className="table table-striped table-sm">
+                  <thead>
+                    <tr>
+                      <th scope="col">Name</th>
+                      <th scope="col">PNR</th>
+                      <th scope="col">Cost</th>
+                      <th scope="col">Paid to SCA</th>
+                      <th scope="col">Remained</th>
+                      <th scope="col">Pay</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {tickets.map((r, i) => {
+                      return (
+                        <tr key={i}>
+                          <td>{r.name}</td>
+                          <td>{r.bookingCode}</td>
+                          <td>€ {r.paidAmount}</td>
+                          <td>€ {r.supplied}</td>
+                          <td>€ {r.remained}</td>
+                          <td>
+                            <input
+                              className={
+                                "tickets tickets-field tickets-input-" + r.id
+                              }
+                              placeholder="remained to pay"
+                              type="number"
+                              step="0.01"
+                              min="0"
+                              max={r.remained}
+                            />
+                            &nbsp;
+                            <button
+                              className={"tickets-field tickets-btn-" + r.id}
+                              onClick={() => {
+                                manageSupplied(r.id, r.remained, r.supplied);
+                              }}
+                            >
+                              Ok
+                            </button>
+                            &nbsp;
+                            <label
+                              hidden
+                              className={`tickets-ok-${r.id} text-success`}
+                            >
+                              <i className="fa fa-check"></i>
+                            </label>
+                            <label
+                              hidden
+                              className={`tickets-ko-${r.id} text-danger`}
+                            >
+                              <i className="fa fa-times"></i>
+                            </label>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>

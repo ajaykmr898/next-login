@@ -25,7 +25,9 @@ async function getAll(filters) {
       transferDate: formatDate(e.transferDate, "IT"),
       suppliedTicket: e.suppliedTicket ? "€ " + e.suppliedTicket : "-",
       ticketRefundUsed: e.ticketRefundUsed ? "€ " + e.ticketRefundUsed : "-",
-      remainedRefund: e.refund ? "€ " + remainedRefund.toFixed(2) : "-",
+      remainedRefund: e.ticket[0].refund
+        ? "€ " + remainedRefund.toFixed(2)
+        : "-",
       remainedSupplied: "€ " + remainedSupplied.toFixed(2),
       paidAmount: "€ " + paidAmount.toFixed(2),
       supplied: "€ " + supplied.toFixed(2),

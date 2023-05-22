@@ -37,7 +37,6 @@ function Index() {
         group[transferName].push(arr);
         return group;
       }, {});
-      console.log(operationsI);
       setOperations(operationsI);
     });
   };
@@ -127,16 +126,14 @@ function Index() {
                           <th scope="row">
                             {i + 1} - Bonifico
                             {" - " + operations[key][0]["transferDate"]}
-                            {/*" - Transfer" +
-                              operations[key][0][
-                                "transferAmountTotalOperation"
-                              ]*/}
-                            {/*" + Refund: " +
-                              operations[key][0]["refundAmountTotalOperation"]*/}
-                            {" - " +
+                            {" - " + operations[key][0]["totalOperation"]}
+                            {" (" +
                               operations[key][0][
                                 "transferAmountTotalOperation"
                               ]}
+                            {" + " +
+                              operations[key][0]["refundAmountTotalOperation"] +
+                              ") "}
                             <i className="fa fa-chevron-down tb-btns"></i>
                           </th>
                         </tr>
