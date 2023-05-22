@@ -85,8 +85,9 @@ function Budget(props) {
         remained: parseFloat(remained).toFixed(2),
       };
     });
-    setTickets(res2);
+
     disableEnableInputsOnDeltaZeroOrBudgetFieldsNotSet("d");
+    setTickets(res2);
   }
 
   function disableInputsForTransferAndRefunds() {
