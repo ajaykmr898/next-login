@@ -19,9 +19,9 @@ function Nav() {
     "seller/transfer": "Transfer Amount SCA",
   };
   const config = getConfig();
-  let icon = "fa fa-plane";
+  let style = "";
   if (config?.publicRuntimeConfig?.isLocal) {
-    icon = "fa fa-plane green";
+    style = "bg-body";
   }
 
   useEffect(() => {
@@ -60,10 +60,9 @@ function Nav() {
     <div>
       <aside id="sidebar-wrapper">
         <div className="sidebar-brand">
-          <h2>
-            <i className={icon}></i>
-            &nbsp;&nbsp; Ticket Manager
-          </h2>
+          <div>
+            <img className={"logo " + style} src="logo.png" alt="" />
+          </div>
         </div>
 
         <ul className="sidebar-nav">

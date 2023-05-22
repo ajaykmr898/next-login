@@ -1,6 +1,11 @@
 @import "primereact/resources/themes/saga-blue/theme.css";
 @import "primereact/resources/primereact.min.css";
 
+.logo {
+  width: 70%;
+  height: 150px;
+}
+
 .form-select {
   display: inline;
   width: 20%;
@@ -100,7 +105,7 @@ a:focus {
 
 .sidebar-nav {
   position: absolute;
-  top: 75px;
+  top: 180px;
   width: 250px;
   margin: 0;
   padding: 0;
