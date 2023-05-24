@@ -30,7 +30,10 @@ async function getAll(filters) {
       },
     },
   ];
-  return await Operations.aggregate(query).sort({ createdAt: -1 });
+  return await Operations.aggregate(query).sort({
+    createdAt: -1,
+    operation: 1,
+  });
 }
 
 async function create(params) {
