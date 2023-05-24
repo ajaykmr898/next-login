@@ -32,6 +32,7 @@ async function getAll(filters) {
   ];
   return await Operations.aggregate(query).sort({
     operation: 1,
+    createdAt: -1,
   });
 }
 
