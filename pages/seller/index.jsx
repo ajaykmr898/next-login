@@ -8,6 +8,7 @@ export default Index;
 
 function Index() {
   const [operations, setOperations] = useState(null);
+  const [opExcel, setOpExcel] = useState(null);
   const [dates, setDates] = useState({
     start: "",
     end: "",
@@ -38,12 +39,58 @@ function Index() {
         group[transferName].push(arr);
         return group;
       }, {});
+      setOpExcel(res);
       setOperations(operationsI);
     });
   };
 
   const addNew = () => {
     Router.push("/seller/transfer");
+  };
+
+  const download = () => {
+    console.log(opExcel);
+    const headers = [
+      "Date",
+      "Name",
+      "PNR",
+      "Operation",
+      "Cost",
+      "Total Paid to SCA",
+      "Remained to pay SCA",
+      "Transferred with Operation",
+      "Total Refund",
+      "Refund Used",
+      "Remained refund",
+      "Refund Used with Operation",
+    ];
+    const csvString = [
+      headers,
+      ...opExcel.map((i) => [
+        i.transferDate,
+        i.name,
+        i.bookingCode,
+        i.operation,
+        i.paidAmount,
+        i.supplied,
+        i.remainedSupplied,
+        i.suppliedTicket,
+        i.refund,
+        i.refundUsed,
+        i.remainedRefund,
+        i.ticketRefundUsed,
+      ]),
+    ]
+      .map((e) => e.join(";"))
+      .join("\n");
+    const csvContent = "data:text/csv;charset=utf-8," + csvString;
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "operations_" + Date.now() + ".csv");
+    document.body.appendChild(link);
+
+    link.click();
   };
 
   const search = () => {
@@ -57,7 +104,7 @@ function Index() {
     <Layout>
       <div className="container">
         <div className="row">
-          <div className="col-sm-2">
+          <div className="col-md-3">
             <label htmlFor="type">Type:</label>
             <div className="input-group">
               <select id="type" className="form-select">
@@ -65,7 +112,7 @@ function Index() {
               </select>
             </div>
           </div>
-          <div className="col-sm-3">
+          <div className="col-md-3">
             <label htmlFor="start">From Date:</label>
             <div className="input-group">
               <input
@@ -77,7 +124,7 @@ function Index() {
               />
             </div>
           </div>
-          <div className="col-sm-3">
+          <div className="col-md-3">
             <label htmlFor="end">To Date:</label>
             <div className="input-group">
               <input
@@ -89,7 +136,7 @@ function Index() {
               />
             </div>
           </div>
-          <div className="col-sm-2">
+          <div className="col-sm-1">
             <button
               type="submit"
               className="btn btn-block btn-primary width-search"
@@ -97,17 +144,27 @@ function Index() {
                 search();
               }}
             >
-              Search Transfers
+              <i className="fa fa-search"></i>
             </button>
           </div>
-          <div className="col-sm-2">
+          <div className="col-sm-1">
+            <button
+              className="btn btn-block btn-warning width-search"
+              onClick={() => {
+                download();
+              }}
+            >
+              <i className="fa fa-download"></i>
+            </button>
+          </div>
+          <div className="col-sm-1">
             <button
               className="btn btn-block btn-success width-search"
               onClick={() => {
                 addNew();
               }}
             >
-              New Transfer
+              <i className="fa fa-add"></i>
             </button>
           </div>
         </div>
