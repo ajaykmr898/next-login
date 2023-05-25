@@ -13,8 +13,14 @@ function Add() {
 
   function getRefundsForSupply() {
     ticketsService.getRefundsForSupply({}).then((x) => {
+      let totalRefund = 0;
+      let totalRefundUsed = 0;
+      let totalRemained = 0;
       const refunds = x.map((e) => {
         let remained = e.refund - (e.refundUsed || 0);
+        totalRefund += parseFloat(e.refund || 0);
+        totalRefundUsed += parseFloat(e.refundUsed || 0);
+        totalRemained += parseFloat(remained || 0);
         return {
           ...e,
           refundUsed: e.refundUsed || 0,
@@ -22,12 +28,15 @@ function Add() {
         };
       });
       setRefunds(refunds);
+      setTotals({ totalRefund, totalRefundUsed, totalRemained });
     });
   }
 
   const [refunds, setRefunds] = useState(null);
-
+  const [totals, setTotals] = useState({});
   return (
-    <Layout>{refunds ? <Budget refunds={refunds} /> : <Spinner />}</Layout>
+    <Layout>
+      {refunds ? <Budget refunds={refunds} totals={totals} /> : <Spinner />}
+    </Layout>
   );
 }

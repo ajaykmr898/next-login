@@ -19,7 +19,7 @@ function Index() {
 
   const getOperations = (dates = null) => {
     let start = new Date();
-    start.setMonth(start.getMonth() - 6);
+    //start.setMonth(start.getMonth() - 6);
     start.setDate(1);
     start = formatDate(start);
     let end = formatDate(new Date());

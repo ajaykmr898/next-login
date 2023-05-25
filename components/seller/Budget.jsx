@@ -12,7 +12,13 @@ export { Budget };
 
 function Budget(props) {
   const refunds = props.refunds;
+  const { totalRefund, totalRefundUsed, totalRemained } = props.totals;
   const [tickets, setTickets] = useState(null);
+  const [totals, setTotals] = useState({
+    totalCost: 0,
+    totalPaidSca: 0,
+    totalRemainedSca: 0,
+  });
   const [delta, setDelta] = useState(0);
   const [total, setTotal] = useState(0);
   const [refundTot, setRefundTot] = useState(0);
@@ -81,8 +87,15 @@ function Budget(props) {
 
   async function getTickets() {
     const res = await ticketsService.getTicketsForSupply();
+    let totalCost = 0;
+    let totalPaidSca = 0;
+    let totalRemainedSca = 0;
     const res2 = res.map((e) => {
       let remained = e.paidAmount - (e.supplied || 0);
+
+      totalCost += parseFloat(e.paidAmount || 0);
+      totalPaidSca += parseFloat(e.supplied || 0);
+      totalRemainedSca += parseFloat(remained || 0);
       return {
         ...e,
         supplied: e.supplied ? e.supplied : 0,
@@ -90,6 +103,7 @@ function Budget(props) {
       };
     });
     setTickets(res2);
+    setTotals({ totalCost, totalPaidSca, totalRemainedSca });
   }
 
   function disableInputsForTransferAndRefunds() {
@@ -470,6 +484,14 @@ function Budget(props) {
                         </tr>
                       );
                     })}
+                    <tr>
+                      <th>Totals:</th>
+                      <th></th>
+                      <th>€ {totalRefund}</th>
+                      <th>€ {totalRefundUsed}</th>
+                      <th>€ {totalRemained}</th>
+                      <th></th>
+                    </tr>
                   </tbody>
                 </table>
               </div>
@@ -582,6 +604,14 @@ function Budget(props) {
                         </td>
                       </tr>
                     )}
+                    <tr>
+                      <th>Totals:</th>
+                      <th></th>
+                      <th>{totals.totalCost.toFixed(2)}</th>
+                      <th>{totals.totalPaidSca.toFixed(2)}</th>
+                      <th>{totals.totalRemainedSca.toFixed(2)}</th>
+                      <th></th>
+                    </tr>
                   </tbody>
                 </table>
               </div>
