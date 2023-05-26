@@ -54,7 +54,7 @@ function Index() {
 
     input.files = dt.files;
     setFiles(input.files);
-    console.log(input.files);
+    //console.log(input.files);
   }
 
   function getFileName(f) {

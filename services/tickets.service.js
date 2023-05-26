@@ -249,6 +249,7 @@ async function upload(files) {
 
     // console.log(final, final.length);
     let iac = { 38286592: "SCA" };
+    let agl = { A723: "ASHU", S475: "SONU", M277: "MALI" };
     let ard = [];
     let t = [];
     let n = [];
@@ -377,8 +378,8 @@ async function upload(files) {
       let tkt = {
         name: ntp,
         bookingCode: c2,
-        agent: ag,
-        iata: iac[ia],
+        agent: agl.hasOwnProperty(ag) ? agl[ag] : ag,
+        iata: iac.hasOwnProperty(ia) ? iac[ia] : ia,
         agentCost: ac,
         ticketNumber: t[i],
         paymentMethod: mt,
@@ -409,7 +410,7 @@ async function upload(files) {
   });
 
   fc.map((f) => {
-    console.log(f);
+    //console.log(f);
     create(f);
   });
 }

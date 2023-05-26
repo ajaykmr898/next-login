@@ -71,7 +71,7 @@ function Index() {
   };
 
   const download = () => {
-    console.log(opExcel);
+    //console.log(opExcel);
     const headers = [
       "Date",
       "Name",

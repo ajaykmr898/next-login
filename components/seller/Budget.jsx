@@ -236,7 +236,7 @@ function Budget(props) {
         used = parseFloat(used);
         remainedI = parseFloat(remainedI);
         if (used <= remainedI && used > 0) {
-          console.log(remainedA);
+          //console.log(remainedA);
           let total = parseFloat(refundUsed) + used;
           number += used;
           total = total.toFixed(2);

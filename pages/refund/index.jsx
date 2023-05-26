@@ -457,7 +457,7 @@ function Index() {
   };
 
   const deleteTicket = () => {
-    console.log("delete", ticket);
+    //console.log("delete", ticket);
     ticketsService.delete(ticket.id).then(() => {
       setTickets((tickets) => tickets.filter((x) => x.id !== ticket.id));
       hideDeleteTicketDialog();
@@ -503,7 +503,7 @@ function Index() {
   );
 
   const calculate = (data) => {
-    console.log(data);
+    //console.log(data);
     let ts = 0;
     let tr = 0;
     let tp = 0;

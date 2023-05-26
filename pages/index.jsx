@@ -243,7 +243,7 @@ function Home() {
     setAgentsP({});
     setAgentsA({});
     ticketsService.getProfit({ start, end, type }).then((x) => {
-      console.log(x);
+      //console.log(x);
       setProfit(x.ticketsP);
       setAmounts(x.ticketsP);
       setMethods(x.methods);
