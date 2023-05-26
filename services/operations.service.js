@@ -36,6 +36,8 @@ async function getAll(filters) {
       totalOperation: e.totalOperation ? "€ " + e.totalOperation : "",
       transferAmountTotalOperation: "€ " + e.transferAmountTotalOperation,
       refundAmountTotalOperation: "€ " + e.refundAmountTotalOperation,
+      transferAmountTotalOperationN: e.transferAmountTotalOperation,
+      refundAmountTotalOperationN: e.refundAmountTotalOperation,
     };
   });
   return data;

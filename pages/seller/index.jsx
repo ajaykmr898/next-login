@@ -8,6 +8,7 @@ export default Index;
 
 function Index() {
   const [operations, setOperations] = useState(null);
+  const [totals, setTotals] = useState({ supplied: 0, refund: 0, total: 0 });
   const [opExcel, setOpExcel] = useState(null);
   const [dates, setDates] = useState({
     start: "",
@@ -39,8 +40,29 @@ function Index() {
         group[transferName].push(arr);
         return group;
       }, {});
+
       setOpExcel(res);
       setOperations(operationsI);
+
+      let transferAmountTotalOperationI = 0;
+      let refundAmountTotalOperationI = 0;
+      Object.keys(operationsI).map((i) => {
+        transferAmountTotalOperationI += parseFloat(
+          operationsI[i][0].transferAmountTotalOperationN
+        );
+        refundAmountTotalOperationI += parseFloat(
+          operationsI[i][0].refundAmountTotalOperationN
+        );
+      });
+      setTotals({
+        total:
+          "€ " +
+          parseFloat(
+            transferAmountTotalOperationI + refundAmountTotalOperationI
+          ).toFixed(2),
+        supplied: "€ " + transferAmountTotalOperationI.toFixed(2),
+        refund: "€ " + refundAmountTotalOperationI.toFixed(2),
+      });
     });
   };
 
@@ -177,6 +199,13 @@ function Index() {
             <table className="table table-striped accordion">
               {operations && Object.keys(operations).length ? (
                 <tbody>
+                  <tr>
+                    <th>
+                      Total: {totals.total} ({totals.supplied} + {totals.refund}
+                      )
+                    </th>
+                  </tr>
+                  <tr></tr>
                   {Object.keys(operations).map((key, i) => {
                     return (
                       <React.Fragment key={"i" + i}>
