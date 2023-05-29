@@ -39,7 +39,7 @@ function Login() {
     <Layout>
       <div className="container">
         <div className="row">
-          <div className="col-lg-10 col-md-12 login-box">
+          <div className="col-lg-10 col-md-11 login-box">
             <div className="col-lg-12 login-key">
               <i className="fa fa-key" aria-hidden="true"></i>
             </div>
