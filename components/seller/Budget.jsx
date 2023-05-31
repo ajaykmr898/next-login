@@ -487,9 +487,9 @@ function Budget(props) {
                     <tr>
                       <th>Totals:</th>
                       <th></th>
-                      <th>€ {totalRefund}</th>
-                      <th>€ {totalRefundUsed}</th>
-                      <th>€ {totalRemained}</th>
+                      <th>€ {totalRefund.toFixed(2)}</th>
+                      <th>€ {totalRefundUsed.toFixed(2)}</th>
+                      <th>€ {totalRemained.toFixed(2)}</th>
                       <th></th>
                     </tr>
                   </tbody>

@@ -28,9 +28,6 @@ function Add() {
         };
       });
       setRefunds(refunds);
-      /*totalRefund = (totalRefund || "").toFixed(2);
-      totalRefundUsed = (totalRefundUsed || "").toFixed(2);
-      totalRemained = (totalRemained || "").toFixed(2);*/
       setTotals({ totalRefund, totalRefundUsed, totalRemained });
     });
   }
