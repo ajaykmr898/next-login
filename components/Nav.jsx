@@ -19,7 +19,7 @@ function Nav() {
     "seller/transfer": "Transfer Amount SCA",
   };
   const config = getConfig();
-  let icon = "fa fa-plane";
+  let icon = "fa fa-plane yellow";
   if (config?.publicRuntimeConfig?.isLocal) {
     icon = "fa fa-plane green";
   }
@@ -62,7 +62,7 @@ function Nav() {
         <div className="sidebar-brand">
           <h2>
             <i className={icon}></i>
-            &nbsp;&nbsp; Ticket Manager
+            &nbsp;&nbsp;Ticket Manager
           </h2>
         </div>
 

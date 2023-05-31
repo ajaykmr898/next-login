@@ -19,6 +19,10 @@
   color: green;
 }
 
+.yellow {
+  color: #f8be12;
+}
+
 .center-text {
   text-align: center;
 }
