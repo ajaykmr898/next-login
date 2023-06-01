@@ -581,7 +581,7 @@ function Index() {
                 search();
               }}
             >
-              Search
+              <i className="fa fa-search"></i> Search
             </button>
           </div>
         </div>

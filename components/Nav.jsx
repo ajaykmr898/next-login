@@ -7,7 +7,7 @@ export { Nav };
 
 function Nav() {
   const [user, setUser] = useState(null);
-  const pages = ["users", "tickets", "upload", "refund", "seller"];
+  const pages = ["users", "tickets", "upload", "refund", "seller", "expenses"];
   const titles = {
     users: "Agents List",
     tickets: "Tickets List",
@@ -17,6 +17,10 @@ function Nav() {
     refund: "Refunds",
     seller: "SCA Transfers",
     "seller/transfer": "Transfer Amount SCA",
+    expenses: "Expenses",
+    "expenses/categories": "Expenses Categories",
+    "expenses/add": "Add Expense",
+    "expenses/edit": "Edit Expense",
   };
   const config = getConfig();
   let icon = "fa fa-plane yellow";
@@ -73,12 +77,6 @@ function Nav() {
               &nbsp;&nbsp;&nbsp;&nbsp; Dashboard
             </Link>
           </li>
-          <li className={getActiveMenu("users")}>
-            <Link href="/users">
-              <i className="fa-fw fas fa-users nav-icon"></i>
-              &nbsp;&nbsp;&nbsp;&nbsp; Agents
-            </Link>
-          </li>
           <li className={getActiveMenu("tickets")}>
             <Link href="/tickets">
               <i className="fa-fw fas fa-list nav-icon"></i>
@@ -97,10 +95,22 @@ function Nav() {
               &nbsp;&nbsp;&nbsp;&nbsp; SCA Transfers
             </Link>
           </li>
+          <li className={getActiveMenu("expenses")}>
+            <Link href="/expenses">
+              <i className="fa-fw fas fa-money-bill nav-icon"></i>
+              &nbsp;&nbsp;&nbsp;&nbsp; Expenses
+            </Link>
+          </li>
           <li className={getActiveMenu("upload")}>
             <Link href="/upload">
               <i className="fa-fw fas fa-upload nav-icon"></i>
               &nbsp;&nbsp;&nbsp;&nbsp; Uploads
+            </Link>
+          </li>
+          <li className={getActiveMenu("users")}>
+            <Link href="/users">
+              <i className="fa-fw fas fa-users nav-icon"></i>
+              &nbsp;&nbsp;&nbsp;&nbsp; Agents
             </Link>
           </li>
           <li className="nav-item">

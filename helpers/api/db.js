@@ -9,6 +9,7 @@ export const db = {
   User: userModel(),
   Tickets: ticketsModel(),
   Operations: operationsModel(),
+  Expenses: expensesModel(),
 };
 
 // mongoose models with schema definitions
@@ -120,4 +121,34 @@ function operationsModel() {
     },
   });
   return mongoose.models.Operations || mongoose.model("Operations", schema);
+}
+
+function expensesModel() {
+  const schema = new Schema(
+    {
+      title: { type: String, required: false },
+      desc: { type: String, required: false },
+      subcategory: { type: String, required: false },
+      categoryId: { type: mongoose.Schema.ObjectId, required: false },
+      type: { type: String, required: false },
+      paymentMethod: { type: String, required: false },
+      amount: { type: String, required: false },
+      paymentDate: { type: String, required: false },
+      status: { type: String, required: false },
+    },
+    {
+      // add createdAt and updatedAt timestamps
+      timestamps: true,
+      strict: false,
+    }
+  );
+  schema.set("toJSON", {
+    virtuals: true,
+    versionKey: false,
+    transform: function (doc, ret) {
+      delete ret._id;
+      delete ret.hash;
+    },
+  });
+  return mongoose.models.Expenses || mongoose.model("Expenses", schema);
 }
