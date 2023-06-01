@@ -129,7 +129,7 @@ function expensesModel() {
       title: { type: String, required: false },
       desc: { type: String, required: false },
       subcategory: { type: String, required: false },
-      categoryId: { type: mongoose.Schema.ObjectId, required: false },
+      category: { type: String, required: false },
       type: { type: String, required: false },
       paymentMethod: { type: String, required: false },
       amount: { type: String, required: false },
