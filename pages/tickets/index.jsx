@@ -175,7 +175,7 @@ function Index() {
   };
 
   const editTicket = (ticket) => {
-    Router.push("/tickets/edit/" + ticket.id);
+    window.open("/tickets/edit/" + ticket.id, "_blank");
   };
 
   const actions = (e, ticket) => {
