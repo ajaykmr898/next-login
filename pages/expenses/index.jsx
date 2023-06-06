@@ -58,6 +58,7 @@ function Index() {
   }, []);
 
   const getExpenses = (dates = null) => {
+    setLoading(true);
     let start = new Date();
     //start.setMonth(start.getMonth() - 6);
     start.setDate(1);
@@ -218,7 +219,7 @@ function Index() {
   );
 
   const editExpense = (expense) => {
-    Router.push("/expenses/edit/" + expense.id);
+    window.open("/expenses/edit/" + expense.id, "_blank");
   };
 
   const actions = (e, expense) => {
