@@ -17,6 +17,7 @@ export default Index;
 
 function Index() {
   const [tickets, setTickets] = useState([]);
+  const [apiTickets, setApiTickets] = useState([]);
   const dt = useRef(null);
   const [ticketDialog, setTicketDialog] = useState(false);
   const [deleteTicketDialog, setDeleteTicketDialog] = useState(false);
@@ -46,6 +47,7 @@ function Index() {
     }
     ticketsService.getAll({ start, end, type }).then((tickets) => {
       setTickets(tickets);
+      setApiTickets(tickets);
       onGlobalFilterChange({ target: { value: "" } });
       setLoading(false);
     });
@@ -112,6 +114,20 @@ function Index() {
     }
   };
 
+  const filterProfitType = (e) => {
+    const isChecked = e.target.checked;
+    let totals = apiTickets;
+    if (isChecked) {
+      let newTickets = tickets.filter((t) => !t.amountsCompleted);
+      newTickets = newTickets.length > 0 ? newTickets : [];
+      setTickets([...newTickets]);
+      totals = newTickets;
+    } else {
+      setTickets([...apiTickets]);
+    }
+    calculate(totals);
+  };
+
   const renderHeader = () => {
     return (
       <div className="flex justify-content-end">
@@ -141,6 +157,13 @@ function Index() {
           <option value="6">Card Number</option>
           <option value="7">Payment Methods</option>
         </select>
+        <input
+          className="ms-2"
+          type="checkbox"
+          id="profitType"
+          onChange={(e) => filterProfitType(e)}
+        />
+        &nbsp;Not Fully Paid
         <Button
           className="tb-btns"
           type="button"
@@ -455,6 +478,7 @@ function Index() {
     //console.log("delete", ticket);
     ticketsService.delete(ticket.id).then(() => {
       setTickets((tickets) => tickets.filter((x) => x.id !== ticket.id));
+      setApiTickets((tickets) => tickets.filter((x) => x.id !== ticket.id));
       hideDeleteTicketDialog();
     });
   };

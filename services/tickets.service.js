@@ -62,6 +62,7 @@ async function getAll(filters) {
     let penality = t.refund
       ? parseFloat(t.paidAmount) - parseFloat(t.refund)
       : "";
+    let amountsCompleted = profit >= 0;
     return {
       ...t,
       profit: "€ " + profit,
@@ -83,6 +84,7 @@ async function getAll(filters) {
         : t.returnedDate,
       supplied: t.supplied ? "€ " + t.supplied : t.supplied,
       penality: penality !== "" ? "€ " + parseFloat(penality).toFixed(2) : "",
+      amountsCompleted: amountsCompleted,
     };
   });
   return tickets;
