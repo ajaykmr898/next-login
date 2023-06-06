@@ -71,7 +71,7 @@ async function getAll(filters) {
       receivingAmount2Date: ra2d,
       receivingAmount3Date: ra3d,
       idP: i + 1,
-      receivingAmountT: "€ " + tra,
+      receivingAmountT: "€ " + tra.toFixed(2),
       paidAmount: "€ " + t.paidAmount,
       agentCost: t.agentCost ? "€ " + t.agentCost : t.agentCost,
       methods: methods,
