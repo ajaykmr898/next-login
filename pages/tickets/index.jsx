@@ -628,7 +628,7 @@ function Index() {
             body={actionBodyTemplate}
             exportable={false}
           ></Column>
-          <Column field="idP" header="Id" />
+          <Column style={{ maxWidth: "3rem" }} field="idP" header="Id" />
           <Column
             style={{ maxWidth: "8rem" }}
             field="name"
