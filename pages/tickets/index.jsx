@@ -629,7 +629,7 @@ function Index() {
             exportable={false}
           ></Column>
           <Column
-            style={{ width: "3rem", textAlign: "center" }}
+            style={{ width: "5rem", textAlign: "center" }}
             field="idP"
             header="Id"
           />
