@@ -73,6 +73,7 @@ function ticketsModel() {
       refundDate: { type: String, required: false },
       returned: { type: String, required: false },
       returnedDate: { type: String, required: false },
+      desc: { type: String, required: false },
     },
     {
       // add createdAt and updatedAt timestamps

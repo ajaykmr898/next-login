@@ -40,6 +40,7 @@ function AddEdit(props) {
     refundDate: Yup.string().notRequired(),
     returned: Yup.string().notRequired(),
     returnedDate: Yup.string().notRequired(),
+    desc: Yup.string().notRequired(),
   });
   const formOptions = { resolver: yupResolver(validationSchema) };
 
@@ -85,6 +86,7 @@ function AddEdit(props) {
         refundDate: data.refundDate || "",
         returned: data.returned || 0,
         returnedDate: data.returnedDate || "",
+        desc: data.desc || "",
       };
       if (!ticket) {
         await ticketsService.create(ticketNew);
@@ -112,6 +114,7 @@ function AddEdit(props) {
           refundDate: "",
           returned: "",
           returnedDate: "",
+          desc: "",
         });
         alertService.success(
           "Ticket for " + ticketNew.name + " added successfully",
@@ -530,21 +533,32 @@ function AddEdit(props) {
           <div className="invalid-feedback">{errors.returnedDate?.message}</div>
         </div>
       </div>
-
-      <div className="mb-3">
-        <button
-          type="submit"
-          disabled={formState.isSubmitting}
-          className="btn btn-primary me-2"
-        >
-          {formState.isSubmitting && (
-            <span className="spinner-border spinner-border-sm me-1"></span>
-          )}
-          Save
-        </button>
-        <Link href="/tickets" className="btn btn-link">
-          Cancel
-        </Link>
+      <div className="mb-3 col">
+        <label className="form-label">Extra Notes</label>
+        <textarea
+          name="desc"
+          defaultValue={ticket?.desc}
+          {...register("desc")}
+          className={`form-control ${errors.desc ? "is-invalid" : ""}`}
+        />
+        <div className="invalid-feedback">{errors.desc?.message}</div>
+      </div>
+      <div className="row">
+        <div className="mb-3">
+          <button
+            type="submit"
+            disabled={formState.isSubmitting}
+            className="btn btn-primary me-2"
+          >
+            {formState.isSubmitting && (
+              <span className="spinner-border spinner-border-sm me-1"></span>
+            )}
+            Save
+          </button>
+          <Link href="/tickets" className="btn btn-link">
+            Cancel
+          </Link>
+        </div>
       </div>
     </form>
   );

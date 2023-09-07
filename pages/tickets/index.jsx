@@ -812,6 +812,10 @@ function Index() {
                   </tr>
                 </>
               )}
+              <tr>
+                <td scope="col">Extra Notes:</td>
+                <td scope="col">{ticket.desc}</td>
+              </tr>
             </tbody>
           </table>
         )}

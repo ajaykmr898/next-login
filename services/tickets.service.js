@@ -403,6 +403,7 @@ async function upload(files) {
         flight: f,
         refund: "",
         refundDate: "",
+        desc: "",
         supplied: 0,
         returned: 0,
         returnedDate: "",
