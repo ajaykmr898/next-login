@@ -1,8 +1,9 @@
 import { Layout } from "components/users";
 import React, { useState, useEffect, useRef } from "react";
 import Router from "next/router";
-import { formatDate, operationsService } from "../../services";
+import { formatDate, operationsService, ticketsService } from "../../services";
 import { Spinner } from "components";
+import Swal from "sweetalert2";
 
 export default Index;
 
@@ -15,9 +16,96 @@ function Index() {
     end: "",
     type: "",
   });
+  const swal = Swal.mixin({
+    customClass: {
+      confirmButton: "m-1 btn btn-success",
+      cancelButton: "btn btn-danger",
+    },
+    buttonsStyling: false,
+  });
+
   useEffect(() => {
     getOperations();
   }, []);
+
+  const removeBonifico = (e, transfer) => {
+    e.preventDefault();
+    e.stopPropagation();
+    swal
+      .fire({
+        title: "Are you sure?",
+        text: "You want to delete these operations from database?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes",
+        cancelButtonText: "Cancel",
+        reverseButtons: true,
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          const resp = onComplete(transfer);
+          if (!resp.errorU && !resp.errorR) {
+            swal
+              .fire(
+                "Saved",
+                "Your operations has been deleted successfully.",
+                "success"
+              )
+              .then((res) => {
+                if (res.isDismissed || res.isConfirmed) {
+                  window.location.reload();
+                }
+              });
+          } else {
+            swal.fire(
+              "Error!",
+              "An error occurred while deleting operations.",
+              "error"
+            );
+          }
+        }
+      });
+  };
+
+  const onComplete = (transfer) => {
+    let errorU = false;
+    let errorR = false;
+    transfer.map((op) => {
+      //console.log(op);
+      let isRefund = op.operation.includes("Used");
+      let isSca = op.operation.includes("SCA");
+
+      let ticketRefundUsed = isRefund ? parseFloat(op.ticketRefundUsedN) : null;
+      let suppliedTicket = isSca ? parseFloat(op.suppliedTicketN) : null;
+
+      let supplied = op.ticket[0].supplied
+        ? parseFloat(op.ticket[0].supplied)
+        : null;
+      let refundUsed = op.ticket[0].refundUsed
+        ? parseFloat(op.ticket[0].refundUsed)
+        : null;
+
+      supplied = supplied ? supplied - suppliedTicket : null;
+      refundUsed = refundUsed ? refundUsed - ticketRefundUsed : null;
+
+      let params = isRefund
+        ? {
+            refundUsed:
+              refundUsed && Math.sign(refundUsed) !== -1 ? refundUsed : 0,
+          }
+        : { supplied: supplied && Math.sign(supplied) !== -1 ? supplied : 0 };
+
+      ticketsService
+        .update(op.ticketId, params)
+        .catch((err) => (errorU = true));
+
+      console.log(op.ticketId, params, op.cid);
+
+      operationsService.delete(op.cid).catch((err) => (errorR = true));
+    });
+
+    return { errorU, errorR };
+  };
 
   const getOperations = (dates = null) => {
     let start = new Date();
@@ -221,7 +309,14 @@ function Index() {
                             {" + " +
                               operations[key][0]["refundAmountTotalOperation"] +
                               ") "}
-                            <i className="fa fa-chevron-down tb-btns"></i>
+                            <i
+                              className="fa fa-times tb-btns"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                removeBonifico(e, operations[key]);
+                              }}
+                            ></i>
                           </th>
                         </tr>
                         <tr

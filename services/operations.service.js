@@ -6,6 +6,7 @@ const baseUrl = `/api/operations`;
 export const operationsService = {
   getAll,
   create,
+  delete: _delete,
 };
 
 async function getAll(filters) {
@@ -22,8 +23,11 @@ async function getAll(filters) {
       parseFloat(ticket.paidAmount) - parseFloat(ticket.supplied || 0);
     return {
       ...e,
+      cid: e._id,
       transferDate: formatDate(e.transferDate, "IT"),
+      suppliedTicketN: e.suppliedTicket,
       suppliedTicket: e.suppliedTicket ? "€ " + e.suppliedTicket : "-",
+      ticketRefundUsedN: e.ticketRefundUsed,
       ticketRefundUsed: e.ticketRefundUsed ? "€ " + e.ticketRefundUsed : "-",
       remainedRefund: ticket.refund ? "€ " + remainedRefund.toFixed(2) : "-",
       remainedSupplied: "€ " + remainedSupplied.toFixed(2),
@@ -45,4 +49,8 @@ async function getAll(filters) {
 
 async function create(operation) {
   await fetchWrapper.post(`${baseUrl}/create`, operation);
+}
+
+async function _delete(id) {
+  await fetchWrapper.delete(`${baseUrl}/${id}`);
 }

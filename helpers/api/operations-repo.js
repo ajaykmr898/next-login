@@ -5,6 +5,7 @@ const Operations = db.Operations;
 export const operationsRepo = {
   getAll,
   create,
+  delete: _delete,
 };
 
 async function getAll(filters) {
@@ -38,4 +39,8 @@ async function getAll(filters) {
 async function create(params) {
   const operation = new Operations(params);
   await operation.save();
+}
+
+async function _delete(id) {
+  await Operations.findByIdAndRemove(id);
 }
