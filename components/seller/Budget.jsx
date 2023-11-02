@@ -110,9 +110,11 @@ function Budget(props) {
     document.getElementById("budget").setAttribute("disabled", "disabled");
     document.getElementById("budget-date").setAttribute("disabled", "disabled");
     document.getElementById("add").setAttribute("disabled", "disabled");
-    document
-      .getElementById("remained-button")
-      .setAttribute("disabled", "disabled");
+    if (refunds.length) {
+      document
+        .getElementById("remained-button")
+        .setAttribute("disabled", "disabled");
+    }
     let elements = document.getElementsByClassName("remained");
     for (let i = 0; i < elements.length; i++) {
       elements[i].setAttribute("disabled", "disabled");
