@@ -21,7 +21,7 @@ function Index() {
         let fi = fileName.split(".");
         let fls = fi.length;
         let fe = fi[fls - 1];
-        if (fls > 1 && fe.includes("M")) {
+        if ((fls > 1 && fe.includes("M")) || fe.includes("N")) {
           dt.items.add(file);
         }
       }
