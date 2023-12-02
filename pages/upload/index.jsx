@@ -3,13 +3,28 @@ import { useState, useEffect } from "react";
 
 import { Spinner } from "components";
 import { Layout } from "components/users";
-import { alertService, ticketsService, userService } from "services";
+import { alertService, ticketsService } from "services";
 
 export default Index;
 
 function Index() {
   const [files, setFiles] = useState(null);
   const [content, setContent] = useState([]);
+
+  const months = [
+    "JAN",
+    "FEB",
+    "MAR",
+    "APR",
+    "MAY",
+    "JUN",
+    "JUL",
+    "AUG",
+    "SET",
+    "OCT",
+    "NOV",
+    "DEC",
+  ];
 
   function readInput(e) {
     let input = e.target;
@@ -21,7 +36,7 @@ function Index() {
         let fi = fileName.split(".");
         let fls = fi.length;
         let fe = fi[fls - 1];
-        if ((fls > 1 && fe.includes("M")) || fe.includes("N")) {
+        if ((fls > 1 && fe.includes("M")) || months.includes(fe)) {
           dt.items.add(file);
         }
       }
