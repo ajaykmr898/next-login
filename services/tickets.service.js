@@ -230,6 +230,11 @@ async function getProfit(filters) {
   return { ticketsP, methods, methodsP, agents, agentsP, agentsA, methodsA };
 }
 
+function isNumeric(str) {
+  const numericRegex = /^\d+$/;
+  return numericRegex.test(str);
+}
+
 async function upload(files) {
   let fc = [];
   files.map((ct) => {
@@ -250,13 +255,37 @@ async function upload(files) {
     });
 
     // console.log(final, final.length);
-    let iac = { 38286592: "SCA" };
+    let iac = { 38286592: "SCA", 38288331: "Indus" };
     let agl = { A723: "ASHU", S475: "SONU", M277: "MALI" };
     let ard = [];
     let t = [];
     let n = [];
-    let ia =
-      final.hasOwnProperty(3) && final[3].hasOwnProperty(6) ? final[3][6] : "-";
+    let ia = "";
+    let ofi = "";
+    if (
+      final.hasOwnProperty(3) &&
+      final[3].hasOwnProperty(3) &&
+      isNumeric(final[3][3])
+    ) {
+      ofi = final[3][3];
+    } else {
+      ofi = "-";
+    }
+    if (
+      final.hasOwnProperty(3) &&
+      final[3].hasOwnProperty(6) &&
+      isNumeric(final[3][6])
+    ) {
+      ia = final[3][6];
+    } else if (
+      final.hasOwnProperty(3) &&
+      final[3].hasOwnProperty(9) &&
+      isNumeric(final[3][9])
+    ) {
+      ia = final[3][9];
+    } else {
+      ia = "-";
+    }
     let c2 = "-";
     let ag = "";
     let ac = "";
@@ -382,6 +411,7 @@ async function upload(files) {
         bookingCode: c2,
         agent: agl.hasOwnProperty(ag) ? agl[ag] : ag,
         iata: iac.hasOwnProperty(ia) ? iac[ia] : ia,
+        office: iac.hasOwnProperty(ofi) ? iac[ofi] : ofi,
         agentCost: ac,
         ticketNumber: t[i],
         paymentMethod: mt,
