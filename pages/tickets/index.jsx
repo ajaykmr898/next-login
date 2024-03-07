@@ -105,6 +105,8 @@ function Index() {
       "name",
       "cardNumber",
       "methods",
+      "travel1",
+      "travel2",
     ];
     let selected = parseInt(e.target.value);
     if (selected !== 0) {
