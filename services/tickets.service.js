@@ -255,7 +255,7 @@ async function upload(files) {
     });
 
     // console.log(final, final.length);
-    let iac = { 38286592: "SCA", 38288331: "Indus" };
+    let iac = { 38286592: "SCA", 38288331: "INDUS" };
     let agl = { A723: "ASHU", S475: "SONU", M277: "MALI" };
     let ard = [];
     let t = [];
@@ -302,6 +302,7 @@ async function upload(files) {
     let tn = "";
     let tc = "-";
     let cn = "-";
+    let cni = "-";
     let p = "-";
     let f =
       final.hasOwnProperty(4) && final[4].hasOwnProperty(0) ? final[4][0] : "-";
@@ -374,6 +375,13 @@ async function upload(files) {
           cn = final[r][c].replace("MFPDCCA", "").trim();
           cn = cn.split("/")[0];
         }
+        if (final[r][c].includes("FPCC") && ia === 38288331) {
+          //cni = final[r][c].replace("FPCC", "").trim();
+          let cniT = final[r][c].split("/")[0];
+          console.log(cniT);
+          cniT = cniT[4] + cniT[5] + cniT.slice(-4);
+          console.log(cniT);
+        }
         if (final[r][c].includes("CTCM")) {
           let tph = final[r][c].split("/");
           p = tph.hasOwnProperty(1) && tph[1];
@@ -443,7 +451,7 @@ async function upload(files) {
   });
 
   fc.map((f) => {
-    //console.log(f);
-    create(f);
+    console.log(f);
+    //create(f);
   });
 }
