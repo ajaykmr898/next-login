@@ -375,13 +375,13 @@ async function upload(files) {
           cn = final[r][c].replace("MFPDCCA", "").trim();
           cn = cn.split("/")[0];
         }
-        console.log(ia, final[r][c].includes("FPCC"));
+        //console.log(ia, final[r][c].includes("FPCC"));
         if (final[r][c].includes("FPCC") && ia === "38288331") {
           //cni = final[r][c].replace("FPCC", "").trim();
           let cniT = final[r][c].split("/")[0];
-          console.log(cniT);
+          //console.log(cniT);
           cniT = cniT[4] + cniT[5] + cniT.slice(-4);
-          console.log(cniT);
+          //console.log(cniT);
         }
         if (final[r][c].includes("CTCM")) {
           let tph = final[r][c].split("/");
@@ -433,7 +433,7 @@ async function upload(files) {
         receivingAmount3Method: "",
         receivingAmount2: 0,
         receivingAmount3: 0,
-        cardNumber: cn,
+        cardNumber: cni,
         bookedOn: d,
         travel1: t1s,
         travel2: t2s,
