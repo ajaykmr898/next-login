@@ -77,6 +77,8 @@ function Index() {
     "phone",
     "iata",
     "flight",
+    "travel1",
+    "travel2",
   ];
   const [filtersA, setFiltersA] = useState(allFilters);
   const [globalFilterValue, setGlobalFilterValue] = useState("");
