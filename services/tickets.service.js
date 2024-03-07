@@ -433,7 +433,7 @@ async function upload(files) {
         receivingAmount3Method: "",
         receivingAmount2: 0,
         receivingAmount3: 0,
-        cardNumber: cni,
+        cardNumber: cniT,
         bookedOn: d,
         travel1: t1s,
         travel2: t2s,
