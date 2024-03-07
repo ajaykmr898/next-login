@@ -375,7 +375,8 @@ async function upload(files) {
           cn = final[r][c].replace("MFPDCCA", "").trim();
           cn = cn.split("/")[0];
         }
-        if (final[r][c].includes("FPCC") && ia === 38288331) {
+        console.log(ia, final[r][c].includes("FPCC"));
+        if (final[r][c].includes("FPCC") && ia === "38288331") {
           //cni = final[r][c].replace("FPCC", "").trim();
           let cniT = final[r][c].split("/")[0];
           console.log(cniT);
