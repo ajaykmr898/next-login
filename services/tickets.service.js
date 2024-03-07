@@ -380,7 +380,7 @@ async function upload(files) {
           //cni = final[r][c].replace("FPCC", "").trim();
           let cniT = final[r][c].split("/")[0];
           //console.log(cniT);
-          cniT = cniT[4] + cniT[5] + cniT.slice(-4);
+          cni = cniT[4] + cniT[5] + cniT.slice(-4);
           //console.log(cniT);
         }
         if (final[r][c].includes("CTCM")) {
@@ -433,7 +433,7 @@ async function upload(files) {
         receivingAmount3Method: "",
         receivingAmount2: 0,
         receivingAmount3: 0,
-        cardNumber: cniT,
+        cardNumber: cni,
         bookedOn: d,
         travel1: t1s,
         travel2: t2s,
