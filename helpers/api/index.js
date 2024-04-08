@@ -5,6 +5,7 @@ export * from "./jwt-middleware";
 export * from "./users-repo";
 export * from "./tickets-repo";
 export * from "./operations-repo";
+export * from "./agentsoperations-repo";
 export * from "./expenses-repo";
 
 export function formatDate(date, format = "DB") {

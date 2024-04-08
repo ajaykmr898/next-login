@@ -10,6 +10,7 @@ export const db = {
   Tickets: ticketsModel(),
   Operations: operationsModel(),
   Expenses: expensesModel(),
+  AgentsOperations: agentsOperationsModel(),
 };
 
 // mongoose models with schema definitions
@@ -122,6 +123,41 @@ function operationsModel() {
     },
   });
   return mongoose.models.Operations || mongoose.model("Operations", schema);
+}
+
+function agentsOperationsModel() {
+  const schema = new Schema(
+    {
+      transferName: { type: String, required: false },
+      agentName: { type: String, required: false },
+      transferAmountTotalOperation: { type: String, required: false },
+      refundAmountTotalOperation: { type: String, required: false },
+      ticketId: { type: mongoose.Schema.ObjectId, required: false },
+      transferDate: { type: String, required: false },
+      operation: { type: String, required: false },
+      ticketRefundUsed: { type: String, required: false },
+      //totalRefund: { type: String, required: false },
+      suppliedTicket: { type: String, required: false },
+      //totalSupplied: { type: String, required: false },
+    },
+    {
+      // add createdAt and updatedAt timestamps
+      timestamps: true,
+      strict: false,
+    }
+  );
+  schema.set("toJSON", {
+    virtuals: true,
+    versionKey: false,
+    transform: function (doc, ret) {
+      delete ret._id;
+      delete ret.hash;
+    },
+  });
+  return (
+    mongoose.models.AgentsOperations ||
+    mongoose.model("AgentsOperations", schema)
+  );
 }
 
 function expensesModel() {

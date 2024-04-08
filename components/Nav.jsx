@@ -7,7 +7,15 @@ export { Nav };
 
 function Nav() {
   const [user, setUser] = useState(null);
-  const pages = ["users", "tickets", "upload", "refund", "seller", "expenses"];
+  const pages = [
+    "users",
+    "tickets",
+    "upload",
+    "refund",
+    "seller",
+    "buyer",
+    "expenses",
+  ];
   const titles = {
     users: "Agents List",
     tickets: "Tickets List",
@@ -16,7 +24,9 @@ function Nav() {
     "tickets/edit": "Edit Ticket",
     refund: "Refunds",
     seller: "SCA Transfers",
-    "seller/transfer": "Transfer Amount SCA",
+    buyer: "Agents Transfers",
+    "buyer/transfer": "Transfer Amount to Agents",
+    "seller/transfer": "Transfer Amount to SCA",
     expenses: "Expenses",
     "expenses/categories": "Expenses Categories",
     "expenses/add": "Add Expense",
@@ -93,6 +103,12 @@ function Nav() {
             <Link href="/seller">
               <i className="fa-fw fas fa-money-check-dollar nav-icon"></i>
               &nbsp;&nbsp;&nbsp;&nbsp; SCA Transfers
+            </Link>
+          </li>
+          <li className={getActiveMenu("buyer")}>
+            <Link href="/buyer">
+              <i className="fa-fw fas fa-money-bill-transfer nav-icon"></i>
+              &nbsp;&nbsp;&nbsp;&nbsp; Agents Transfers
             </Link>
           </li>
           <li className={getActiveMenu("expenses")}>
