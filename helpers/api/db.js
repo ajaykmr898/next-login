@@ -22,10 +22,12 @@ function userModel() {
       hash: { type: String, required: true },
       firstName: { type: String, required: true },
       lastName: { type: String, required: true },
+      balance: { type: String, required: true },
     },
     {
       // add createdAt and updatedAt timestamps
       timestamps: true,
+      strict: false,
     }
   );
 
@@ -48,6 +50,7 @@ function ticketsModel() {
       name: { type: String, required: false },
       bookingCode: { type: String, required: false },
       agent: { type: String, required: false },
+      agentId: { type: mongoose.Schema.ObjectId, required: false },
       agentCost: { type: String, required: false },
       iata: { type: String, required: false },
       ticketNumber: { type: String, required: false },
@@ -129,7 +132,7 @@ function agentsOperationsModel() {
   const schema = new Schema(
     {
       transferName: { type: String, required: false },
-      agentName: { type: String, required: false },
+      agentId: { type: String, required: false },
       transferAmountTotalOperation: { type: String, required: false },
       refundAmountTotalOperation: { type: String, required: false },
       ticketId: { type: mongoose.Schema.ObjectId, required: false },

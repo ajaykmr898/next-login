@@ -18,6 +18,7 @@ export const userService = {
   logout,
   register,
   getAll,
+  getAllAgents,
   getById,
   update,
   delete: _delete,
@@ -48,6 +49,10 @@ async function register(user) {
 
 async function getAll() {
   return await fetchWrapper.get(baseUrl);
+}
+
+async function getAllAgents() {
+  return await fetchWrapper.get(`${baseUrl}/agents`);
 }
 
 async function getById(id) {

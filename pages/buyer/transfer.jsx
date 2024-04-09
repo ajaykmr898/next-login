@@ -1,5 +1,5 @@
 import { Layout } from "components/tickets";
-import { Budget } from "../../components/seller/Budget";
+import { Budget } from "../../components/buyer/Budget";
 import { useEffect, useState } from "react";
 import { ticketsService } from "../../services";
 import { Spinner } from "../../components";

@@ -2,7 +2,7 @@ import { fetchWrapper } from "helpers";
 import { formatDate } from "./index";
 
 const baseUrl = `/api/tickets`;
-
+const usersUrl = "/api/users";
 const months = [
   "Jan",
   "Feb",
@@ -37,6 +37,8 @@ async function getTicketsForSupply(filters = {}) {
 
 async function getAll(filters) {
   const response = await fetchWrapper.post(baseUrl, filters);
+  const users = await fetchWrapper.get(usersUrl);
+  console.log(users);
   const tickets = response.map((t, i) => {
     let bkd = formatDate(t.bookedOn, "IT");
     let ra1d = t.receivingAmount1Date
@@ -63,6 +65,12 @@ async function getAll(filters) {
       ? parseFloat(t.paidAmount) - parseFloat(t.refund)
       : "";
     let amountsCompleted = profit >= 0;
+    let agent = users.filter((u) => u.id === t.agentId);
+    if (agent) {
+      agent = agent.hasOwnProperty(0)
+        ? agent[0].firstName + " " + agent[0].lastName
+        : "Not Found";
+    }
     return {
       ...t,
       profit: "€ " + profit,
@@ -73,6 +81,7 @@ async function getAll(filters) {
       idP: i + 1,
       receivingAmountT: "€ " + tra.toFixed(2),
       paidAmount: "€ " + t.paidAmount,
+      agent,
       agentCost: t.agentCost ? "€ " + t.agentCost : t.agentCost,
       methods: methods,
       refund: t.refund ? "€ " + t.refund : t.refund,
@@ -112,6 +121,7 @@ async function getRefundsForSupply(filters = {}) {
 }
 
 async function getProfit(filters) {
+  const users = await fetchWrapper.get(usersUrl);
   const result = await fetchWrapper.post(baseUrl + "/profit", filters);
   let ticketsP = {};
   let methods = {};
@@ -134,7 +144,12 @@ async function getProfit(filters) {
       (ticket.receivingAmount3Method &&
         ticket.receivingAmount3Method.trim().toUpperCase()) ||
       "None";
-    let agent = ticket.agent.trim().toUpperCase() || "None";
+    let agent = users.filter((u) => ticket.agentId === u.id);
+    if (agent) {
+      agent = agent.hasOwnProperty(0)
+        ? agent[0].firstName + " " + agent[0].lastName
+        : "Not FOund";
+    }
     if (methods[method1] !== undefined) {
       methods[method1] += 1;
     } else {

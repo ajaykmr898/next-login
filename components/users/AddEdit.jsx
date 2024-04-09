@@ -44,7 +44,7 @@ function AddEdit(props) {
     try {
       // create or update user based on user prop
       let message;
-      data = { ...data, username_1: data.email };
+      data = { ...data, username_1: data.email, balance: "0" };
       if (user) {
         await userService.update(user.id, data);
         message = "User updated";

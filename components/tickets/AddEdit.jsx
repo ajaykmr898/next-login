@@ -3,12 +3,13 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 
-import { ticketsService, alertService, formatDate } from "services";
+import { ticketsService, alertService, formatDate, categories } from "services";
 
 export { AddEdit };
 
 function AddEdit(props) {
   const ticket = props?.ticket;
+  const agents = props?.agents || [];
   // form validation rules
   const validationSchema = Yup.object().shape({
     name: Yup.string().required("Customer is required"),
@@ -56,6 +57,7 @@ function AddEdit(props) {
         fileName: data.name,
         name: data.name,
         agent: data.agent,
+        agentId: data.agent,
         iata: data.iata || "",
         agentCost: data.agentCost,
         paymentMethod: data.method,
@@ -96,6 +98,7 @@ function AddEdit(props) {
           paid: "",
           receiving: "",
           agent: "",
+          agentId: "",
           iata: "",
           agentCost: "",
           method: "",
@@ -126,6 +129,7 @@ function AddEdit(props) {
           "Ticket for " + ticketNew.name + " updated successfully"
         );
       }
+      console.log(ticketNew);
     } catch (error) {
       alertService.error(error);
       console.error(error);
@@ -150,13 +154,25 @@ function AddEdit(props) {
         </div>
         <div className="mb-3 col-md-4 col-sm-6">
           <label className="form-label">Agent</label>
-          <input
+          <select
             name="agent"
-            defaultValue={ticket?.agent}
+            defaultValue={ticket?.agentId}
             type="text"
             {...register("agent")}
-            className={`form-control ${errors.agent ? "is-invalid" : ""}`}
-          />
+            className={`form-control ${errors.agentId ? "is-invalid" : ""}`}
+          >
+            {agents.map((agent, index) => {
+              return (
+                <option
+                  key={"agent" + index}
+                  value={agent.id}
+                  defaultValue={ticket?.agentId}
+                >
+                  {agent.firstName} {agent.lastName}
+                </option>
+              );
+            })}
+          </select>
           <div className="invalid-feedback">{errors.agent?.message}</div>
         </div>
         <div className="mb-3 col-md-4 col-sm-6">
