@@ -36,9 +36,10 @@ function Index() {
       <table className="table table-striped">
         <thead>
           <tr>
-            <th style={{ width: "30%" }}>First Name</th>
-            <th style={{ width: "30%" }}>Last Name</th>
-            <th style={{ width: "30%" }}>Email</th>
+            <th style={{ width: "20%" }}>First Name</th>
+            <th style={{ width: "20%" }}>Last Name</th>
+            <th style={{ width: "20%" }}>Email</th>
+            <th style={{ width: "10%" }}>Balance</th>
             <th style={{ width: "10%" }}></th>
           </tr>
         </thead>
@@ -49,6 +50,7 @@ function Index() {
                 <td>{user.firstName}</td>
                 <td>{user.lastName}</td>
                 <td>{user.email}</td>
+                <td>€ {user.balance}</td>
                 <td style={{ whiteSpace: "nowrap" }}>
                   <Link
                     href={`/users/edit/${user.id}`}

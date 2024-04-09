@@ -5,7 +5,7 @@ export default apiHandler({
 });
 
 async function getAll(req, res) {
-  const users1 = await usersRepo.getAll();
+  const users1 = await usersRepo.getAllAgents();
   const users = (users1 || []).sort((a, b) => a.firstName - b.firstName);
   return res.status(200).json(users);
 }

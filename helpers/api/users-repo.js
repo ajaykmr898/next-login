@@ -7,6 +7,7 @@ const User = db.User;
 export const usersRepo = {
   authenticate,
   getAll,
+  getAllAgents,
   getById,
   create,
   update,
@@ -29,6 +30,10 @@ async function authenticate({ email, password }) {
     ...user.toJSON(),
     token,
   };
+}
+
+async function getAllAgents() {
+  return await User.find({}, { balance: 1, lastName: 1, firstName: 1 });
 }
 
 async function getAll() {

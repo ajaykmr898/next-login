@@ -3,6 +3,7 @@ import {
   ticketsService,
   operationsService,
   formatDate,
+  userService,
 } from "services";
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
@@ -11,21 +12,25 @@ import { Spinner } from "components";
 export { Budget };
 
 function Budget(props) {
-  const refunds = props.refunds;
-  const { totalRefund, totalRefundUsed, totalRemained } = props.totals;
+  const agents = props.agents;
   const [tickets, setTickets] = useState(null);
+  const [loadingTickets, setLoadingTickets] = useState(false);
+  const [delta, setDelta] = useState(0);
+  const [total, setTotal] = useState(0);
+  const [balanceTot, setBalanceTot] = useState(0);
+  const [agent, setAgent] = useState(null);
+  const [date, setDate] = useState(null);
+
   const [totals, setTotals] = useState({
     totalCost: 0,
     totalPaidSca: 0,
     totalRemainedSca: 0,
+    totalRemainedSca2: 0,
   });
-  const [delta, setDelta] = useState(0);
-  const [total, setTotal] = useState(0);
-  const [balanceTot, setBalanceTot] = useState(0);
-  const [date, setDate] = useState(null);
-  const [budgetTot, setBudgetTot] = useState(0);
-  const [changesRefunds, setChangesRefunds] = useState([]);
-  const [changesSupplied, setChangesSupplied] = useState([]);
+
+  useEffect(() => {
+    document.getElementById("complete").setAttribute("disabled", "disabled");
+  }, []);
 
   const swal = Swal.mixin({
     customClass: {
@@ -34,6 +39,15 @@ function Budget(props) {
     },
     buttonsStyling: false,
   });
+
+  function onComplete() {
+    let errU = false;
+    let deltaI = parseFloat(delta).toFixed(2);
+    console.log(agent, date, total, balanceTot, deltaI);
+    let data = { ...agent, balance: deltaI };
+    userService.update(agent.id, data).catch((err) => (errU = true));
+    return { errU };
+  }
 
   function ask() {
     swal
@@ -76,128 +90,45 @@ function Budget(props) {
       });
   }
 
-  useEffect(() => {
-    document.getElementById("complete").setAttribute("disabled", "disabled");
-    getTickets().finally((res) => {
-      setTimeout(() => {
-        disableEnableInputsOnDeltaZeroOrBudgetFieldsNotSet("d");
-      }, 1000);
-    });
-  }, []);
-
-  async function getTickets() {
-    const res = await ticketsService.getTicketsForSupply();
-    let totalCost = 0;
-    let totalPaidSca = 0;
-    let totalRemainedSca = 0;
-    const res2 = res.map((e) => {
-      let remained = e.paidAmount - (e.supplied || 0);
-
-      totalCost += parseFloat(e.paidAmount || 0);
-      totalPaidSca += parseFloat(e.supplied || 0);
-      totalRemainedSca += parseFloat(remained || 0);
-      return {
-        ...e,
-        supplied: e.supplied ? e.supplied : 0,
-        remained: parseFloat(remained).toFixed(2),
-      };
-    });
-    setTickets(res2);
-    setTotals({ totalCost, totalPaidSca, totalRemainedSca });
+  async function getTickets(filters) {
+    setLoadingTickets(true);
+    const res = await ticketsService.getTicketsByAgent(filters);
+    setTickets(res);
+    setLoadingTickets(false);
   }
 
-  function disableInputsForTransferAndRefunds() {
+  function disableInputsStart() {
     document.getElementById("budget").setAttribute("disabled", "disabled");
     document.getElementById("budget-date").setAttribute("disabled", "disabled");
     document.getElementById("add").setAttribute("disabled", "disabled");
-    if (refunds.length) {
-      document
-        .getElementById("remained-button")
-        .setAttribute("disabled", "disabled");
-    }
-    let elements = document.getElementsByClassName("remained");
-    for (let i = 0; i < elements.length; i++) {
-      elements[i].setAttribute("disabled", "disabled");
-    }
+    document.getElementById("agent").setAttribute("disabled", "disabled");
+    document.getElementById("complete").removeAttribute("disabled");
   }
 
-  function disableEnableInputsOnDeltaZeroOrBudgetFieldsNotSet(type) {
-    let disabled = type === "d";
-    let elements = document.getElementsByClassName("tickets-field");
-    for (let i = 0; i < elements.length; i++) {
-      if (disabled) {
-        elements[i].setAttribute("disabled", "disabled");
-      } else {
-        elements[i].removeAttribute("disabled");
-      }
-    }
-    let elements2 = document.getElementsByClassName("tickets-field-edit");
-    for (let i = 0; i < elements2.length; i++) {
-      elements2[i].setAttribute("disabled", "disabled");
-    }
-  }
-
-  function onComplete() {
-    let deltaI = parseFloat(delta).toFixed(2);
-    if (deltaI === "0.00" && changesSupplied.length > 0) {
-      let errorU = false;
-      let errorI = false;
-      const allTotals = [...changesSupplied, ...changesRefunds];
-      //console.log(allTotals);
-      let transferName = Date.now();
-      allTotals.map((e) => {
-        let params = {};
-        if (e.type === "supplied") {
-          params = { supplied: e.total };
-        } else {
-          params = { refundUsed: e.total };
-        }
-        ticketsService.update(e.id, params).catch((err) => (errorU = true));
-        let data = {};
-        if (e.type === "supplied") {
-          data = {
-            transferName,
-            totalOperation: total,
-            transferAmountTotalOperation: budgetTot,
-            refundAmountTotalOperation: refundTot.toFixed(2),
-            ticketId: e.id,
-            transferDate: formatDate(date, "DB"),
-            operation: "Paid to SCA",
-            ticketRefundUsed: "",
-            suppliedTicket: e.paid,
-          };
-        } else {
-          data = {
-            transferName,
-            totalOperation: total,
-            transferAmountTotalOperation: budgetTot,
-            refundAmountTotalOperation: refundTot.toFixed(2),
-            ticketId: e.id,
-            transferDate: formatDate(date, "DB"),
-            operation: "Refund Used",
-            ticketRefundUsed: e.used,
-            suppliedTicket: "",
-          };
-        }
-        operationsService.create(data).catch((err) => (errorI = true));
-      });
-      return { errorU, errorI };
-    } /*else {
-      console.log("no");
-    }*/
-    return null;
-  }
-
-  function onAdd(e) {
+  async function onAdd(e) {
     e.preventDefault();
     alertService.clear();
     const dateT = document.getElementById("budget-date").value;
-    setDate(dateT);
-    setDelta(total);
+    const agentT = document.getElementById("agent").value;
+    let balanceT = 0;
+    let budgetT = document.getElementById("budget").value;
+    budgetT = parseFloat(budgetT);
     try {
-      if (total > 0 && dateT) {
-        disableInputsForTransferAndRefunds();
-        disableEnableInputsOnDeltaZeroOrBudgetFieldsNotSet("e");
+      if (budgetT > 0 && dateT && agentT !== "agentN") {
+        let agent = agents.filter((agent) => agent.id === agentT);
+        if (agent.length) {
+          balanceT = agent[0].balance;
+          balanceT = +balanceT;
+        }
+        setBalanceTot(balanceT);
+        setAgent(agent[0]);
+        setDate(dateT);
+        adjustTotal(budgetT, balanceT);
+        disableInputsStart();
+        await getTickets({ agentId: agentT });
+      } else {
+        setBalanceTot(balanceT);
+        adjustTotal(0, 0);
       }
     } catch (error) {
       alertService.error(error);
@@ -205,140 +136,38 @@ function Budget(props) {
     }
   }
 
-  function adjustTotal(number, type) {
+  function adjustTotal(budget, balance) {
     let totalT = 0;
-    if (type === "r") {
-      totalT = number + budgetTot;
-    } else {
-      totalT = number + refundTot;
-    }
-    totalT = parseFloat(totalT).toFixed(2);
+    totalT = budget + balance;
+    totalT = totalT !== 0 ? parseFloat(totalT).toFixed(2) : 0;
     setTotal(totalT);
-  }
-
-  function addBudget(e) {
-    let number = e && parseFloat(e.target.value);
-    if (!isNaN(number)) {
-      setBudgetTot(number);
-      adjustTotal(number, "b");
-    }
-  }
-
-  function addRefunds() {
-    let elements = document.getElementsByClassName("remained");
-    let changesT = [];
-    let number = 0;
-    for (let i = 0; i < elements.length; i++) {
-      let used = elements[i].value.trim() || "";
-      let id = (elements[i].classList[1] || "").replace("remained-input-", "");
-      let remainedA = refunds.filter((e) => e.id === id) || [];
-      let remainedI = remainedA.length && remainedA[0]["remained"];
-      let refundUsed = remainedA.length && remainedA[0]["refundUsed"];
-      if (used && remainedI) {
-        used = parseFloat(used);
-        remainedI = parseFloat(remainedI);
-        if (used <= remainedI && used > 0) {
-          //console.log(remainedA);
-          let total = parseFloat(refundUsed) + used;
-          number += used;
-          total = total.toFixed(2);
-          used = used.toFixed(2);
-          changesT.push({ id, used, total, type: "refund" });
-
-          document.getElementsByClassName(
-            "remained-ok-" + id
-          )[0].hidden = false;
-          document.getElementsByClassName("remained-ko-" + id)[0].hidden = true;
-        } else {
-          document.getElementsByClassName(
-            "remained-ko-" + id
-          )[0].hidden = false;
-          document.getElementsByClassName("remained-ok-" + id)[0].hidden = true;
-        }
-      }
-    }
-    if (changesT) {
-      setChangesRefunds(changesT);
-      setRefundTot(number);
-      adjustTotal(number, "r");
-    }
-  }
-
-  function editSupplied(id, remained, supplied) {
-    let number = document.getElementsByClassName("tickets-input-" + id)[0]
-      .value;
-    let numberI = parseFloat(number);
-    let deltaI = parseFloat(delta);
-    deltaI = deltaI + numberI;
-    setDelta(deltaI);
-    document.getElementsByClassName("tickets-input-" + id)[0].value = 0;
-    document
-      .getElementsByClassName("tickets-btn-ok-" + id)[0]
-      .removeAttribute("disabled");
-    document
-      .getElementsByClassName("tickets-btn-edit-" + id)[0]
-      .setAttribute("disabled", "disabled");
-    document
-      .getElementsByClassName("tickets-input-" + id)[0]
-      .removeAttribute("disabled");
-  }
-
-  function addSupplied(id, remained, supplied) {
-    let number = document.getElementsByClassName("tickets-input-" + id)[0]
-      .value;
-    let numberI = parseFloat(number);
-    supplied = parseFloat(supplied);
-    number = parseFloat(number);
-    remained = parseFloat(remained);
-    let deltaI = parseFloat(delta);
-    if (
-      !isNaN(number) &&
-      number > 0 &&
-      number <= deltaI &&
-      number <= remained
-    ) {
-      number = number + supplied;
-      number = number.toFixed(2);
-      let deltaT = deltaI - numberI;
-      deltaT = parseFloat(deltaT).toFixed(2);
-      numberI = numberI.toFixed(2);
-      document
-        .getElementsByClassName("tickets-btn-ok-" + id)[0]
-        .setAttribute("disabled", "disabled");
-      document.getElementsByClassName("tickets-ko-" + id)[0].hidden = true;
-      document.getElementsByClassName("tickets-ok-" + id)[0].hidden = false;
-      document
-        .getElementsByClassName("tickets-btn-edit-" + id)[0]
-        .removeAttribute("disabled");
-      document
-        .getElementsByClassName("tickets-input-" + id)[0]
-        .setAttribute("disabled", "disabled");
-      let newSupplies = [...changesSupplied];
-      const found = newSupplies.some((el) => el.id === id);
-      if (found) {
-        newSupplies = newSupplies.filter((e) => e.id !== id);
-      }
-      newSupplies.push({ id, paid: numberI, total: number, type: "supplied" });
-      setChangesSupplied(newSupplies);
-      setDelta(deltaT);
-
-      if (deltaT === "0.00") {
-        document.getElementById("complete").removeAttribute("disabled");
-        disableEnableInputsOnDeltaZeroOrBudgetFieldsNotSet("d");
-      }
-    } else {
-      document.getElementsByClassName("tickets-ko-" + id)[0].hidden = false;
-      document.getElementsByClassName("tickets-ok-" + id)[0].hidden = true;
-    }
-
-    return false;
+    setDelta(totalT);
   }
 
   return (
     <>
       <form id="add-form" onSubmit={(e) => onAdd(e)}>
         <div className="row">
-          <div className="col-md-2">
+          <div className="col-6 col-md-3">
+            <label className="form-label">
+              Agent: <span className="text-danger">*</span>
+            </label>
+            <div className="input-group">
+              <select className="form-select" id="agent">
+                <option key="agentN" value="agentN">
+                  Select agent
+                </option>
+                {agents.map((agent, index) => {
+                  return (
+                    <option key={"agent" + index} value={agent.id}>
+                      {agent.firstName} {agent.lastName}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
+          </div>
+          <div className="col-6 col-md-3">
             <label className="form-label">
               Date: <span className="text-danger">*</span>
             </label>
@@ -349,7 +178,7 @@ function Budget(props) {
               className="form-control"
             />
           </div>
-          <div className="col-md-2">
+          <div className="col-6 col-md-3">
             <label className="form-label">
               Bonifico: <span className="text-danger">*</span>
             </label>
@@ -358,13 +187,10 @@ function Budget(props) {
               id="budget"
               type="number"
               step="0.01"
-              onChange={(e) => {
-                addBudget(e);
-              }}
               className="form-control"
             />
           </div>
-          <div className="col-md-2">
+          <div className="col-6 col-md-3">
             <label className="form-label">Balance:</label>
             <input
               name="balance"
@@ -375,19 +201,19 @@ function Budget(props) {
               className="form-control"
             />
           </div>
-          <div className="col-md-2">
+          <div className="col-12 col-md-3">
             <div className="text-center">Total - Remained</div>
             <div className="text-center mt-3">
               € {total} - € {delta}
             </div>
           </div>
-          <div className="col-md-2">
+          <div className="col-6 col-md-2">
             <br />
             <button type="submit" id="add" className="btn btn-primary me-2">
-              Start Transferring
+              Start
             </button>
           </div>
-          <div className="col-md-2">
+          <div className="col-6 col-md-2">
             <br />
             <button
               onClick={() => {
@@ -397,110 +223,11 @@ function Budget(props) {
               id="complete"
               className="btn btn-success me-2"
             >
-              Complete Transfer
+              Done
             </button>
           </div>
         </div>
       </form>
-      <br />
-      <div className="accordion" id="accordionExample">
-        <div className="accordion-item">
-          <h2 className="accordion-header" id="headingOne">
-            <button
-              className="accordion-button"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#collapseOne"
-              aria-expanded="true"
-              aria-controls="collapseOne"
-            >
-              {refunds.length
-                ? refunds.length + " Refunds"
-                : "No tickets with refund"}
-            </button>
-          </h2>
-          <div
-            id="collapseOne"
-            className="accordion-collapse collapse collapse"
-            aria-labelledby="headingOne"
-            data-bs-parent="#accordionExample"
-          >
-            <div style={{ textAlign: "center" }}>
-              {refunds.length ? (
-                <button
-                  onClick={() => addRefunds()}
-                  id="remained-button"
-                  className="btn btn-primary"
-                >
-                  Add to Bonifico
-                </button>
-              ) : (
-                ""
-              )}
-            </div>
-            <div className="accordion-body">
-              <div className="table-responsive">
-                <table className="table table-striped table-sm">
-                  <thead>
-                    <tr>
-                      <th scope="col">Name</th>
-                      <th scope="col">PNR</th>
-                      <th scope="col">Total Refund</th>
-                      <th scope="col">Refund Used</th>
-                      <th scope="col">Remained</th>
-                      <th scope="col">Add</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {refunds.map((r, i) => {
-                      return (
-                        <tr key={i}>
-                          <td>{r.name}</td>
-                          <td>{r.bookingCode}</td>
-                          <td>€ {r.refund}</td>
-                          <td>€ {r.refundUsed}</td>
-                          <td>€ {r.remained}</td>
-                          <td>
-                            <input
-                              className={"remained remained-input-" + r.id}
-                              placeholder="remained to use"
-                              type="number"
-                              step="0.01"
-                              min="0"
-                              max={r.remained}
-                            />
-                            &nbsp;
-                            <label
-                              hidden
-                              className={`remained-ok-${r.id} text-success`}
-                            >
-                              <i className="fa fa-check"></i>
-                            </label>
-                            <label
-                              hidden
-                              className={`remained-ko-${r.id} text-danger`}
-                            >
-                              <i className="fa fa-times"></i>
-                            </label>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                    <tr>
-                      <th>Totals:</th>
-                      <th></th>
-                      <th>€ {totalRefund.toFixed(2)}</th>
-                      <th>€ {totalRefundUsed.toFixed(2)}</th>
-                      <th>€ {totalRemained.toFixed(2)}</th>
-                      <th></th>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
       <br />
       <div className="accordion" id="accordionExample1">
         <div className="accordion-item">
@@ -531,10 +258,11 @@ function Budget(props) {
                     <tr>
                       <th scope="col">Name</th>
                       <th scope="col">PNR</th>
-                      <th scope="col">Cost</th>
-                      <th scope="col">Paid to SCA</th>
+                      <th scope="col">Iata Cost</th>
+                      <th scope="col">Agent Cost</th>
+                      <th scope="col">Paid by Agent</th>
                       <th scope="col">Remained</th>
-                      <th scope="col">Pay</th>
+                      <th scope="col">To Pay</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -545,6 +273,7 @@ function Budget(props) {
                             <td>{r.name}</td>
                             <td>{r.bookingCode}</td>
                             <td>€ {r.paidAmount}</td>
+                            <td>€ {r.agentCost}</td>
                             <td>€ {r.supplied}</td>
                             <td>€ {r.remained}</td>
                             <td>
@@ -599,9 +328,9 @@ function Budget(props) {
                           </tr>
                         );
                       })}
-                    {!tickets && (
+                    {loadingTickets && (
                       <tr>
-                        <td colSpan="4">
+                        <td colSpan="7">
                           <Spinner />
                         </td>
                       </tr>
@@ -609,9 +338,11 @@ function Budget(props) {
                     <tr>
                       <th>Totals:</th>
                       <th></th>
-                      <th>{totals.totalCost.toFixed(2)}</th>
-                      <th>{totals.totalPaidSca.toFixed(2)}</th>
-                      <th>{totals.totalRemainedSca.toFixed(2)}</th>
+                      <th>€ {totals.totalCost.toFixed(2)}</th>
+                      <th>€ {totals.totalPaidSca.toFixed(2)}</th>
+                      <th>€ {totals.totalRemainedSca.toFixed(2)}</th>
+                      <th>€ {totals.totalRemainedSca2.toFixed(2)}</th>
+                      <th></th>
                       <th></th>
                     </tr>
                   </tbody>
