@@ -42,10 +42,12 @@ function Budget(props) {
 
   function onComplete() {
     let errU = false;
-    let deltaI = parseFloat(delta).toFixed(2);
-    console.log(agent, date, total, balanceTot, deltaI);
-    let data = { ...agent, balance: deltaI };
-    userService.update(agent.id, data).catch((err) => (errU = true));
+    console.log(agent, date, total, balanceTot, delta);
+    if (!isNaN(delta)) {
+      let deltaI = parseFloat(delta).toFixed(2);
+      let data = { ...agent, balance: deltaI };
+      userService.update(agent.id, data).catch((err) => (errU = true));
+    }
     return { errU };
   }
 
@@ -117,7 +119,7 @@ function Budget(props) {
       if (budgetT > 0 && dateT && agentT !== "agentN") {
         let agent = agents.filter((agent) => agent.id === agentT);
         if (agent.length) {
-          balanceT = agent[0].balance;
+          balanceT = agent[0].balance || 0;
           balanceT = +balanceT;
         }
         setBalanceTot(balanceT);
