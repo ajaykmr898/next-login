@@ -154,7 +154,7 @@ async function getProfit(filters) {
     if (agent) {
       agent = agent.hasOwnProperty(0)
         ? agent[0].firstName + " " + agent[0].lastName
-        : "Not FOund";
+        : "Not Found";
     }
     if (methods[method1] !== undefined) {
       methods[method1] += 1;

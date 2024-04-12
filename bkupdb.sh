@@ -1,9 +1,12 @@
 #!/bin/sh
-if [ -f .env ]; then
-  export $(echo $(cat .env | sed 's/#.*//g'| xargs) | envsubst)
-fi
-
+TODAY=$(date +%F_%H-%M-%S)
+mkdir -p managerBackups
+cd managerBackups
 echo Tickets downloading...
-curl --location --request POST "https://eu-central-1.aws.data.mongodb-api.com/app/data-jukku/endpoint/data/v1/action/find" --header "Content-Type: application/json" --header "Access-Control-Request-Headers: *" --header "api-key: $MONGODB_API" --data-raw '{ "collection":"tickets", "database":"test", "dataSource":"Cluster0", "skip": 0, "limit": 50000 }' > tickets.json
-echo Operations downloading...
-curl --location --request POST "https://eu-central-1.aws.data.mongodb-api.com/app/data-jukku/endpoint/data/v1/action/find" --header "Content-Type: application/json" --header "Access-Control-Request-Headers: *" --header "api-key: $MONGODB_API" --data-raw '{ "collection":"operations", "database":"test", "dataSource":"Cluster0", "skip": 0, "limit": 50000}' > operations.json
+curl --location --request POST "https://eu-central-1.aws.data.mongodb-api.com/app/data-jukku/endpoint/data/v1/action/find" --header "Content-Type: application/json" --header "Access-Control-Request-Headers: *" --header "api-key: 6VkCQ3SME9i0JakxSY05IoCkQmC10mwxPpZAZXSdGLLD23VURjjYlChfy9s6g3os" --data-raw '{ "collection":"tickets", "database":"test", "dataSource":"Cluster0", "skip": 0, "limit": 50000 }' > tickets_$TODAY.json
+echo Suppliers Operations downloading...
+curl --location --request POST "https://eu-central-1.aws.data.mongodb-api.com/app/data-jukku/endpoint/data/v1/action/find" --header "Content-Type: application/json" --header "Access-Control-Request-Headers: *" --header "api-key: 6VkCQ3SME9i0JakxSY05IoCkQmC10mwxPpZAZXSdGLLD23VURjjYlChfy9s6g3os" --data-raw '{ "collection":"operations", "database":"test", "dataSource":"Cluster0", "skip": 0, "limit": 50000}' > operations_$TODAY.json
+echo Users downloading...
+curl --location --request POST "https://eu-central-1.aws.data.mongodb-api.com/app/data-jukku/endpoint/data/v1/action/find" --header "Content-Type: application/json" --header "Access-Control-Request-Headers: *" --header "api-key: 6VkCQ3SME9i0JakxSY05IoCkQmC10mwxPpZAZXSdGLLD23VURjjYlChfy9s6g3os" --data-raw '{ "collection":"users", "database":"test", "dataSource":"Cluster0", "skip": 0, "limit": 50000}' > users_$TODAY.json
+echo Agents Operations downloading...
+curl --location --request POST "https://eu-central-1.aws.data.mongodb-api.com/app/data-jukku/endpoint/data/v1/action/find" --header "Content-Type: application/json" --header "Access-Control-Request-Headers: *" --header "api-key: 6VkCQ3SME9i0JakxSY05IoCkQmC10mwxPpZAZXSdGLLD23VURjjYlChfy9s6g3os" --data-raw '{ "collection":"agentsoperations", "database":"test", "dataSource":"Cluster0", "skip": 0, "limit": 50000}' > agentsoperations_$TODAY.json

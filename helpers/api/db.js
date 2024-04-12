@@ -23,6 +23,8 @@ function userModel() {
       firstName: { type: String, required: true },
       lastName: { type: String, required: true },
       balance: { type: String, required: true },
+      level: { type: String, required: true },
+      code: { type: String, required: true },
     },
     {
       // add createdAt and updatedAt timestamps
@@ -52,6 +54,7 @@ function ticketsModel() {
       agent: { type: String, required: false },
       agentId: { type: mongoose.Schema.ObjectId, required: false },
       agentCost: { type: String, required: false },
+      paidByAgent: { type: String, required: false },
       iata: { type: String, required: false },
       ticketNumber: { type: String, required: false },
       paymentMethod: { type: String, required: false },

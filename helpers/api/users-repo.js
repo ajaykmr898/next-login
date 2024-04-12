@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { db } from "helpers/api";
+import { ObjectId } from "mongodb";
 
 const User = db.User;
 
@@ -78,10 +79,7 @@ async function update(id, params) {
     params.hash = bcrypt.hashSync(params.password, 10);
   }
 
-  // copy params properties to user
-  Object.assign(user, params);
-
-  await user.save();
+  await User.findByIdAndUpdate(id, params);
 }
 
 async function _delete(id) {
