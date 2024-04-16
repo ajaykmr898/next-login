@@ -16,7 +16,7 @@ function AddEdit(props) {
   const validationSchema = Yup.object().shape({
     firstName: Yup.string().required("First Name is required"),
     lastName: Yup.string().required("Last Name is required"),
-    //balance: Yup.string().required("Balance is required"),
+    balance: Yup.string().required("Balance is required"),
     level: Yup.string().required("Level is required"),
     code: Yup.string().required("Code is required"),
     email: Yup.string()
@@ -47,7 +47,6 @@ function AddEdit(props) {
     try {
       // create or update user based on user prop
       let message;
-      data = { ...data, balance: 0 };
       if (user) {
         await userService.update(user.id, data);
         message = "User updated";
@@ -99,6 +98,17 @@ function AddEdit(props) {
             className={`form-control ${errors.level ? "is-invalid" : ""}`}
           />
           <div className="invalid-feedback">{errors.level?.message}</div>
+        </div>
+        <div className="mb-3 col">
+          <label className="form-label">Balance</label>
+          <input
+            name="balance"
+            type="number"
+            step="0.01"
+            {...register("balance")}
+            className={`form-control ${errors.balance ? "is-invalid" : ""}`}
+          />
+          <div className="invalid-feedback">{errors.balance?.message}</div>
         </div>
         <div className="mb-3 col">
           <label className="form-label">Code</label>

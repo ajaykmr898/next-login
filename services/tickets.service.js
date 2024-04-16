@@ -98,6 +98,7 @@ async function getAll(filters) {
         ? formatDate(t.returnedDate, "IT")
         : t.returnedDate,
       supplied: t.supplied ? "€ " + t.supplied : t.supplied,
+      paidByAgent: t.paidByAgent ? "€ " + t.paidByAgent : t.paidByAgent,
       penality: penality !== "" ? "€ " + parseFloat(penality).toFixed(2) : "",
       amountsCompleted: amountsCompleted,
     };
@@ -467,6 +468,7 @@ async function upload(files) {
         supplied: 0,
         returned: 0,
         returnedDate: "",
+        paidByAgent: 0,
       };
       fc.push(tkt);
     });

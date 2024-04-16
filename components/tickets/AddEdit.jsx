@@ -41,6 +41,7 @@ function AddEdit(props) {
     refundDate: Yup.string().notRequired(),
     returned: Yup.string().notRequired(),
     returnedDate: Yup.string().notRequired(),
+    paidByAgent: Yup.string().notRequired(),
     desc: Yup.string().notRequired(),
   });
   const formOptions = { resolver: yupResolver(validationSchema) };
@@ -88,6 +89,7 @@ function AddEdit(props) {
         refundDate: data.refundDate || "",
         returned: data.returned || 0,
         returnedDate: data.returnedDate || "",
+        paidByAgent: data.paidByAgent || "",
         desc: data.desc || "",
       };
       if (!ticket) {
@@ -117,6 +119,7 @@ function AddEdit(props) {
           refundDate: "",
           returned: "",
           returnedDate: "",
+          paidByAgent: "",
           desc: "",
         });
         alertService.success(
@@ -176,7 +179,7 @@ function AddEdit(props) {
           <div className="invalid-feedback">{errors.agent?.message}</div>
         </div>
         <div className="mb-3 col-md-4 col-sm-6">
-          <label className="form-label">Agent Cost</label>
+          <label className="form-label">Agent Cost (for Ticket)</label>
           <input
             name="agentCost"
             defaultValue={ticket?.agentCost}
@@ -371,6 +374,17 @@ function AddEdit(props) {
             className={`form-control ${errors.flight ? "is-invalid" : ""}`}
           />
           <div className="invalid-feedback">{errors.flight?.message}</div>
+        </div>
+        <div className="mb-3 col">
+          <label className="form-label">Paid By Agent (Transfer)</label>
+          <input
+            name="paidByAgent"
+            defaultValue={ticket?.paidByAgent}
+            type="text"
+            {...register("paidByAgent")}
+            className={`form-control ${errors.paidByAgent ? "is-invalid" : ""}`}
+          />
+          <div className="invalid-feedback">{errors.paidByAgent?.message}</div>
         </div>
       </div>
 
