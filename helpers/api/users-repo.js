@@ -34,7 +34,10 @@ async function authenticate({ email, password }) {
 }
 
 async function getAllAgents() {
-  return await User.find({}, { balance: 1, lastName: 1, firstName: 1 });
+  return await User.find(
+    { level: "agent" },
+    { balance: 1, lastName: 1, firstName: 1, level: 1, code: 1 }
+  );
 }
 
 async function getAll() {

@@ -380,7 +380,8 @@ function AddEdit(props) {
           <input
             name="paidByAgent"
             defaultValue={ticket?.paidByAgent}
-            type="text"
+            type="number"
+            step="0.01"
             {...register("paidByAgent")}
             className={`form-control ${errors.paidByAgent ? "is-invalid" : ""}`}
           />

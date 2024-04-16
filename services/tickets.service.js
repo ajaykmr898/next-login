@@ -44,7 +44,6 @@ async function getTicketsByAgent(filters = {}) {
 async function getAll(filters) {
   const response = await fetchWrapper.post(baseUrl, filters);
   const users = await fetchWrapper.get(usersUrl);
-  console.log(users);
   const tickets = response.map((t, i) => {
     let bkd = formatDate(t.bookedOn, "IT");
     let ra1d = t.receivingAmount1Date
@@ -258,6 +257,7 @@ function isNumeric(str) {
 }
 
 async function upload(files) {
+  const users = await fetchWrapper.get(usersUrl);
   let fc = [];
   files.map((ct) => {
     let final = [];
@@ -278,7 +278,19 @@ async function upload(files) {
 
     // console.log(final, final.length);
     let iac = { 38286592: "SCA", 38288331: "INDUS" };
-    let agl = { A723: "ASHU", S475: "SONU", M277: "MALI" };
+    let agl = {};
+    let admin = "";
+    let agency = "";
+    users.map((userT) => {
+      let nameT = userT.firstName + " " + userT.lastName;
+      if (userT.level === "admin") {
+        admin = userT.id;
+      }
+      if (nameT.toLowerCase().includes("agency")) {
+        agency = userT.id;
+      }
+      agl[userT.code] = userT.id;
+    });
     let ard = [];
     let t = [];
     let n = [];
@@ -441,6 +453,9 @@ async function upload(files) {
         name: ntp,
         bookingCode: c2,
         agent: agl.hasOwnProperty(ag) ? agl[ag] : ag,
+        agentId: agl.hasOwnProperty(ag)
+          ? agl[ag]
+          : agency || admin || "123456789012345678901234",
         iata: iac.hasOwnProperty(ia) ? iac[ia] : ia,
         office: iac.hasOwnProperty(ofi) ? iac[ofi] : ofi,
         agentCost: ac,
