@@ -13,7 +13,13 @@ function Add() {
   }, []);
 
   function getAgents() {
-    userService.getAllAgents().then((x) => setAgents(x));
+    userService.getAllAgents().then((res) => {
+      let ags = res.filter(
+        (ag) =>
+          !(ag.firstName + " " + ag.lastName).toLowerCase().includes("agency")
+      );
+      setAgents(ags);
+    });
   }
   return <Layout>{agents ? <Budget agents={agents} /> : <Spinner />}</Layout>;
 }

@@ -16,8 +16,10 @@ export const ticketsRepo = {
 
 async function getTicketsByAgent(filters) {
   let filter = {
-    $and: [{ agentId: { $eq: filters.agentId } }],
-    $expr: { $gt: [{ $toDouble: "$paidAmount" }, { $toDouble: "$supplied" }] },
+    //$and: [{ agentId: { $eq: filters.agentId } }],
+    $expr: {
+      $gt: [{ $toDouble: "$agentCost" }, { $toDouble: "$paidByAgent" }],
+    },
   };
   return await Tickets.find(filter).sort({ bookedOn: -1 });
 }

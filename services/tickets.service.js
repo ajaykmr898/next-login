@@ -38,7 +38,8 @@ async function getTicketsForSupply(filters = {}) {
 
 async function getTicketsByAgent(filters = {}) {
   const response = await fetchWrapper.post(baseUrl + "/agent", filters);
-  return response;
+  let res = response.filter((t) => t.agentId === filters.agentId);
+  return res;
 }
 
 async function getAll(filters) {
@@ -75,6 +76,7 @@ async function getAll(filters) {
       agent = agent.hasOwnProperty(0)
         ? agent[0].firstName + " " + agent[0].lastName
         : "Not Found";
+      agent = agent.toLowerCase().includes("agency") ? "" : agent;
     }
     return {
       ...t,
@@ -87,7 +89,7 @@ async function getAll(filters) {
       receivingAmountT: "€ " + tra.toFixed(2),
       paidAmount: "€ " + t.paidAmount,
       agent,
-      agentCost: t.agentCost ? "€ " + t.agentCost : t.agentCost,
+      agentCost: t.agentCost && agent ? "€ " + t.agentCost : "",
       methods: methods,
       refund: t.refund ? "€ " + t.refund : t.refund,
       refundUsed: t.refundUsed ? "€ " + t.refundUsed : t.refundUsed,
