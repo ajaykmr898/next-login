@@ -30,6 +30,14 @@ async function getAll(filters) {
         as: "ticket",
       },
     },
+    {
+      $lookup: {
+        from: "users",
+        localField: "agentId",
+        foreignField: "_id",
+        as: "agent",
+      },
+    },
   ];
   return await AgentsOperations.aggregate(query).sort({
     operation: 1,

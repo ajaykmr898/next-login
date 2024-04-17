@@ -13,7 +13,12 @@ export default Index;
 
 function Index() {
   const [operations, setOperations] = useState(null);
-  const [totals, setTotals] = useState({ supplied: 0, refund: 0, total: 0 });
+  const [totals, setTotals] = useState({
+    supplied: 0,
+    adjusted: 0,
+    total: 0,
+    balance: 0,
+  });
   const [opExcel, setOpExcel] = useState(null);
   const [dates, setDates] = useState({
     start: "",
@@ -76,28 +81,19 @@ function Index() {
     let errorR = false;
     transfer.map((op) => {
       //console.log(op);
-      let isRefund = op.operation.includes("Used");
       let isSca = op.operation.includes("SCA");
 
-      let ticketRefundUsed = isRefund ? parseFloat(op.ticketRefundUsedN) : null;
       let suppliedTicket = isSca ? parseFloat(op.suppliedTicketN) : null;
 
       let supplied = op.ticket[0].supplied
         ? parseFloat(op.ticket[0].supplied)
         : null;
-      let refundUsed = op.ticket[0].refundUsed
-        ? parseFloat(op.ticket[0].refundUsed)
-        : null;
 
       supplied = supplied ? supplied - suppliedTicket : null;
-      refundUsed = refundUsed ? refundUsed - ticketRefundUsed : null;
 
-      let params = isRefund
-        ? {
-            refundUsed:
-              refundUsed && Math.sign(refundUsed) !== -1 ? refundUsed : 0,
-          }
-        : { supplied: supplied && Math.sign(supplied) !== -1 ? supplied : 0 };
+      let params = {
+        supplied: supplied && Math.sign(supplied) !== -1 ? supplied : 0,
+      };
 
       ticketsService
         .update(op.ticketId, params)
@@ -137,23 +133,28 @@ function Index() {
       setOperations(operationsI);
 
       let transferAmountTotalOperationI = 0;
-      let refundAmountTotalOperationI = 0;
+      let balanceAmountTotalOperationI = 0;
+      let adjustedAmountTotalOperationI = 0;
       Object.keys(operationsI).map((i) => {
         transferAmountTotalOperationI += parseFloat(
-          operationsI[i][0].transferAmountTotalOperationN
+          operationsI[i][0].transferOperationN
         );
-        refundAmountTotalOperationI += parseFloat(
-          operationsI[i][0].refundAmountTotalOperationN
+        balanceAmountTotalOperationI += parseFloat(
+          operationsI[i][0].balanceOperationN
+        );
+        adjustedAmountTotalOperationI += parseFloat(
+          operationsI[i][0].suppliedTotalN
         );
       });
       setTotals({
         total:
           "€ " +
           parseFloat(
-            transferAmountTotalOperationI + refundAmountTotalOperationI
+            transferAmountTotalOperationI + balanceAmountTotalOperationI
           ).toFixed(2),
         supplied: "€ " + transferAmountTotalOperationI.toFixed(2),
-        refund: "€ " + refundAmountTotalOperationI.toFixed(2),
+        balance: "€ " + balanceAmountTotalOperationI.toFixed(2),
+        adjusted: "€ " + adjustedAmountTotalOperationI.toFixed(2),
       });
     });
   };
@@ -293,8 +294,8 @@ function Index() {
                 <tbody>
                   <tr>
                     <th>
-                      Total: {totals.total} ({totals.supplied} + {totals.refund}
-                      )
+                      Total: {totals.total} ({totals.supplied} +{" "}
+                      {totals.balance}) - Adjusted: {totals.adjusted}
                     </th>
                   </tr>
                   <tr></tr>
@@ -304,15 +305,15 @@ function Index() {
                         <tr data-bs-toggle="collapse" data-bs-target={"#r" + i}>
                           <th scope="row">
                             {i + 1} - Bonifico
+                            {" - " + operations[key][0]["agentName"]}
                             {" - " + operations[key][0]["transferDate"]}
                             {" - " + operations[key][0]["totalOperation"]}
-                            {" (" +
-                              operations[key][0][
-                                "transferAmountTotalOperation"
-                              ]}
+                            {" (" + operations[key][0]["transferOperation"]}
                             {" + " +
-                              operations[key][0]["refundAmountTotalOperation"] +
+                              operations[key][0]["balanceOperation"] +
                               ") "}
+                            {" - Adjusted: " +
+                              operations[key][0]["suppliedTotal"]}
                             <i
                               className="fa fa-times tb-btns"
                               onClick={(e) => {

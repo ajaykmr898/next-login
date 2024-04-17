@@ -135,16 +135,16 @@ function agentsOperationsModel() {
   const schema = new Schema(
     {
       transferName: { type: String, required: false },
-      agentId: { type: String, required: false },
-      transferAmountTotalOperation: { type: String, required: false },
-      refundAmountTotalOperation: { type: String, required: false },
+      agentId: { type: mongoose.Schema.ObjectId, required: false },
+      totalOperation: { type: String, required: false },
+      balanceOperation: { type: String, required: false },
+      balanceOperationDelta: { type: String, required: false },
+      transferOperation: { type: String, required: false },
       ticketId: { type: mongoose.Schema.ObjectId, required: false },
       transferDate: { type: String, required: false },
       operation: { type: String, required: false },
-      ticketRefundUsed: { type: String, required: false },
-      //totalRefund: { type: String, required: false },
       suppliedTicket: { type: String, required: false },
-      //totalSupplied: { type: String, required: false },
+      suppliedTotal: { type: String, required: false },
     },
     {
       // add createdAt and updatedAt timestamps

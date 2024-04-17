@@ -12,36 +12,35 @@ export const agentsOperationsService = {
 async function getAll(filters) {
   const response = await fetchWrapper.post(baseUrl, filters);
   const data = response.map((e) => {
-    let ticket = e.ticket[0];
-    let paidAmount = parseFloat(ticket.paidAmount);
-    let supplied = parseFloat(ticket.supplied || 0);
-    let refundUsed = parseFloat(ticket.refundUsed || 0);
-    let refund = parseFloat(ticket.refund || 0);
-    let remainedRefund =
-      parseFloat(ticket.refund) - parseFloat(ticket.refundUsed || 0);
+    let ticket = e?.ticket[0];
+    let agent = e?.agent[0];
+    let paidAmount = parseFloat(ticket.agentCost);
+    let supplied = parseFloat(ticket.paidByAgent || 0);
     let remainedSupplied =
-      parseFloat(ticket.paidAmount) - parseFloat(ticket.supplied || 0);
+      parseFloat(ticket.agentCost) - parseFloat(ticket.paidByAgent || 0);
     return {
       ...e,
       cid: e._id,
       transferDate: formatDate(e.transferDate, "IT"),
-      suppliedTicketN: e.suppliedTicket,
-      suppliedTicket: e.suppliedTicket ? "€ " + e.suppliedTicket : "-",
-      ticketRefundUsedN: e.ticketRefundUsed,
-      ticketRefundUsed: e.ticketRefundUsed ? "€ " + e.ticketRefundUsed : "-",
-      remainedRefund: ticket.refund ? "€ " + remainedRefund.toFixed(2) : "-",
+      balanceOperation: e.balanceOperation ? "€ " + e.balanceOperation : "-",
+      balanceOperationN: e.balanceOperation,
+      balanceOperationDelta: e.balanceOperationDelta
+        ? "€ " + e.balanceOperationDelta
+        : "-",
+      balanceOperationDeltaN: e.balanceOperationDelta,
       remainedSupplied: "€ " + remainedSupplied.toFixed(2),
       paidAmount: "€ " + paidAmount.toFixed(2),
       supplied: "€ " + supplied.toFixed(2),
-      refund: "€ " + refund.toFixed(2),
-      refundUsed: "€ " + refundUsed.toFixed(2),
       name: ticket.name,
+      agentName: agent.firstName + " " + agent.lastName,
       bookingCode: ticket.bookingCode,
       totalOperation: e.totalOperation ? "€ " + e.totalOperation : "",
-      transferAmountTotalOperation: "€ " + e.transferAmountTotalOperation,
-      refundAmountTotalOperation: "€ " + e.refundAmountTotalOperation,
-      transferAmountTotalOperationN: e.transferAmountTotalOperation,
-      refundAmountTotalOperationN: e.refundAmountTotalOperation,
+      transferOperation: "€ " + e.transferOperation,
+      transferOperationN: e.transferOperation,
+      suppliedTicket: "€ " + e.suppliedTicket,
+      suppliedTicketN: e.suppliedTicket,
+      suppliedTotal: "€ " + parseFloat(e.suppliedTotal).toFixed(2),
+      suppliedTotalN: parseFloat(e.suppliedTotal).toFixed(2),
     };
   });
   return data;
