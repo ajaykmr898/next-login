@@ -192,13 +192,13 @@ function Index() {
         i.suppliedTicket.replace("€", "Eur"),
       ]),
     ]
-      .map((e) => e.join(","))
+      .map((e) => e.join(";"))
       .join("\n");
     const csvContent = "data:text/csv;charset=utf-8," + csvString;
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute("download", "operations_" + Date.now() + ".csv");
+    link.setAttribute("download", "agentsoperations_" + Date.now() + ".csv");
     document.body.appendChild(link);
 
     link.click();
