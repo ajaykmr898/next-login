@@ -36,6 +36,7 @@ async function getAll(filters) {
         localField: "agentId",
         foreignField: "_id",
         as: "agent",
+        pipeline: [{ $project: { firstName: 1, lastName: 1, id: 1, _id: 1 } }],
       },
     },
   ];

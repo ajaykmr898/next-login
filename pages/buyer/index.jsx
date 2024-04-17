@@ -80,30 +80,20 @@ function Index() {
     let errorU = false;
     let errorR = false;
     transfer.map((op) => {
-      //console.log(op);
-      let isSca = op.operation.includes("SCA");
-
-      let suppliedTicket = isSca ? parseFloat(op.suppliedTicketN) : null;
-
-      let supplied = op.ticket[0].supplied
-        ? parseFloat(op.ticket[0].supplied)
+      let suppliedTicket = parseFloat(op.suppliedTicketN);
+      let paidByAgent = op.ticket[0].paidByAgent
+        ? parseFloat(op.ticket[0].paidByAgent)
         : null;
-
-      supplied = supplied ? supplied - suppliedTicket : null;
-
+      paidByAgent = paidByAgent ? paidByAgent - suppliedTicket : 0;
       let params = {
-        supplied: supplied && Math.sign(supplied) !== -1 ? supplied : 0,
+        paidByAgent:
+          paidByAgent && Math.sign(paidByAgent) !== -1 ? paidByAgent : 0,
       };
-
       ticketsService
         .update(op.ticketId, params)
         .catch((err) => (errorU = true));
-
-      console.log(op.ticketId, params, op.cid);
-
       agentsOperationsService.delete(op.cid).catch((err) => (errorR = true));
     });
-
     return { errorU, errorR };
   };
 
