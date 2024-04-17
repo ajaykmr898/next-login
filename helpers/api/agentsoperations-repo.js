@@ -40,6 +40,7 @@ async function getAll(filters) {
       },
     },
   ];
+
   return await AgentsOperations.aggregate(query).sort({
     operation: 1,
   });

@@ -5,6 +5,7 @@ import {
   formatDate,
   agentsOperationsService,
   ticketsService,
+  userService,
 } from "../../services";
 import { Spinner } from "components";
 import Swal from "sweetalert2";
@@ -13,6 +14,7 @@ export default Index;
 
 function Index() {
   const [operations, setOperations] = useState(null);
+  const [agents, setAgents] = useState(null);
   const [totals, setTotals] = useState({
     supplied: 0,
     adjusted: 0,
@@ -34,9 +36,19 @@ function Index() {
   });
 
   useEffect(() => {
+    getAgents();
     getOperations();
   }, []);
 
+  function getAgents() {
+    userService.getAllAgents().then((res) => {
+      let ags = res.filter(
+        (ag) =>
+          !(ag.firstName + " " + ag.lastName).toLowerCase().includes("agency")
+      );
+      setAgents(ags);
+    });
+  }
   const removeBonifico = (e, transfer) => {
     e.preventDefault();
     e.stopPropagation();
@@ -104,14 +116,16 @@ function Index() {
     start = formatDate(start);
     let end = formatDate(new Date());
     let type = "transferDate";
+    let agent = null;
     if (dates) {
       start = dates.start;
       end = dates.end;
       type = dates.type;
+      agent = dates.agent === "all" ? null : dates.agent;
     } else {
-      setDates({ start, end, type });
+      setDates({ start, end, type, agent });
     }
-    agentsOperationsService.getAll({ start, end, type }).then((res) => {
+    agentsOperationsService.getAll({ start, end, type, agent }).then((res) => {
       const operationsI = res.reduce((group, arr) => {
         const { transferName } = arr;
         group[transferName] = group[transferName] ?? [];
@@ -160,14 +174,10 @@ function Index() {
       "Name",
       "PNR",
       "Operation",
-      "Cost",
-      "Total Paid to SCA",
-      "Remained to pay SCA",
-      "Transferred with Operation",
-      "Total Refund",
-      "Refund Used",
-      "Remained refund",
-      "Refund Used with Operation",
+      "Agent Cost",
+      "Total Paid By Agent",
+      "Remained to pay",
+      "Paid with Operation",
     ];
     const csvString = [
       headers,
@@ -180,13 +190,9 @@ function Index() {
         i.supplied.replace("€", "Eur"),
         i.remainedSupplied.replace("€", "Eur"),
         i.suppliedTicket.replace("€", "Eur"),
-        i.refund.replace("€", "Eur"),
-        i.refundUsed.replace("€", "Eur"),
-        i.remainedRefund.replace("€", "Eur"),
-        i.ticketRefundUsed.replace("€", "Eur"),
       ]),
     ]
-      .map((e) => e.join(";"))
+      .map((e) => e.join(","))
       .join("\n");
     const csvContent = "data:text/csv;charset=utf-8," + csvString;
     const encodedUri = encodeURI(csvContent);
@@ -202,14 +208,31 @@ function Index() {
     let start = document.getElementById("start").value;
     let end = document.getElementById("end").value;
     let type = document.getElementById("type").value;
-    getOperations({ start, end, type });
+    let agent = document.getElementById("agent").value;
+    getOperations({ start, end, type, agent });
   };
 
   return (
     <Layout>
       <div className="container">
         <div className="row">
-          <div className="col-md-3">
+          <div className="col-md-2">
+            <label htmlFor="agent">Agent:</label>
+            <div className="input-group">
+              <select id="agent" className="form-select">
+                <option value="all">All Agents</option>
+                {agents &&
+                  agents.map((agent, index) => {
+                    return (
+                      <option key={"agent" + index} value={agent.id}>
+                        {agent.firstName} {agent.lastName}
+                      </option>
+                    );
+                  })}
+              </select>
+            </div>
+          </div>
+          <div className="col-md-2">
             <label htmlFor="type">Type:</label>
             <div className="input-group">
               <select id="type" className="form-select">
@@ -217,7 +240,7 @@ function Index() {
               </select>
             </div>
           </div>
-          <div className="col-md-3">
+          <div className="col-md-2">
             <label htmlFor="start">From Date:</label>
             <div className="input-group">
               <input
@@ -229,7 +252,7 @@ function Index() {
               />
             </div>
           </div>
-          <div className="col-md-3">
+          <div className="col-md-2">
             <label htmlFor="end">To Date:</label>
             <div className="input-group">
               <input
@@ -327,18 +350,10 @@ function Index() {
                                     <td scope="row">Name</td>
                                     <td scope="row">PNR</td>
                                     <td scope="row">Operation</td>
-                                    <td scope="row">Cost</td>
-                                    <td scope="row">Total Paid to SCA</td>
-                                    <td scope="row">Remained to pay SCA</td>
-                                    <td scope="row">
-                                      Transferred with Operation
-                                    </td>
-                                    <td scope="row">Total Refund</td>
-                                    <td scope="row">Refund Used</td>
-                                    <td scope="row">Remained refund</td>
-                                    <td scope="row">
-                                      Refund Used with Operation
-                                    </td>
+                                    <td scope="row">Agent Cost</td>
+                                    <td scope="row">Total Paid By Agent</td>
+                                    <td scope="row">Remained to Pay</td>
+                                    <td scope="row">Paid with Operation</td>
                                   </tr>
                                   {Object.keys(operations[key]).map(
                                     (key2, i2) => {
@@ -387,30 +402,6 @@ function Index() {
                                               {
                                                 operations[key][key2][
                                                   "suppliedTicket"
-                                                ]
-                                              }
-                                            </td>
-                                            <td scope="row">
-                                              {operations[key][key2]["refund"]}
-                                            </td>
-                                            <td scope="row">
-                                              {
-                                                operations[key][key2][
-                                                  "refundUsed"
-                                                ]
-                                              }
-                                            </td>
-                                            <td scope="row">
-                                              {
-                                                operations[key][key2][
-                                                  "remainedRefund"
-                                                ]
-                                              }
-                                            </td>
-                                            <td scope="row">
-                                              {
-                                                operations[key][key2][
-                                                  "ticketRefundUsed"
                                                 ]
                                               }
                                             </td>

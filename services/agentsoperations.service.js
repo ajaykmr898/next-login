@@ -32,7 +32,7 @@ async function getAll(filters) {
       paidAmount: "€ " + paidAmount.toFixed(2),
       supplied: "€ " + supplied.toFixed(2),
       name: ticket.name,
-      agentName: agent.firstName + " " + agent.lastName,
+      agentName: agent ? agent.firstName + " " + agent.lastName : "Not Found",
       bookingCode: ticket.bookingCode,
       totalOperation: e.totalOperation ? "€ " + e.totalOperation : "",
       transferOperation: "€ " + e.transferOperation,
