@@ -512,7 +512,7 @@ function AddEdit(props) {
           <div className="invalid-feedback">{errors.refundDate?.message}</div>
         </div>
         <div className="mb-3 col-md-4 col-sm-6">
-          <label className="form-label">Paid SCA</label>
+          <label className="form-label">Paid Supplier</label>
           <input
             name="supplied"
             defaultValue={ticket?.supplied}

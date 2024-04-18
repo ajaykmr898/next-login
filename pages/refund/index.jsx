@@ -617,7 +617,7 @@ function Index() {
           ></Column>
           <Column field="idP" header="Id" />
           <Column field="name" sortable header="Passenger" />
-          <Column field="supplied" sortable header="Supplied SCA" />
+          <Column field="supplied" sortable header="Supplied To Supplier" />
           <Column field="refund" sortable header="Refund" />
           <Column field="refundDate" sortable header="Refund Date" />
           <Column field="refundUsed" sortable header="Refund Used" />

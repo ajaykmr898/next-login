@@ -532,7 +532,7 @@ function Budget(props) {
                       <th scope="col">Name</th>
                       <th scope="col">PNR</th>
                       <th scope="col">Cost</th>
-                      <th scope="col">Paid to SCA</th>
+                      <th scope="col">Paid to Supplier</th>
                       <th scope="col">Remained</th>
                       <th scope="col">Pay</th>
                     </tr>

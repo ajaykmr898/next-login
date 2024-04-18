@@ -23,10 +23,10 @@ function Nav() {
     "tickets/add": "Add Ticket",
     "tickets/edit": "Edit Ticket",
     refund: "Refunds",
-    seller: "SCA Transfers",
+    seller: "Suppliers Transfers",
     buyer: "Agents Transfers",
     "buyer/transfer": "Transfer Amount to Agents",
-    "seller/transfer": "Transfer Amount to SCA",
+    "seller/transfer": "Transfer Amount to Supplier",
     expenses: "Expenses",
     "expenses/categories": "Expenses Categories",
     "expenses/add": "Add Expense",
@@ -102,7 +102,7 @@ function Nav() {
           <li className={getActiveMenu("seller")}>
             <Link href="/seller">
               <i className="fa-fw fas fa-money-check-dollar nav-icon"></i>
-              &nbsp;&nbsp;&nbsp;&nbsp; SCA Transfers
+              &nbsp;&nbsp;&nbsp;&nbsp; Suppliers Transfers
             </Link>
           </li>
           <li className={getActiveMenu("buyer")}>

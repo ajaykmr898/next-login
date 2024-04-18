@@ -166,8 +166,8 @@ function Index() {
       "PNR",
       "Operation",
       "Cost",
-      "Total Paid to SCA",
-      "Remained to pay SCA",
+      "Total Paid to Supplier",
+      "Remained to pay Supplier",
       "Transferred with Operation",
       "Total Refund",
       "Refund Used",
@@ -333,8 +333,10 @@ function Index() {
                                     <td scope="row">PNR</td>
                                     <td scope="row">Operation</td>
                                     <td scope="row">Cost</td>
-                                    <td scope="row">Total Paid to SCA</td>
-                                    <td scope="row">Remained to pay SCA</td>
+                                    <td scope="row">Total Paid to Supplier</td>
+                                    <td scope="row">
+                                      Remained to pay Supplier
+                                    </td>
                                     <td scope="row">
                                       Transferred with Operation
                                     </td>
