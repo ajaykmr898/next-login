@@ -26,6 +26,7 @@ function Index() {
     start: "",
     end: "",
     type: "",
+    agent: null,
   });
   const swal = Swal.mixin({
     customClass: {
@@ -109,7 +110,7 @@ function Index() {
     return { errorU, errorR };
   };
 
-  const getOperations = (dates = null) => {
+  const getOperations = (datesX = null) => {
     let start = new Date();
     //start.setMonth(start.getMonth() - 6);
     start.setDate(1);
@@ -117,23 +118,27 @@ function Index() {
     let end = formatDate(new Date());
     let type = "transferDate";
     let agent = null;
-    if (dates) {
-      start = dates.start;
-      end = dates.end;
-      type = dates.type;
-      agent = dates.agent === "all" ? null : dates.agent;
+    if (datesX) {
+      start = datesX.start;
+      end = datesX.end;
+      type = datesX.type;
+      agent = datesX.agent === "all" ? null : datesX.agent;
     } else {
       setDates({ start, end, type, agent });
     }
     agentsOperationsService.getAll({ start, end, type, agent }).then((res) => {
-      const operationsI = res.reduce((group, arr) => {
+      let res2 = res;
+      if (datesX && datesX.agent && datesX.agent !== "all") {
+        res2 = res.filter((r) => r.agentId === datesX.agent);
+      }
+      const operationsI = res2.reduce((group, arr) => {
         const { transferName } = arr;
         group[transferName] = group[transferName] ?? [];
         group[transferName].push(arr);
         return group;
       }, {});
 
-      setOpExcel(res);
+      setOpExcel(res2);
       setOperations(operationsI);
 
       let transferAmountTotalOperationI = 0;
