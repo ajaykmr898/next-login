@@ -246,7 +246,7 @@ function Index() {
               />
             </div>
           </div>
-          <div className="col-sm-1">
+          <div className="col-md-1 col-sm-3">
             <button
               type="submit"
               className="btn btn-block btn-primary width-search"
@@ -257,7 +257,7 @@ function Index() {
               <i className="fa fa-search"></i>
             </button>
           </div>
-          <div className="col-sm-1">
+          <div className="col-md-1 col-sm-3">
             <button
               className="btn btn-block btn-warning width-search"
               onClick={() => {
@@ -267,7 +267,7 @@ function Index() {
               <i className="fa fa-download"></i>
             </button>
           </div>
-          <div className="col-sm-1">
+          <div className="col-md-1 col-sm-3">
             <button
               className="btn btn-block btn-success width-search"
               onClick={() => {

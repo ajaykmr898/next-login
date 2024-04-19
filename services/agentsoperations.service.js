@@ -12,7 +12,7 @@ export const agentsOperationsService = {
 async function getAll(filters) {
   const response = await fetchWrapper.post(baseUrl, filters);
   const data = response.map((e) => {
-    let ticket = e?.ticket[0];
+    let ticket = e?.ticket[0] || [];
     let agent = e?.agent[0];
     let paidAmount = parseFloat(ticket.agentCost);
     let supplied = parseFloat(ticket.paidByAgent || 0);
