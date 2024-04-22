@@ -1,4 +1,5 @@
 import { db, formatDate } from "helpers/api";
+import moment from "moment/moment";
 
 const Tickets = db.Tickets;
 
@@ -16,10 +17,14 @@ export const ticketsRepo = {
 
 async function getTicketsByAgent(filters) {
   let filter = {
-    //$and: [{ agentId: { $eq: filters.agentId } }],
-    $expr: {
-      $gt: [{ $toDouble: "$agentCost" }, { $toDouble: "$paidByAgent" }],
-    },
+    $and: [
+      { bookedOn: { $gt: moment("20240430").format("YYYY-MM-DD") } },
+      {
+        $expr: {
+          $gt: [{ $toDouble: "$agentCost" }, { $toDouble: "$paidByAgent" }],
+        },
+      },
+    ],
   };
   return await Tickets.find(filter).sort({ bookedOn: -1 });
 }
