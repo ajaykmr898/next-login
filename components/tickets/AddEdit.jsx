@@ -89,7 +89,7 @@ function AddEdit(props) {
         refundDate: data.refundDate || "",
         returned: data.returned || 0,
         returnedDate: data.returnedDate || "",
-        paidByAgent: data.paidByAgent || "",
+        paidByAgent: data.paidByAgent || 0,
         desc: data.desc || "",
       };
       if (!ticket) {
@@ -119,7 +119,7 @@ function AddEdit(props) {
           refundDate: "",
           returned: "",
           returnedDate: "",
-          paidByAgent: "",
+          paidByAgent: 0,
           desc: "",
         });
         alertService.success(
@@ -379,7 +379,7 @@ function AddEdit(props) {
           <label className="form-label">Paid By Agent (Transfer)</label>
           <input
             name="paidByAgent"
-            defaultValue={ticket?.paidByAgent}
+            defaultValue={ticket?.paidByAgent || 0}
             type="number"
             step="0.01"
             {...register("paidByAgent")}
