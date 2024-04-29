@@ -312,7 +312,7 @@ function Index() {
                 <tbody>
                   <tr>
                     <th>
-                      Total: {totals.total} ({totals.supplied} +{" "}
+                      Total: {totals.supplied} ({totals.supplied} +{" "}
                       {totals.balance}) - Adjusted: {totals.adjusted}
                     </th>
                   </tr>
@@ -325,7 +325,7 @@ function Index() {
                             {i + 1} - Bonifico
                             {" - " + operations[key][0]["agentName"]}
                             {" - " + operations[key][0]["transferDate"]}
-                            {" - " + operations[key][0]["totalOperation"]}
+                            {" - " + operations[key][0]["transferOperation"]}
                             {" (" + operations[key][0]["transferOperation"]}
                             {" + " +
                               operations[key][0]["balanceOperation"] +
