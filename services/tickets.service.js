@@ -461,7 +461,7 @@ async function upload(files) {
         iata: iac.hasOwnProperty(ia) ? iac[ia] : ia,
         office: iac.hasOwnProperty(ofi) ? iac[ofi] : ofi,
         agentCost: ac.trim() !== "" ? ac : 0,
-        ticketNumber: t[i],
+        ticketNumber: t.length ? t[i] : tc,
         paymentMethod: mt,
         paidAmount: tk2,
         receivingAmount1: tra,
