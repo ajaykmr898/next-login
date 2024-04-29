@@ -18,7 +18,7 @@ export const ticketsRepo = {
 async function getTicketsByAgent(filters) {
   let filter = {
     $and: [
-      { bookedOn: { $gt: moment("20240430").format("YYYY-MM-DD") } },
+      { bookedOn: { $gt: moment("20240101").format("YYYY-MM-DD") } },
       {
         $expr: {
           $gt: [{ $toDouble: "$agentCost" }, { $toDouble: "$paidByAgent" }],
