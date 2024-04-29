@@ -182,7 +182,7 @@ function AddEdit(props) {
           <label className="form-label">Agent Cost (for Ticket)</label>
           <input
             name="agentCost"
-            defaultValue={ticket?.agentCost}
+            defaultValue={ticket?.agentCost || 0}
             type="number"
             step="0.01"
             {...register("agentCost")}
