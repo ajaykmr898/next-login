@@ -171,22 +171,28 @@ function Budget(props) {
     let budgetT = document.getElementById("budget").value;
     budgetT = parseFloat(budgetT);
     try {
-      if (budgetT > 0 && dateT && agentT !== "agentN") {
+      if (budgetT >= 0 && dateT && agentT !== "agentN") {
         let agent = agents.filter((agent) => agent.id === agentT);
         if (agent.length) {
           balanceT = agent[0].balance || 0;
           balanceT = +balanceT;
         }
-        setBalanceTot(balanceT);
-        setBudgetTot(budgetT);
-        setAgent(agent[0]);
-        setDate(dateT);
-        adjustTotal(budgetT, balanceT);
-        disableInputsStart();
-        await getTickets({ agentId: agentT });
-        setTimeout(() => {
-          disableEnableInputsOnDeltaZero("e");
-        }, 1000);
+        if (budgetT > 0 || balanceT > 0) {
+          setBalanceTot(balanceT);
+          setBudgetTot(budgetT);
+          setAgent(agent[0]);
+          setDate(dateT);
+          adjustTotal(budgetT, balanceT);
+          disableInputsStart();
+          await getTickets({ agentId: agentT });
+          setTimeout(() => {
+            disableEnableInputsOnDeltaZero("e");
+          }, 1000);
+        } else {
+          alertService.error(
+            "One field between 'Bonifico' and 'Balance' must be greater then 0"
+          );
+        }
       } else {
         setBalanceTot(balanceT);
         adjustTotal(0, 0);
