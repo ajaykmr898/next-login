@@ -136,6 +136,7 @@ function agentsOperationsModel() {
     {
       transferName: { type: String, required: false },
       agentId: { type: mongoose.Schema.ObjectId, required: false },
+      method: { type: String, required: false },
       totalOperation: { type: String, required: false },
       balanceOperation: { type: String, required: false },
       balanceOperationDelta: { type: String, required: false },

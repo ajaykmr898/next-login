@@ -22,6 +22,7 @@ function Budget(props) {
   const [budgetTot, setBudgetTot] = useState(0);
   const [agent, setAgent] = useState(null);
   const [date, setDate] = useState(null);
+  const [method, setMethod] = useState("");
   const [changes, setChanges] = useState([]);
 
   const [totals, setTotals] = useState({
@@ -47,7 +48,16 @@ function Budget(props) {
     let errI = false;
     let errT = false;
     let transferName = Date.now();
-    console.log(agent, date, total, balanceTot, budgetTot, delta, changes);
+    console.log(
+      agent,
+      date,
+      method,
+      total,
+      balanceTot,
+      budgetTot,
+      delta,
+      changes
+    );
     if (!isNaN(delta)) {
       let deltaI = parseFloat(delta).toFixed(2);
       let data = { ...agent, balance: deltaI };
@@ -77,6 +87,7 @@ function Budget(props) {
           ticketId: e.id,
           agentId: agent.id,
           transferDate: formatDate(date, "DB"),
+          method: method,
           operation: "Paid By Agent",
           suppliedTicket: e.paid,
           suppliedTotal,
@@ -157,6 +168,7 @@ function Budget(props) {
   function disableInputsStart() {
     document.getElementById("budget").setAttribute("disabled", "disabled");
     document.getElementById("budget-date").setAttribute("disabled", "disabled");
+    document.getElementById("method").setAttribute("disabled", "disabled");
     document.getElementById("add").setAttribute("disabled", "disabled");
     document.getElementById("agent").setAttribute("disabled", "disabled");
     document.getElementById("complete").removeAttribute("disabled");
@@ -166,12 +178,18 @@ function Budget(props) {
     e.preventDefault();
     alertService.clear();
     const dateT = document.getElementById("budget-date").value;
+    const methodT = document.getElementById("method").value;
     const agentT = document.getElementById("agent").value;
     let balanceT = 0;
     let budgetT = document.getElementById("budget").value;
     budgetT = parseFloat(budgetT);
     try {
-      if (budgetT >= 0 && dateT && agentT !== "agentN") {
+      if (
+        budgetT >= 0 &&
+        dateT &&
+        agentT !== "agentN" &&
+        methodT.trim() !== ""
+      ) {
         let agent = agents.filter((agent) => agent.id === agentT);
         if (agent.length) {
           balanceT = agent[0].balance || 0;
@@ -182,6 +200,7 @@ function Budget(props) {
           setBudgetTot(budgetT);
           setAgent(agent[0]);
           setDate(dateT);
+          setMethod(methodT);
           adjustTotal(budgetT, balanceT);
           disableInputsStart();
           await getTickets({ agentId: agentT });
@@ -190,7 +209,7 @@ function Budget(props) {
           }, 1000);
         } else {
           alertService.error(
-            "One field between 'Bonifico' and 'Balance' must be greater then 0"
+            "One field between 'Amount' and 'Balance' must be greater then 0"
           );
         }
       } else {
@@ -331,9 +350,9 @@ function Budget(props) {
               className="form-control"
             />
           </div>
-          <div className="col-6 col-md-3">
+          <div className="col-6 col-md-2">
             <label className="form-label">
-              Bonifico: <span className="text-danger">*</span>
+              Amount: <span className="text-danger">*</span>
             </label>
             <input
               name="budget"
@@ -343,7 +362,18 @@ function Budget(props) {
               className="form-control"
             />
           </div>
-          <div className="col-6 col-md-3">
+          <div className="col-6 col-md-2">
+            <label className="form-label">
+              Method: <span className="text-danger">*</span>
+            </label>
+            <input
+              name="method"
+              id="method"
+              type="text"
+              className="form-control"
+            />
+          </div>
+          <div className="col-6 col-md-2">
             <label className="form-label">Balance:</label>
             <input
               name="balance"
@@ -354,9 +384,9 @@ function Budget(props) {
               className="form-control"
             />
           </div>
-          <div className="col-12 col-md-3">
+          <div className="col-6 col-md-3">
             <div className="text-center">Total - Remained</div>
-            <div className="text-center mt-3">
+            <div className="text-center">
               € {total} - € {delta}
             </div>
           </div>

@@ -324,7 +324,7 @@ function Index() {
                       <React.Fragment key={"i" + i}>
                         <tr data-bs-toggle="collapse" data-bs-target={"#r" + i}>
                           <th scope="row">
-                            {i + 1} - Bonifico
+                            {i + 1 + " - " + operations[key][0]["method"]}
                             {" - " + operations[key][0]["agentName"]}
                             {" - " + operations[key][0]["transferDate"]}
                             {" - " + operations[key][0]["transferOperation"]}
