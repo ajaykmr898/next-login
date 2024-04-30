@@ -14,10 +14,10 @@ async function getAll(filters) {
   const data = response.map((e) => {
     let ticket = e?.ticket[0] || [];
     let agent = e?.agent[0];
-    let paidAmount = parseFloat(ticket.agentCost);
+    let paidAmount = parseFloat(ticket.agentCost || 0);
     let supplied = parseFloat(ticket.paidByAgent || 0);
     let remainedSupplied =
-      parseFloat(ticket.agentCost) - parseFloat(ticket.paidByAgent || 0);
+      parseFloat(ticket.agentCost || 0) - parseFloat(ticket.paidByAgent || 0);
     return {
       ...e,
       cid: e._id,

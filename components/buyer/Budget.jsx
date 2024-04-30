@@ -53,10 +53,21 @@ function Budget(props) {
       let data = { ...agent, balance: deltaI };
       userService.update(agent.id, data).catch((err) => (errU = true));
       let suppliedTotal = 0;
-      [...changes].map((e) => {
+      let changesNew = [...changes];
+      if (!changesNew.length) {
+        changesNew = [
+          {
+            id: "123456789012345678901234",
+            paid: "0",
+            total: "0",
+            type: "supplied",
+          },
+        ];
+      }
+      changesNew.map((e) => {
         suppliedTotal += parseFloat(e.paid);
       });
-      [...changes].map((e) => {
+      changesNew.map((e) => {
         let dataT = {
           transferName,
           totalOperation: total,

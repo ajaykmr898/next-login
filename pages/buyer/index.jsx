@@ -93,18 +93,20 @@ function Index() {
     let errorU = false;
     let errorR = false;
     transfer.map((op) => {
-      let suppliedTicket = parseFloat(op.suppliedTicketN);
-      let paidByAgent = op.ticket[0].paidByAgent
-        ? parseFloat(op.ticket[0].paidByAgent)
-        : null;
-      paidByAgent = paidByAgent ? paidByAgent - suppliedTicket : 0;
-      let params = {
-        paidByAgent:
-          paidByAgent && Math.sign(paidByAgent) !== -1 ? paidByAgent : 0,
-      };
-      ticketsService
-        .update(op.ticketId, params)
-        .catch((err) => (errorU = true));
+      if (op?.ticket && op.ticket[0]) {
+        let suppliedTicket = parseFloat(op.suppliedTicketN);
+        let paidByAgent = op.ticket[0].paidByAgent
+          ? parseFloat(op.ticket[0].paidByAgent)
+          : null;
+        paidByAgent = paidByAgent ? paidByAgent - suppliedTicket : 0;
+        let params = {
+          paidByAgent:
+            paidByAgent && Math.sign(paidByAgent) !== -1 ? paidByAgent : 0,
+        };
+        ticketsService
+          .update(op.ticketId, params)
+          .catch((err) => (errorU = true));
+      }
       agentsOperationsService.delete(op.cid).catch((err) => (errorR = true));
     });
     return { errorU, errorR };

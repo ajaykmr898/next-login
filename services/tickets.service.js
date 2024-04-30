@@ -346,7 +346,7 @@ async function upload(files) {
     for (let r = 0; r < final.length; r++) {
       for (let c = 0; c < final[r].length; c++) {
         if (final[r][c].includes("I-00")) {
-          n.push(final[r][c + 1].replace(/[^a-zA-Z ]/g, " ").trim());
+          n.push(final[r][c + 1].replace(/[^a-zA-Z/ ]/g, " ").trim());
         }
         if (final[r][c].includes("T-K")) {
           t.push(final[r][c].replace("T-K", "").trim());
@@ -460,8 +460,8 @@ async function upload(files) {
           : agency || admin || "123456789012345678901234",
         iata: iac.hasOwnProperty(ia) ? iac[ia] : ia,
         office: iac.hasOwnProperty(ofi) ? iac[ofi] : ofi,
-        agentCost: ac,
-        ticketNumber: t[i],
+        agentCost: ac.trim() !== "" ? ac : 0,
+        ticketNumber: t.length ? t[i] : tc,
         paymentMethod: mt,
         paidAmount: tk2,
         receivingAmount1: tra,
@@ -490,9 +490,12 @@ async function upload(files) {
       fc.push(tkt);
     });
   });
-
+  let created = [];
   fc.map((f) => {
-    //console.log(f);
-    create(f);
+    if (f?.ticketNumber && !created.includes(f.ticketNumber)) {
+      //console.log(f);
+      create(f);
+      created.push(f.ticketNumber);
+    }
   });
 }
