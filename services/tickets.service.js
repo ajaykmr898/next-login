@@ -460,7 +460,7 @@ async function upload(files) {
           : agency || admin || "123456789012345678901234",
         iata: iac.hasOwnProperty(ia) ? iac[ia] : ia,
         office: iac.hasOwnProperty(ofi) ? iac[ofi] : ofi,
-        agentCost: ac.trim() !== "" ? ac : 0,
+        agentCost: ac !== "" ? ac : 0,
         ticketNumber: t.length ? t[i] : tc,
         paymentMethod: mt,
         paidAmount: tk2,
