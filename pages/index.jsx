@@ -1,5 +1,5 @@
 import { ticketsService, userService } from "services";
-import { Doughnut, Chart, Pie } from "react-chartjs-2";
+import { Doughnut, Chart, Pie, PolarArea } from "react-chartjs-2";
 import { useEffect, useState } from "react";
 import React from "react";
 import {
@@ -14,6 +14,9 @@ import {
   LineController,
   BarController,
   ArcElement,
+  TimeScale,
+  Title,
+  RadialLinearScale,
 } from "chart.js";
 import { formatDate } from "../services";
 
@@ -24,9 +27,13 @@ ChartJS.register(
   PointElement,
   LineElement,
   Legend,
+  TimeScale,
+  Title,
+  Legend,
   Tooltip,
   LineController,
   BarController,
+  RadialLinearScale,
   ArcElement
 );
 
@@ -41,14 +48,11 @@ function Home() {
   const [agentsP, setAgentsP] = useState({});
   const [agentsA, setAgentsA] = useState({});
   const [methodsA, setMethodsA] = useState({});
+  const [airlines, setAirlines] = useState({});
+  const [airlinesList, setAirlinesList] = useState({});
+  const [total, setTotal] = useState(0);
   const [dates, setDates] = useState({});
   const colors = [
-    "rgba(255, 99, 132, 0.5)",
-    "rgba(54, 162, 235, 0.5)",
-    "rgba(255, 206, 86, 0.5)",
-    "rgba(75, 192, 192, 0.5)",
-    "rgba(153, 102, 255, 0.5)",
-    "rgba(255, 159, 64, 0.5)",
     "rgba(255, 99, 132, 0.5)",
     "rgba(54, 162, 235, 0.5)",
     "rgba(255, 206, 86, 0.5)",
@@ -85,6 +89,25 @@ function Home() {
             {
               data: Object.values(methodsA),
               label: "Methods",
+              backgroundColor: colors.slice(),
+              borderColor: colors.slice(),
+            },
+          ],
+        }}
+      />
+    ) : (
+      <div className="text-center">No Data to show</div>
+    );
+
+  const pieChart6 =
+    Object.keys(airlines).length > 0 ? (
+      <PolarArea
+        data={{
+          labels: Object.keys(airlines),
+          datasets: [
+            {
+              data: Object.values(airlines),
+              label: "Airlines",
               backgroundColor: colors.slice(),
               borderColor: colors.slice(),
             },
@@ -243,7 +266,7 @@ function Home() {
     setAgentsP({});
     setAgentsA({});
     ticketsService.getProfit({ start, end, type }).then((x) => {
-      //console.log(x);
+      console.log(x);
       setProfit(x.ticketsP);
       setAmounts(x.ticketsP);
       setMethods(x.methods);
@@ -252,6 +275,9 @@ function Home() {
       setAgentsP(x.agentsP);
       setAgentsA(x.agentsA);
       setMethodsA(x.methodsA);
+      setAirlines(x.airlines);
+      setAirlinesList(x.airlinesList);
+      setTotal(x.total);
     });
   };
 
@@ -362,6 +388,44 @@ function Home() {
               <br />
               <h4 className="drag-text">Pay. by Methods</h4>
               {pieChart5}
+            </div>
+            <div className="col-12 col-xs-12 col-xl-12">
+              <br />
+              <h4 className="drag-text">Bookings</h4>
+              {pieChart6}
+              <table className="table table-striped">
+                <thead>
+                  <tr>
+                    <th style={{ width: "70%" }}>Name</th>
+                    <th style={{ width: "30%" }}>Bookings</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <b>Total</b>
+                    </td>
+                    <td>
+                      <b>{total}</b>
+                    </td>
+                  </tr>
+                  {Object.keys(airlinesList) &&
+                    Object.keys(airlinesList).map((airline, i) => (
+                      <tr key={i}>
+                        <td>{airline}</td>
+                        <td>{airlinesList[airline]}</td>
+                      </tr>
+                    ))}
+                  <tr>
+                    <td>
+                      <b>Total</b>
+                    </td>
+                    <td>
+                      <b>{total}</b>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>

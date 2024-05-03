@@ -138,6 +138,8 @@ async function getProfit(filters) {
   let methodsP = {};
   let agentsA = {};
   let methodsA = {};
+  let airlines = {};
+  let total = 0;
   result.map((ticket) => {
     let date = new Date(ticket.bookedOn);
     let key = months[date.getMonth()] + " " + date.getFullYear();
@@ -249,8 +251,42 @@ async function getProfit(filters) {
         methodsA[method3] = totalReceivingAmount3;
       }
     }
+
+    let flight = ticket.flight
+      .trim()
+      .replace("A-", "")
+      .trim()
+      .replace("-", "")
+      .trim();
+    let flight2 = flight.slice(0, 2);
+    let flight3 = flight2 === "A " ? flight.slice(2).trim() : flight;
+    if (!Object.keys(airlines).includes(flight3)) {
+      airlines[flight3] = 1;
+    } else {
+      airlines[flight3] += 1;
+    }
+    total += 1;
   });
-  return { ticketsP, methods, methodsP, agents, agentsP, agentsA, methodsA };
+
+  const airlines1 = Object.entries(airlines);
+  function compareValues(a, b) {
+    return b[1] - a[1];
+  }
+  const sortedAirlines1 = airlines1.sort(compareValues);
+  const sortedAirlines2 = Object.fromEntries(sortedAirlines1);
+
+  return {
+    ticketsP,
+    methods,
+    methodsP,
+    agents,
+    agentsP,
+    agentsA,
+    methodsA,
+    airlines,
+    airlinesList: sortedAirlines2,
+    total,
+  };
 }
 
 function isNumeric(str) {
