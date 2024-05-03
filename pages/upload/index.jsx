@@ -20,7 +20,7 @@ function Index() {
     "JUN",
     "JUL",
     "AUG",
-    "SET",
+    "SEP",
     "OCT",
     "NOV",
     "DEC",

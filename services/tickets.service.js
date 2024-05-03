@@ -12,7 +12,7 @@ const months = [
   "Jun",
   "Jul",
   "Aug",
-  "Set",
+  "Sep",
   "Oct",
   "Nov",
   "Dec",
@@ -432,11 +432,29 @@ async function upload(files) {
     let dstr = "";
     let t1s = "";
     let t2s = "";
+    let mnts = months.map((m) => m.toLowerCase());
+    let cm = new Date().getMonth() + 1;
+    let cd = new Date().getDate();
     for (let i = 0; i < ard.length; i++) {
       let dd = ard[i][5];
       let dd2 = dd.split(" ");
       let d2l = dd2.length;
-      dstr += dd2[d2l - 1] + " - ";
+      let dfm = dd2[d2l - 1].slice(-3);
+      if (mnts.includes(dfm.toLowerCase())) {
+        let dfd = dd2[d2l - 1].slice(0, 2);
+        dfm = mnts.indexOf(dfm.toLowerCase()) + 1;
+        dfm = dfm < 10 ? "0" + dfm : dfm;
+        let dfy = d.slice(0, 4);
+        if (
+          parseInt(dfm) < cm ||
+          (parseInt(dfm) === cm && parseInt(dfd) < cd)
+        ) {
+          dfy = parseInt(dfy) + 1;
+        }
+        dstr += dfd + "/" + dfm + "/" + dfy + " - ";
+      } else {
+        dstr += dd2[d2l - 1] + " - ";
+      }
       t1s += ard[i][2] + " - ";
       t2s += ard[i][4] + " - ";
     }
@@ -493,8 +511,8 @@ async function upload(files) {
   let created = [];
   fc.map((f) => {
     if (f?.ticketNumber && !created.includes(f.ticketNumber)) {
-      //console.log(f);
-      create(f);
+      console.log(f);
+      //create(f);
       created.push(f.ticketNumber);
     }
   });
