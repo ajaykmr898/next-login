@@ -15,6 +15,7 @@ function Nav() {
     "seller",
     "buyer",
     "expenses",
+    "flights",
   ];
   const titles = {
     users: "Agents List",
@@ -31,6 +32,7 @@ function Nav() {
     "expenses/categories": "Expenses Categories",
     "expenses/add": "Add Expense",
     "expenses/edit": "Edit Expense",
+    flights: "Next Flights",
   };
   const config = getConfig();
   let icon = "fa fa-plane yellow";
@@ -85,6 +87,12 @@ function Nav() {
             <Link href="/">
               <i className="fa-fw fas fa-line-chart nav-icon"></i>
               &nbsp;&nbsp;&nbsp;&nbsp; Dashboard
+            </Link>
+          </li>
+          <li className={getActiveMenu("flights")}>
+            <Link href="/flights">
+              <i className="fa-fw fas fa-plane nav-icon"></i>
+              &nbsp;&nbsp;&nbsp;&nbsp; Next Flights
             </Link>
           </li>
           <li className={getActiveMenu("tickets")}>

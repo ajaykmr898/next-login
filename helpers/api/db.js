@@ -11,6 +11,7 @@ export const db = {
   Operations: operationsModel(),
   Expenses: expensesModel(),
   AgentsOperations: agentsOperationsModel(),
+  Airlines: airlinesModel(),
 };
 
 // mongoose models with schema definitions
@@ -165,6 +166,33 @@ function agentsOperationsModel() {
     mongoose.models.AgentsOperations ||
     mongoose.model("AgentsOperations", schema)
   );
+}
+
+function airlinesModel() {
+  const schema = new Schema(
+    {
+      name: { type: String, required: true },
+      desc: { type: String, required: false },
+      url: { type: String, required: false },
+      checkin: { type: String, required: true },
+      country: { type: String, required: true },
+      checkinTime: { type: String, required: false },
+    },
+    {
+      // add createdAt and updatedAt timestamps
+      timestamps: true,
+      strict: false,
+    }
+  );
+  schema.set("toJSON", {
+    virtuals: true,
+    versionKey: false,
+    transform: function (doc, ret) {
+      delete ret._id;
+      delete ret.hash;
+    },
+  });
+  return mongoose.models.Airlines || mongoose.model("Airlines", schema);
 }
 
 function expensesModel() {

@@ -107,7 +107,7 @@ function Home() {
           datasets: [
             {
               data: Object.values(airlines),
-              label: "Airlines",
+              label: "Tickets",
               backgroundColor: colors.slice(),
               borderColor: colors.slice(),
             },

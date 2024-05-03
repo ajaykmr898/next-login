@@ -13,7 +13,23 @@ export const ticketsRepo = {
   getRefundsForSupply,
   getTicketsForSupply,
   getTicketsByAgent,
+  getFlights,
 };
+
+async function getFlights() {
+  let regex =
+    `(${moment().format("DD/MM/YYYY")}|` +
+    `${moment().add(1, "days").format("DD/MM/YYYY")}|` +
+    `${moment().add(2, "days").format("DD/MM/YYYY")})`;
+
+  const filter = {
+    dates: {
+      $regex: regex,
+    },
+  };
+  //console.log(JSON.stringify(filter));
+  return await Tickets.find(filter).sort({ bookedOn: -1 });
+}
 
 async function getTicketsByAgent(filters) {
   let filter = {

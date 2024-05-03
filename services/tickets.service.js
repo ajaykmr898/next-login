@@ -29,10 +29,16 @@ export const ticketsService = {
   getRefundsForSupply,
   getTicketsForSupply,
   getTicketsByAgent,
+  getFlights,
 };
 
 async function getTicketsForSupply(filters = {}) {
   const response = await fetchWrapper.post(baseUrl + "/supply", filters);
+  return response;
+}
+
+async function getFlights() {
+  const response = await fetchWrapper.post(baseUrl + "/flights", {});
   return response;
 }
 

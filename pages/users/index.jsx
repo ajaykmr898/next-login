@@ -79,14 +79,14 @@ function Index() {
             ))}
           {!users && (
             <tr>
-              <td colSpan="4">
+              <td colSpan="7">
                 <Spinner />
               </td>
             </tr>
           )}
           {users && !users.length && (
             <tr>
-              <td colSpan="4" className="text-center">
+              <td colSpan="7" className="text-center">
                 <div className="p-2">No Users To Display</div>
               </td>
             </tr>
