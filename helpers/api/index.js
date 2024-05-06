@@ -7,6 +7,7 @@ export * from "./tickets-repo";
 export * from "./operations-repo";
 export * from "./agentsoperations-repo";
 export * from "./expenses-repo";
+export * from "./flights-repo";
 
 export function formatDate(date, format = "DB") {
   let d = new Date(date),

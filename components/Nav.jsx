@@ -32,7 +32,7 @@ function Nav() {
     "expenses/categories": "Expenses Categories",
     "expenses/add": "Add Expense",
     "expenses/edit": "Edit Expense",
-    flights: "Next Flights",
+    flights: "Next Flights/Events",
   };
   const config = getConfig();
   let icon = "fa fa-plane yellow";
@@ -92,7 +92,7 @@ function Nav() {
           <li className={getActiveMenu("flights")}>
             <Link href="/flights">
               <i className="fa-fw fas fa-plane nav-icon"></i>
-              &nbsp;&nbsp;&nbsp;&nbsp; Next Flights
+              &nbsp;&nbsp;&nbsp;&nbsp; Next Flights/Events
             </Link>
           </li>
           <li className={getActiveMenu("tickets")}>

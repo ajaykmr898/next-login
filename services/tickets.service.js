@@ -1,5 +1,5 @@
 import { fetchWrapper } from "helpers";
-import { formatDate } from "./index";
+import { cleanFlight, formatDate } from "./index";
 
 const baseUrl = `/api/tickets`;
 const usersUrl = "/api/users";
@@ -258,18 +258,11 @@ async function getProfit(filters) {
       }
     }
 
-    let flight = ticket.flight
-      .trim()
-      .replace("A-", "")
-      .trim()
-      .replace("-", "")
-      .trim();
-    let flight2 = flight.slice(0, 2);
-    let flight3 = flight2 === "A " ? flight.slice(2).trim() : flight;
-    if (!Object.keys(airlines).includes(flight3)) {
-      airlines[flight3] = 1;
+    let flight = cleanFlight(ticket);
+    if (!Object.keys(airlines).includes(flight)) {
+      airlines[flight] = 1;
     } else {
-      airlines[flight3] += 1;
+      airlines[flight] += 1;
     }
     total += 1;
   });

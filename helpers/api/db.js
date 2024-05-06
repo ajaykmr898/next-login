@@ -174,8 +174,8 @@ function airlinesModel() {
       name: { type: String, required: true },
       desc: { type: String, required: false },
       url: { type: String, required: false },
-      checkin: { type: String, required: true },
-      country: { type: String, required: true },
+      checkin: { type: String, required: false },
+      country: { type: String, required: false },
       checkinTime: { type: String, required: false },
     },
     {

@@ -1,9 +1,8 @@
-import Link from "next/link";
 import { useState, useEffect } from "react";
 
 import { Spinner } from "components";
 import { Layout } from "components/tickets";
-import { ticketsService } from "services";
+import { ticketsService, flightsService } from "services";
 
 export default Index;
 
@@ -14,7 +13,9 @@ function Index() {
     ticketsService.getFlights().then((x) => setTickets(x));
   }, []);
 
-  const checkin = () => {};
+  const checkin = () => {
+    flightsService.setFlights().then((y) => console.log(y));
+  };
 
   return (
     <Layout>
