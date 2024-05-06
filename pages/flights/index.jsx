@@ -13,8 +13,10 @@ function Index() {
     ticketsService.getFlights().then((x) => setTickets(x));
   }, []);
 
-  const checkin = () => {
-    flightsService.setFlights().then((y) => console.log(y));
+  const checkin = (ticket) => {
+    console.log(ticket);
+    window.open(ticket.url, "_blank");
+    //flightsService.setFlights().then((y) => console.log(y));
   };
 
   return (
@@ -39,9 +41,9 @@ function Index() {
                 <td>{ticket.dates}</td>
                 <td style={{ whiteSpace: "nowrap" }}>
                   <button
-                    onClick={() => checkin(ticket.id)}
+                    onClick={() => checkin(ticket)}
                     className="btn btn-sm btn-primary"
-                    hidden={ticket.isFlight}
+                    hidden={!ticket.isFlight}
                   >
                     <i className="fa fa-plane"></i>
                     &nbsp;Check In

@@ -3,6 +3,7 @@ import { cleanFlight, formatDate } from "./index";
 
 const baseUrl = `/api/tickets`;
 const usersUrl = "/api/users";
+const airlinesUrl = "/api/flights";
 const months = [
   "Jan",
   "Feb",
@@ -39,7 +40,19 @@ async function getTicketsForSupply(filters = {}) {
 
 async function getFlights() {
   const response = await fetchWrapper.post(baseUrl + "/flights", {});
-  return response;
+  const airlinesI = await fetchWrapper.get(airlinesUrl);
+  const airlinesN = airlinesI.map((a) => a.name);
+  let flights = [];
+  response.map((r) => {
+    let url = "";
+    let flight = cleanFlight(r);
+    if (airlinesN.includes(flight)) {
+      url = airlinesI.filter((a) => a.name === flight)[0].url;
+    }
+    let isFlight = !!url;
+    flights.push({ ...r, url, isFlight });
+  });
+  return flights;
 }
 
 async function getTicketsByAgent(filters = {}) {
