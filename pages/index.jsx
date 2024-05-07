@@ -393,46 +393,48 @@ function Home() {
               <br />
               <h4 className="drag-text">Bookings</h4>
               {pieChart6}
-              <table className="table table-striped">
-                <thead>
-                  <tr>
-                    <th style={{ width: "70%" }}>Name</th>
-                    <th style={{ width: "30%" }}>Bookings</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>
-                      <b>Total</b>
-                    </td>
-                    <td>
-                      <b>{total}</b>
-                    </td>
-                  </tr>
-                  {Object.keys(airlinesList) &&
-                    Object.keys(airlinesList).map((airline, i) => (
-                      <tr key={i}>
-                        <td>{airline}</td>
-                        <td>
-                          {airlinesList[airline]} (
-                          {(
-                            (parseInt(airlinesList[airline]) * 100) /
-                            parseInt(total)
-                          ).toFixed(2)}
-                          %)
-                        </td>
-                      </tr>
-                    ))}
-                  <tr>
-                    <td>
-                      <b>Total</b>
-                    </td>
-                    <td>
-                      <b>{total}</b>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+              <div className="table-responsive">
+                <table className="table table-striped">
+                  <thead>
+                    <tr>
+                      <th style={{ width: "70%" }}>Name</th>
+                      <th style={{ width: "30%" }}>Bookings</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <b>Total</b>
+                      </td>
+                      <td>
+                        <b>{total}</b>
+                      </td>
+                    </tr>
+                    {Object.keys(airlinesList) &&
+                      Object.keys(airlinesList).map((airline, i) => (
+                        <tr key={i}>
+                          <td>{airline}</td>
+                          <td>
+                            {airlinesList[airline]} (
+                            {(
+                              (parseInt(airlinesList[airline]) * 100) /
+                              parseInt(total)
+                            ).toFixed(2)}
+                            %)
+                          </td>
+                        </tr>
+                      ))}
+                    <tr>
+                      <td>
+                        <b>Total</b>
+                      </td>
+                      <td>
+                        <b>{total}</b>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
