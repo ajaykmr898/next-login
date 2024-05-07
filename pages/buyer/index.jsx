@@ -177,7 +177,6 @@ function Index() {
   const download = () => {
     //console.log(opExcel);
     const headers = [
-      "Date",
       "Name",
       "PNR",
       "Operation",
@@ -186,21 +185,38 @@ function Index() {
       "Remained to pay",
       "Paid with Operation",
     ];
-    const csvString = [
-      headers,
-      ...opExcel.map((i) => [
-        i.transferDate,
-        i.name,
-        i.bookingCode,
-        i.operation,
-        i.paidAmount.replace("€", "Eur"),
-        i.supplied.replace("€", "Eur"),
-        i.remainedSupplied.replace("€", "Eur"),
-        i.suppliedTicket.replace("€", "Eur"),
-      ]),
-    ]
-      .map((e) => e.join(";"))
-      .join("\n");
+    let csvStringT = [];
+    Object.keys(operations).map((o, i) => {
+      let opExcel = operations[o];
+      csvStringT.push(
+        [
+          [
+            opExcel[0].agentName,
+            opExcel[0].method,
+            opExcel[0].transferDate,
+            opExcel[0].transferOperation.replace("€", "Eur"),
+            opExcel[0].balanceOperation.replace("€", "Eur"),
+            opExcel[0].suppliedTotal.replace("€", "Eur"),
+          ],
+          headers,
+        ],
+        opExcel.map((i) => [
+          i.name,
+          i.bookingCode,
+          i.operation,
+          i.paidAmount.replace("€", "Eur"),
+          i.supplied.replace("€", "Eur"),
+          i.remainedSupplied.replace("€", "Eur"),
+          i.suppliedTicket.replace("€", "Eur"),
+        ])
+      );
+      //console.log(oy, o, i);
+    });
+    const csvStringN = csvStringT.reduce((acc, arr) => acc.concat(arr), []);
+
+    let csvString = csvStringN.map((e) => e.join(",")).join("\n");
+    //console.log(csvStringT, csvStringN, csvString);
+
     const csvContent = "data:text/csv;charset=utf-8," + csvString;
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
