@@ -105,8 +105,10 @@ async function getById(id) {
 }
 
 async function create(params) {
-  const ticket = new Tickets(params);
-  await ticket.save();
+  if (!(await Tickets.findOne({ ticketNumber: params.ticketNumber }))) {
+    const ticket = new Tickets(params);
+    await ticket.save();
+  }
 }
 
 async function update(id, params) {
