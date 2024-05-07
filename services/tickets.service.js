@@ -52,7 +52,8 @@ async function getFlights() {
     let isFlight = !!url;
     flights.push({ ...r, url, isFlight });
   });
-  return flights;
+  let tickets = getAll({}, flights);
+  return tickets;
 }
 
 async function getTicketsByAgent(filters = {}) {
@@ -61,8 +62,10 @@ async function getTicketsByAgent(filters = {}) {
   return res;
 }
 
-async function getAll(filters) {
-  const response = await fetchWrapper.post(baseUrl, filters);
+async function getAll(filters, flights = []) {
+  const response = flights.length
+    ? flights
+    : await fetchWrapper.post(baseUrl, filters);
   const users = await fetchWrapper.get(usersUrl);
   const tickets = response.map((t, i) => {
     let bkd = formatDate(t.bookedOn, "IT");

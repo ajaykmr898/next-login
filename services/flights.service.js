@@ -50,7 +50,7 @@ async function setFlights() {
         country: "-",
         checkinTime: "-",
       };
-      create(flightT);
+      //create(flightT);
     }
   });
   return airlinesN;
