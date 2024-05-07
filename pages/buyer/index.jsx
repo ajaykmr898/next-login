@@ -208,7 +208,8 @@ function Index() {
           i.supplied.replace("€", "Eur"),
           i.remainedSupplied.replace("€", "Eur"),
           i.suppliedTicket.replace("€", "Eur"),
-        ])
+        ]),
+        [[]]
       );
       //console.log(oy, o, i);
     });
