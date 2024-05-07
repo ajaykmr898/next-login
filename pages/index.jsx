@@ -413,7 +413,14 @@ function Home() {
                     Object.keys(airlinesList).map((airline, i) => (
                       <tr key={i}>
                         <td>{airline}</td>
-                        <td>{airlinesList[airline]}</td>
+                        <td>
+                          {airlinesList[airline]} (
+                          {(
+                            (parseInt(airlinesList[airline]) * 100) /
+                            parseInt(total)
+                          ).toFixed(2)}
+                          %)
+                        </td>
                       </tr>
                     ))}
                   <tr>
