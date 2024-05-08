@@ -161,7 +161,9 @@ async function getProfit(filters) {
   let agentsA = {};
   let methodsA = {};
   let airlines = {};
+  let airlinesC = {};
   let total = 0;
+  let totalC = 0;
   result.map((ticket) => {
     let date = new Date(ticket.bookedOn);
     let key = months[date.getMonth()] + " " + date.getFullYear();
@@ -281,6 +283,13 @@ async function getProfit(filters) {
       airlines[flight] += 1;
     }
     total += 1;
+
+    if (!Object.keys(airlinesC).includes(flight)) {
+      airlinesC[flight] = paidAmount;
+    } else {
+      airlinesC[flight] += paidAmount;
+    }
+    totalC += paidAmount;
   });
 
   const airlines1 = Object.entries(airlines);
@@ -301,6 +310,8 @@ async function getProfit(filters) {
     airlines,
     airlinesList: sortedAirlines2,
     total,
+    airlinesC,
+    totalC,
   };
 }
 

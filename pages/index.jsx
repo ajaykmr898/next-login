@@ -50,7 +50,9 @@ function Home() {
   const [methodsA, setMethodsA] = useState({});
   const [airlines, setAirlines] = useState({});
   const [airlinesList, setAirlinesList] = useState({});
+  const [airlinesC, setAirlinesC] = useState({});
   const [total, setTotal] = useState(0);
+  const [totalC, setTotalC] = useState(0);
   const [dates, setDates] = useState({});
   const colors = [
     "rgba(255, 99, 132, 0.5)",
@@ -277,7 +279,9 @@ function Home() {
       setMethodsA(x.methodsA);
       setAirlines(x.airlines);
       setAirlinesList(x.airlinesList);
+      setAirlinesC(x.airlinesC);
       setTotal(x.total);
+      setTotalC(x.totalC);
     });
   };
 
@@ -397,8 +401,9 @@ function Home() {
                 <table className="table table-striped">
                   <thead>
                     <tr>
-                      <th style={{ width: "70%" }}>Name</th>
-                      <th style={{ width: "30%" }}>Bookings</th>
+                      <th style={{ width: "40%" }}>Name</th>
+                      <th style={{ width: "20%" }}>Bookings</th>
+                      <th style={{ width: "20%" }}>Cost</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -408,6 +413,9 @@ function Home() {
                       </td>
                       <td>
                         <b>{total}</b>
+                      </td>
+                      <td>
+                        <b>{totalC.toFixed(2)}</b>
                       </td>
                     </tr>
                     {Object.keys(airlinesList) &&
@@ -422,6 +430,14 @@ function Home() {
                             ).toFixed(2)}
                             %)
                           </td>
+                          <td>
+                            {airlinesC[airline].toFixed(2)} (
+                            {(
+                              (parseFloat(airlinesC[airline]) * 100) /
+                              parseFloat(totalC)
+                            ).toFixed(2)}
+                            %)
+                          </td>
                         </tr>
                       ))}
                     <tr>
@@ -430,6 +446,9 @@ function Home() {
                       </td>
                       <td>
                         <b>{total}</b>
+                      </td>
+                      <td>
+                        <b>{totalC.toFixed(2)}</b>
                       </td>
                     </tr>
                   </tbody>
