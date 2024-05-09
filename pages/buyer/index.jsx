@@ -9,7 +9,8 @@ import {
 } from "../../services";
 import { Spinner } from "components";
 import Swal from "sweetalert2";
-
+import { jsPDF } from "jspdf";
+import "jspdf-autotable";
 export default Index;
 
 function Index() {
@@ -21,7 +22,7 @@ function Index() {
     total: 0,
     balance: 0,
   });
-  const [opExcel, setOpExcel] = useState(null);
+  const [opPdf, setOpPdf] = useState(null);
   const [dates, setDates] = useState({
     start: "",
     end: "",
@@ -129,9 +130,9 @@ function Index() {
       setDates({ start, end, type, agent });
     }
     agentsOperationsService.getAll({ start, end, type, agent }).then((res) => {
-      let res2 = res;
+      let res2 = res.data;
       if (datesX && datesX.agent && datesX.agent !== "all") {
-        res2 = res.filter((r) => r.agentId === datesX.agent);
+        res2 = res.data.filter((r) => r.agentId === datesX.agent);
       }
       const operationsI = res2.reduce((group, arr) => {
         const { transferName } = arr;
@@ -140,7 +141,7 @@ function Index() {
         return group;
       }, {});
 
-      setOpExcel(res2);
+      setOpPdf(res.tickets);
       setOperations(operationsI);
 
       let transferAmountTotalOperationI = 0;
@@ -174,58 +175,137 @@ function Index() {
     Router.push("/buyer/transfer");
   };
 
-  const download = () => {
-    //console.log(opExcel);
-    const headers = [
-      "Name",
-      "PNR",
-      "Operation",
-      "Agent Cost",
-      "Total Paid By Agent",
-      "Remained to pay",
-      "Paid with Operation",
-    ];
-    let csvStringT = [];
-    Object.keys(operations).map((o, i) => {
-      let opExcel = operations[o];
-      csvStringT.push(
-        [
+  const download = (type) => {
+    if (type === 1) {
+      //console.log(opExcel);
+      const headers = [
+        "Name",
+        "PNR",
+        "Operation",
+        "Agent Cost",
+        "Total Paid By Agent",
+        "Remained to pay",
+        "Paid with Operation",
+      ];
+      let csvStringT = [];
+      Object.keys(operations).map((o, i) => {
+        let opExcel = operations[o];
+        csvStringT.push(
           [
-            opExcel[0].agentName,
-            opExcel[0].method,
-            opExcel[0].transferDate,
-            opExcel[0].transferOperation.replace("€", "Eur"),
-            opExcel[0].balanceOperation.replace("€", "Eur"),
-            opExcel[0].suppliedTotal.replace("€", "Eur"),
+            [
+              opExcel[0].agentName,
+              opExcel[0].method,
+              opExcel[0].transferDate,
+              opExcel[0].transferOperation.replace("€", "Eur"),
+              opExcel[0].balanceOperation.replace("€", "Eur"),
+              opExcel[0].suppliedTotal.replace("€", "Eur"),
+            ],
+            headers,
           ],
-          headers,
-        ],
-        opExcel.map((i) => [
-          i.name,
-          i.bookingCode,
-          i.operation,
-          i.paidAmount.replace("€", "Eur"),
-          i.supplied.replace("€", "Eur"),
-          i.remainedSupplied.replace("€", "Eur"),
-          i.suppliedTicket.replace("€", "Eur"),
-        ]),
-        [[]]
+          opExcel.map((i) => [
+            i.name,
+            i.bookingCode,
+            i.operation,
+            i.paidAmount.replace("€", "Eur"),
+            i.supplied.replace("€", "Eur"),
+            i.remainedSupplied.replace("€", "Eur"),
+            i.suppliedTicket.replace("€", "Eur"),
+          ]),
+          [[]]
+        );
+        //console.log(oy, o, i);
+      });
+      const csvStringN = csvStringT.reduce((acc, arr) => acc.concat(arr), []);
+
+      let csvString = csvStringN.map((e) => e.join(",")).join("\n");
+      //console.log(csvStringT, csvStringN, csvString);
+
+      const csvContent = "data:text/csv;charset=utf-8," + csvString;
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", "agentsoperations_" + Date.now() + ".csv");
+      document.body.appendChild(link);
+
+      link.click();
+    } else {
+      console.log(operations, opPdf);
+      const imgData = "logo.png";
+      const doc = new jsPDF();
+      let row = 10;
+      let width = 130;
+      let length = 35;
+      doc.addImage(imgData, "PNG", 10, 10, 40, 40);
+
+      doc.setFontSize(20);
+      row += 10;
+      doc.text("Indus Viaggi", 200, row, null, null, "right");
+      doc.setFontSize(10);
+      row += 10;
+      doc.text("Via Don Giovanni Alai, 6/A", 200, row, null, null, "right");
+      row += 5;
+      doc.text("42121 - Reggio Emilia", 200, row, null, null, "right");
+      row += 5;
+      doc.text("Tel/fax: +39 0522434627", 200, row, null, null, "right");
+      row += 5;
+      doc.text(
+        "Cell.: +39 3889220982, +39 3802126100",
+        200,
+        row,
+        null,
+        null,
+        "right"
       );
-      //console.log(oy, o, i);
-    });
-    const csvStringN = csvStringT.reduce((acc, arr) => acc.concat(arr), []);
+      row += 10;
+      doc.setDrawColor(120, 120, 120);
+      doc.line(10, row, 200, row);
+      doc.setFontSize(10);
+      row += 2;
 
-    let csvString = csvStringN.map((e) => e.join(",")).join("\n");
-    //console.log(csvStringT, csvStringN, csvString);
+      /*opPdf.map((op) => {
+        doc.text("sedg:" + op.name, 10, row);
+        row += 10;
+      });*/
 
-    const csvContent = "data:text/csv;charset=utf-8," + csvString;
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", "agentsoperations_" + Date.now() + ".csv");
-    document.body.appendChild(link);
+      const headers = [
+        ["Name", "Booking Date", "PNR", "Ticket N.", "Cost", "Paid"],
+      ];
 
-    link.click();
+      const data = opPdf.map((o) => [
+        o.name,
+        formatDate(o.bookedOn, "it"),
+        o.bookingCode,
+        o.ticketNumber,
+        "€ " + o.agentCost,
+        "€ " + o.paidByAgent,
+      ]);
+
+      let content = {
+        startY: row,
+        head: headers,
+        body: data,
+      };
+      doc.autoTable(content);
+      //doc.addPage();
+      //row = 10;
+
+      doc.text("sdfh", 10, row, null, null, "left");
+      row = 280;
+      doc.setFontSize(8);
+      doc.text("Indus Viaggi", 200, row, null, null, "right");
+      row += 2;
+      doc.line(10, row, 200, row);
+      row += 3;
+      doc.text(
+        "Via Don Giovanni Alai, 6/A, 42121 Reggio Emilia RE",
+        200,
+        row,
+        null,
+        null,
+        "right"
+      );
+      doc.save("agentsoperations_" + Date.now() + ".pdf");
+    }
   };
 
   const search = () => {
@@ -303,7 +383,17 @@ function Index() {
             <button
               className="btn btn-block btn-warning width-search"
               onClick={() => {
-                download();
+                download(1);
+              }}
+            >
+              <i className="fa fa-download"></i>
+            </button>
+          </div>
+          <div className="col-md-1 col-sm-3">
+            <button
+              className="btn btn-block btn-danger width-search"
+              onClick={() => {
+                download(2);
               }}
             >
               <i className="fa fa-download"></i>
