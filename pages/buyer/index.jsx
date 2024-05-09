@@ -288,8 +288,8 @@ function Index() {
       doc.autoTable(content);
       //doc.addPage();
       //row = 10;
+      //doc.text("sdfh", 10, row, null, null, "left");
 
-      doc.text("sdfh", 10, row, null, null, "left");
       row = 280;
       doc.setFontSize(8);
       doc.text("Indus Viaggi", 200, row, null, null, "right");
