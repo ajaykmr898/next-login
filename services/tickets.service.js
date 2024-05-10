@@ -573,8 +573,8 @@ async function upload(files) {
   let created = [];
   fc.map((f) => {
     if (f?.ticketNumber && !created.includes(f.ticketNumber)) {
-      console.log(f);
-      //create(f);
+      //console.log(f);
+      create(f);
       created.push(f.ticketNumber);
     }
   });
