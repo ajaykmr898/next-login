@@ -229,12 +229,29 @@ function Index() {
 
       link.click();
     } else {
-      console.log(operations, opPdf);
+      const headers = [
+        ["Name", "Booking Date", "PNR", "Ticket N.", "Cost", "Paid"],
+      ];
+      let agentCost = 0;
+      let paidByAgent = 0;
+      const data = opPdf.map((o) => {
+        agentCost += parseFloat(o.agentCost);
+        paidByAgent += parseFloat(o.paidByAgent);
+        return [
+          o.name,
+          formatDate(o.bookedOn, "it"),
+          o.bookingCode,
+          o.ticketNumber,
+          "€ " + o.agentCost,
+          "€ " + o.paidByAgent,
+        ];
+      });
+
+      //console.log(operations, opPdf);
       const imgData = "logo.png";
       const doc = new jsPDF();
       let row = 10;
-      let width = 130;
-      let length = 35;
+
       doc.addImage(imgData, "PNG", 10, 10, 40, 40);
 
       doc.setFontSize(20);
@@ -257,28 +274,22 @@ function Index() {
         "right"
       );
       row += 10;
+      doc.text(
+        "Total Cost: € " +
+          parseFloat(agentCost).toFixed(2) +
+          " - Total Paid: € " +
+          parseFloat(paidByAgent).toFixed(2),
+        10,
+        row,
+        null,
+        null,
+        "left"
+      );
+      row += 2;
       doc.setDrawColor(120, 120, 120);
       doc.line(10, row, 200, row);
       doc.setFontSize(10);
       row += 2;
-
-      /*opPdf.map((op) => {
-        doc.text("sedg:" + op.name, 10, row);
-        row += 10;
-      });*/
-
-      const headers = [
-        ["Name", "Booking Date", "PNR", "Ticket N.", "Cost", "Paid"],
-      ];
-
-      const data = opPdf.map((o) => [
-        o.name,
-        formatDate(o.bookedOn, "it"),
-        o.bookingCode,
-        o.ticketNumber,
-        "€ " + o.agentCost,
-        "€ " + o.paidByAgent,
-      ]);
 
       let content = {
         startY: row,
@@ -286,9 +297,6 @@ function Index() {
         body: data,
       };
       doc.autoTable(content);
-      //doc.addPage();
-      //row = 10;
-      //doc.text("sdfh", 10, row, null, null, "left");
 
       row = 280;
       doc.setFontSize(8);
