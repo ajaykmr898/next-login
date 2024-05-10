@@ -217,7 +217,7 @@ function Index() {
       });
       const csvStringN = csvStringT.reduce((acc, arr) => acc.concat(arr), []);
 
-      let csvString = csvStringN.map((e) => e.join(",")).join("\n");
+      let csvString = csvStringN.map((e) => e.join(";")).join("\n");
       //console.log(csvStringT, csvStringN, csvString);
 
       const csvContent = "data:text/csv;charset=utf-8," + csvString;
@@ -230,13 +230,24 @@ function Index() {
       link.click();
     } else {
       const headers = [
-        ["Name", "Booking Date", "PNR", "Ticket N.", "Cost", "Paid"],
+        [
+          "Name",
+          "Booking Date",
+          "PNR",
+          "Ticket N.",
+          "Cost",
+          "Paid",
+          "Remained",
+        ],
       ];
       let agentCost = 0;
       let paidByAgent = 0;
+      let remainedT = 0;
       const data = opPdf.map((o) => {
         agentCost += parseFloat(o.agentCost);
         paidByAgent += parseFloat(o.paidByAgent);
+        let remained = parseFloat(o.agentCost) - parseFloat(o.paidByAgent);
+        remainedT += remained;
         return [
           o.name,
           formatDate(o.bookedOn, "it"),
@@ -244,6 +255,7 @@ function Index() {
           o.ticketNumber,
           "€ " + o.agentCost,
           "€ " + o.paidByAgent,
+          "€ " + parseFloat(remained).toFixed(2),
         ];
       });
 
@@ -278,7 +290,9 @@ function Index() {
         "Total Cost: € " +
           parseFloat(agentCost).toFixed(2) +
           " - Total Paid: € " +
-          parseFloat(paidByAgent).toFixed(2),
+          parseFloat(paidByAgent).toFixed(2) +
+          " - Remained: € " +
+          parseFloat(remainedT).toFixed(2),
         10,
         row,
         null,
