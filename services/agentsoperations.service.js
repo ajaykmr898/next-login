@@ -21,7 +21,10 @@ async function getAll(filters) {
     let remainedSupplied =
       parseFloat(ticket.agentCost || 0) - parseFloat(ticket.paidByAgent || 0);
 
-    if (!ticketsIds.includes(ticket?._id)) {
+    if (
+      !ticketsIds.includes(ticket?._id) &&
+      (filters.agent === null || filters.agent === ticket.agentId)
+    ) {
       ticketsIds.push(ticket._id);
       tickets.push(ticket);
     }
