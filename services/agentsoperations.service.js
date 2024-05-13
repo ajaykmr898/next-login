@@ -12,7 +12,8 @@ export const agentsOperationsService = {
 
 async function getAll(filters) {
   const response = await fetchWrapper.post(baseUrl, filters);
-  const ticketsT = await fetchWrapper.post(ticketsUrl, filters);
+  let filtersT = { ...filters, type: "bookedOn" };
+  const ticketsT = await fetchWrapper.post(ticketsUrl, filtersT);
 
   let tickets = [];
   ticketsT.map((t) => {
