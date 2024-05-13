@@ -21,7 +21,7 @@ async function setFlights() {
   let airlinesT = [];
 
   let filters = {
-    start: moment().add("-21", "month"),
+    start: moment().add("-24", "month"),
     end: moment(),
     type: "bookedOn",
   };

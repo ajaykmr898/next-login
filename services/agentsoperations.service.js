@@ -2,6 +2,7 @@ import { fetchWrapper } from "helpers";
 import { formatDate } from "./index";
 
 const baseUrl = `/api/agentsoperations`;
+const ticketsUrl = `/api/tickets`;
 
 export const agentsOperationsService = {
   getAll,
@@ -11,8 +12,15 @@ export const agentsOperationsService = {
 
 async function getAll(filters) {
   const response = await fetchWrapper.post(baseUrl, filters);
+  const ticketsT = await fetchWrapper.post(ticketsUrl, filters);
+
   let tickets = [];
-  let ticketsIds = [];
+  ticketsT.map((t) => {
+    if (filters.agent === null || filters.agent === t.agentId) {
+      tickets.push(t);
+    }
+  });
+
   let data = response.map((e) => {
     let ticket = e?.ticket[0] || [];
     let agent = e?.agent[0];
@@ -21,13 +29,13 @@ async function getAll(filters) {
     let remainedSupplied =
       parseFloat(ticket.agentCost || 0) - parseFloat(ticket.paidByAgent || 0);
 
-    if (
+    /*if (
       !ticketsIds.includes(ticket?._id) &&
       (filters.agent === null || filters.agent === ticket.agentId)
     ) {
       ticketsIds.push(ticket._id);
       tickets.push(ticket);
-    }
+    }*/
     return {
       ...e,
       cid: e._id,
