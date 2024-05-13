@@ -16,11 +16,13 @@ async function getAll(filters) {
   const ticketsT = await fetchWrapper.post(ticketsUrl, filtersT);
 
   let tickets = [];
+  let ticketsIds = [];
   ticketsT.map((t) => {
     if (
       (filters.agent === null && t.agentCost.trim() !== "0") ||
       filters.agent === t.agentId
     ) {
+      ticketsIds.push(t.id);
       tickets.push(t);
     }
   });
@@ -33,13 +35,13 @@ async function getAll(filters) {
     let remainedSupplied =
       parseFloat(ticket.agentCost || 0) - parseFloat(ticket.paidByAgent || 0);
 
-    /*if (
+    if (
       !ticketsIds.includes(ticket?._id) &&
       (filters.agent === null || filters.agent === ticket.agentId)
     ) {
       ticketsIds.push(ticket._id);
       tickets.push(ticket);
-    }*/
+    }
     return {
       ...e,
       cid: e._id,
