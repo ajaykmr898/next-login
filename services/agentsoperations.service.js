@@ -18,7 +18,7 @@ async function getAll(filters) {
   let tickets = [];
   ticketsT.map((t) => {
     if (
-      (filters.agent === null && t.agentId !== "") ||
+      (filters.agent === null && t.agentCost !== "") ||
       filters.agent === t.agentId
     ) {
       tickets.push(t);
