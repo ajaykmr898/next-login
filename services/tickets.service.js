@@ -577,7 +577,7 @@ async function upload(files) {
   });
   let created = [];
   fc.map((f) => {
-    if (f?.isVoid) {
+    if (f?.ticketNumber && f?.isVoid) {
       let params = {
         agentCost: 0,
         paidAmount: 0,
@@ -594,7 +594,7 @@ async function upload(files) {
     } else {
       if (f?.ticketNumber && !created.includes(f.ticketNumber)) {
         console.log(f);
-        //create(f);
+        create(f);
         created.push(f.ticketNumber);
       }
     }
