@@ -402,11 +402,15 @@ async function upload(files) {
     let cn = "-";
     let cni = "-";
     let p = "-";
+    let vd = false;
     let f =
       final.hasOwnProperty(4) && final[4].hasOwnProperty(0) ? final[4][0] : "-";
 
     for (let r = 0; r < final.length; r++) {
       for (let c = 0; c < final[r].length; c++) {
+        if (final[r][c].includes("AMD") && final[r][c].includes("VOID")) {
+          vd = true;
+        }
         if (final[r][c].includes("I-00")) {
           n.push(final[r][c + 1].replace(/[^a-zA-Z/ ]/g, " ").trim());
         }
@@ -553,6 +557,7 @@ async function upload(files) {
         receivingAmount2: 0,
         receivingAmount3: 0,
         cardNumber: cni,
+        isVoid: vd,
         bookedOn: d,
         travel1: t1s,
         travel2: t2s,
@@ -572,10 +577,26 @@ async function upload(files) {
   });
   let created = [];
   fc.map((f) => {
-    if (f?.ticketNumber && !created.includes(f.ticketNumber)) {
-      //console.log(f);
-      create(f);
-      created.push(f.ticketNumber);
+    if (f?.isVoid) {
+      let params = {
+        agentCost: 0,
+        paidAmount: 0,
+        receivingAmount1: 0,
+        receivingAmount2: 0,
+        receivingAmount3: 0,
+        refund: "",
+        supplied: 0,
+        returned: 0,
+        paidByAgent: 0,
+      };
+      console.log(f);
+      //update(f?.ticketNumber, params);
+    } else {
+      if (f?.ticketNumber && !created.includes(f.ticketNumber)) {
+        console.log(f);
+        //create(f);
+        created.push(f.ticketNumber);
+      }
     }
   });
 }
