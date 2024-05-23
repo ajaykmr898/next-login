@@ -14,6 +14,7 @@ export const ticketsRepo = {
   getTicketsForSupply,
   getTicketsByAgent,
   getFlights,
+  findAndUpdate,
 };
 
 async function getFlights() {
@@ -115,6 +116,12 @@ async function update(id, params) {
   await Tickets.findByIdAndUpdate(id, params);
 }
 
+async function findAndUpdate(params) {
+  let ticket = await Tickets.findOne({ ticketNumber: params.ticketNumber });
+  if (ticket) {
+    await update(ticket?.id, { ...params });
+  }
+}
 async function _delete(id) {
   await Tickets.findByIdAndRemove(id);
 }

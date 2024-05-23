@@ -137,6 +137,10 @@ async function update(id, params) {
   await fetchWrapper.put(`${baseUrl}/${id}`, params);
 }
 
+async function findAndUpdate(ticket) {
+  await fetchWrapper.put(baseUrl, ticket);
+}
+
 async function _delete(id) {
   await fetchWrapper.delete(`${baseUrl}/${id}`);
 }
@@ -408,7 +412,7 @@ async function upload(files) {
 
     for (let r = 0; r < final.length; r++) {
       for (let c = 0; c < final[r].length; c++) {
-        if (final[r][c].includes("AMD") && final[r][c].includes("VOID")) {
+        if (r === 1 && final[r].join("").includes("VOID")) {
           vd = true;
         }
         if (final[r][c].includes("I-00")) {
@@ -579,6 +583,7 @@ async function upload(files) {
   fc.map((f) => {
     if (f?.ticketNumber && f?.isVoid) {
       let params = {
+        ticketNumber: f?.ticketNumber,
         agentCost: 0,
         paidAmount: 0,
         receivingAmount1: 0,
@@ -588,12 +593,13 @@ async function upload(files) {
         supplied: 0,
         returned: 0,
         paidByAgent: 0,
+        isVoid: "true",
       };
-      console.log(f);
-      //update(f?.ticketNumber, params);
+      //console.log(f);
+      findAndUpdate(params);
     } else {
       if (f?.ticketNumber && !created.includes(f.ticketNumber)) {
-        console.log(f);
+        //console.log(f);
         create(f);
         created.push(f.ticketNumber);
       }
